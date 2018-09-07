@@ -1,0 +1,531 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Using Multicast DNS to protect privacy when exposing ICE candidates</title>
+
+  
+<style type="text/css">/*<![CDATA[*/
+@viewport {
+  zoom: 1.0;
+  width: extend-to-zoom;
+}
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+
+@media screen and (min-width: 1024px) {
+  body>ul.toc, body>#rfc\.toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 550px);
+    width: 300px;
+    z-index: 1;
+  }
+  #rfc\.toc {
+    top: 55px;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  ul.toc, #rfc\.toc {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  body>ul.toc {
+    top: 140px;
+  }
+
+  body {
+    padding-right: 350px;
+  }
+}
+
+body {
+  font: 16px "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #333;
+  font-size-adjust: 0.5;
+  line-height: 24px;
+  margin: 75px auto;
+  max-width: 724px;
+}
+
+.title, .filename, h1, h2, h3, h4 {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size-adjust: 0.5;
+  font-weight: 500;
+  color: #333;
+  line-height: 100%;
+  margin: 0.8em 0 0.3em;
+}
+.title { font-size: 36px; }
+h1 { font-size: 36px; }
+h2 { font-size: 24px; }
+h3, h4 { font-size: 18px; }
+h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
+  color: #333;
+}
+
+ul.toc li {
+  list-style: none;
+  text-indent: -2.5em;
+  padding-left: 2.5em;
+  padding-bottom: 5px;
+  margin: 0;
+}
+ul.toc ul {
+  margin: 0;
+}
+/* xml2rfc nests ul directly inside ul which messes with the style badly */
+ul.toc, ul.toc>ul, ul.toc ul>ul {
+  margin: 0 0 0 1.5em;
+}
+
+table {
+  margin-left: 0em;
+  border-collapse: collapse;
+}
+th {
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+}
+tr:nth-child(2n+1) > td,
+tr:nth-child(2n+1) > th {
+  background-color: #f9f9f9;
+}
+td.reference {
+  max-width: 200px;
+  border-top: none;
+  padding-right: 1em;
+}
+.right {
+  text-align: right;
+}
+
+
+table.header {
+  width: 100%;
+}
+table.header td {
+  border: none;
+  background-color: transparent;
+  color: black;
+}
+.filename {
+  color: rgb(119, 119, 119);
+  font-size: 23px;
+  font-weight: normal;
+  height: auto;
+  line-height: 100%;
+}
+#rfc\.abstract+p, #rfc\.abstract p {
+  font-size: 18px;
+  line-height: 27px%;
+}
+
+samp, tt, code, pre {
+  font: 11pt consolas, monospace;
+  font-size-adjust: none;
+}
+pre {
+  background-color: #eee;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+  padding: 5px;
+  margin: 5px;
+}
+.figure {
+  font-style: italic;
+  margin: 0 1.5em;
+}
+
+address {
+  margin: 10px 0 0;
+}
+.vcard {
+  font-style: normal;
+}
+.vcardline {
+  display: block;
+}
+.vcardline .fn {
+  font-weight: bold;
+}
+.vcardline .hidden {
+  display: none;
+}
+
+dl {
+  margin-left: 1em;
+}
+dl.dl-horizontal: {
+  margin-left: 0;
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.nohang > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .5em;
+}
+dl.compact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+ul.empty {
+  list-style-type: none;
+}
+ul.empty li {
+  margin-top: .5em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+hr.noprint {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #2a6496;
+}
+a[href]:hover {
+  background-color: #eee;
+}
+
+ol, ul, li, p {
+  padding: 0;
+  margin: 0.5em 0 0.5em 2em;
+}
+li, p {
+  margin-left: 0;
+}
+address {
+  font-style: normal;
+}
+
+.github-fork-ribbon-wrapper {
+  display: none;
+}
+@media screen and (min-width: 800px) {
+  /* "Fork me on GitHub" CSS ribbon based on
+   * https://github.com/simonwhitaker/github-fork-ribbon-css
+   */
+  .github-fork-ribbon {
+    position: absolute;
+    padding: 2px 0;
+    background-color: #a00;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+    font: 700 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    pointer-events: auto;
+
+    top: 38px;
+    right: -45px;
+
+    transform: rotate(45deg);
+  }
+
+  .github-fork-ribbon a[href],
+  .github-fork-ribbon a[href]:hover {
+    color: #fff;
+    background-color: transparent;
+    text-decoration: none;
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+    text-align: center;
+
+    width: 190px;
+    line-height: 18px;
+
+    display: inline-block;
+    padding: 2px 0;
+
+    border: 1.5px dotted #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .github-fork-ribbon-wrapper {
+    display: block;
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    overflow: hidden;
+    top: 0; right: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .github-fork-ribbon-wrapper {
+    position: fixed;
+  }
+/*]]>*/</style>
+
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.2" rel="Chapter" title="2 Privacy Concerns">
+<link href="#rfc.section.3" rel="Chapter" title="3 Principle">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 ICE Candidate Gathering">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 ICE Candidate Processing">
+<link href="#rfc.section.4" rel="Chapter" title="4 Privacy Guidelines">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 APIs leaking IP addresses">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Generated names reuse">
+<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Specific execution contexts">
+<link href="#rfc.section.5" rel="Chapter" title="5 Specification Requirements">
+<link href="#rfc.references" rel="Chapter" title="6 Informative References">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content="xml2rfc version 2.8.4 - https://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Fablet, Y." />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-mdns-ice-candidates-00" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-6-29" />
+  <meta name="dct.abstract" content="WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.  To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.  This is currently used as a way to track users.  This document describes a way to share IP addresses with other clients while preserving client privacy.  This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS " />
+  <meta name="description" content="WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.  To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.  This is currently used as a way to track users.  This document describes a way to share IP addresses with other clients while preserving client privacy.  This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS " />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">RTCWEB</td>
+<td class="right">Y. Fablet</td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">Apple Inc.</td>
+</tr>
+<tr>
+<td class="left">Intended status: Informational</td>
+<td class="right">June 29, 2018</td>
+</tr>
+<tr>
+<td class="left">Expires: December 31, 2018</td>
+<td class="right"></td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">Using Multicast DNS to protect privacy when exposing ICE candidates<br />
+  <span class="filename">draft-mdns-ice-candidates-00</span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.  To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.  This is currently used as a way to track users.  This document describes a way to share IP addresses with other clients while preserving client privacy.  This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS <a href="#RFC6763" class="xref">[RFC6763]</a>.</p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on December 31, 2018.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<li>2.   <a href="#rfc.section.2">Privacy Concerns</a>
+</li>
+<li>3.   <a href="#rfc.section.3">Principle</a>
+</li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">ICE Candidate Gathering</a>
+</li>
+<li>3.2.   <a href="#rfc.section.3.2">ICE Candidate Processing</a>
+</li>
+</ul><li>4.   <a href="#rfc.section.4">Privacy Guidelines</a>
+</li>
+<ul><li>4.1.   <a href="#rfc.section.4.1">APIs leaking IP addresses</a>
+</li>
+<li>4.2.   <a href="#rfc.section.4.2">Generated names reuse</a>
+</li>
+<li>4.3.   <a href="#rfc.section.4.3">Specific execution contexts</a>
+</li>
+</ul><li>5.   <a href="#rfc.section.5">Specification Requirements</a>
+</li>
+<li>6.   <a href="#rfc.references">Informative References</a>
+</li>
+<li><a href="#rfc.authors">Author's Address</a>
+</li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#problems" id="problems">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">As detailed in <a href="#IPHandling" class="xref">[IPHandling]</a>, exposing client private IP addresses allows maximizing the probability to successfully create a connection between two clients.  This information is also used by many web sites as a way to fingerprint and identify users without their consent.</p>
+<p id="rfc.section.1.p.2">The first approach exposes client private IP addresses by default, as can be seen from websites such as <a href="#IPLeak" class="xref">[IPLeak]</a>.  The second approach implemented in the WebKit engine enforces the following policy:</p>
+<p></p>
+
+<ol>
+<li>By default, use mode 3 as defined in <a href="#IPHandling" class="xref">[IPHandling]</a>: any host ICE candidate is filtered out.</li>
+<li>Use mode 2 as defined in <a href="#IPHandling" class="xref">[IPHandling]</a> if there is an explicit user action to trust the web site: host ICE candidates are exposed to the web site based on the use of navigator.mediaDevices.getUserMedia, which typically prompts the user to grant or deny access to cameras/microphones.</li>
+</ol>
+<p id="rfc.section.1.p.4">The second approach supports most common audio/video conference applications but leads to failing or suboptimal connections for applications relying solely on data channel.  This is particularly an issue on unmanaged networks, typically home or small offices where NAT loopback might not be supported.</p>
+<p id="rfc.section.1.p.5">To overcome the shortcomings of the above two approaches, this document proposes to register dynamically generated names using Multicast DNS when gathering ICE candidates.  These dynamically generated names are used to replace private IP addresses in host ICE candidates.  Only clients that can resolve these dynamically generated names using Multicast DNS will get access to the actual client IP address.</p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#concerns" id="concerns">Privacy Concerns</a>
+</h1>
+<p id="rfc.section.2.p.1">The gathering of ICE candidates without user consent is a well-known fingerprinting technique to track users.  This is particularly a concern when users are connected through a NAT which is a usual configuration.  In such a case, knowing both the private IP address and the public IP address will usually identify uniquely the user device.  Additionally, Internet web sites can more easily attack intranet web sites when knowing the intranet IP address range.</p>
+<p id="rfc.section.2.p.2">A successful WebRTC connection between two peers is also a potential thread to user privacy.  When a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.  Browsers often isolate contexts one from the other.  Private browsing mode contexts usually do not share any information with regular browsing contexts.  The WebKit engine isolates third-party iframes in various ways (cookies, ITP) to prevent user tracking.  Enabling a web application to determine that two contexts run in the same device would defeat some of the protections provided by modern browsers.</p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#principle" id="principle">Principle</a>
+</h1>
+<p id="rfc.section.3.p.1">This section uses the concept of ICE agent as define in <a href="#RFC5245" class="xref">[RFC5245]</a>.  In the remainder of the document, it is assumed that each browser execution context has its own ICE agent.</p>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#gathering" id="gathering">ICE Candidate Gathering</a>
+</h1>
+<p id="rfc.section.3.1.p.1">For any host ICE candidate gathered by a browsing context as part of <a href="#RFC5245" class="xref">[RFC5245]</a> section 4.1.1, obfuscation of the candidate is done as follows:</p>
+<p></p>
+
+<ol>
+<li>Check whether the context ICE agent registered a name resolving to the ICE host candidate IP address.</li>
+<li>If the ICE agent registered the name, replace the IP address of the ICE host candidate with the name with &#8220;.local&#8221; appended to it. Expose the candidate and abort these steps.</li>
+<li>Generate a random unique name, typically a version 4 UUID as defined in <a href="#RFC4122" class="xref">[RFC4122]</a>.</li>
+<li>Register the unique name using Multicast DNS.</li>
+<li>If registering of the unique name fails, abort these steps. The candidate is not exposed.</li>
+<li>Store the name and its related IP address in the ICE agent for future reuse.</li>
+<li>Replace the IP address of the ICE host candidate with the name with &#8220;.local&#8221; appended to it. Expose the candidate.</li>
+</ol>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#processing" id="processing">ICE Candidate Processing</a>
+</h1>
+<p id="rfc.section.3.2.p.1">For any remote host ICE candidate received by the ICE agent, the following procedure is used:</p>
+<p></p>
+
+<ol>
+<li>If the connection-address field value of the ICE candidate does not finish by &#8220;.local&#8221;, process the candidate as defined in <a href="#RFC5245" class="xref">[RFC5245]</a>.</li>
+<li>Otherwise, remove the &#8220;.local&#8221; suffix to the value and resolve it using Multicast DNS.</li>
+<li>If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.</li>
+<li>Otherwise, ignore the candidate.</li>
+</ol>
+<p id="rfc.section.3.2.p.3">Multicast DNS resolution might end up retrieving both an IPv4 and IPv6 address.  In that case, the IPv6 address may be used preferably to the IPv4 address.</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#guidelines" id="guidelines">Privacy Guidelines</a>
+</h1>
+<h1 id="rfc.section.4.1">
+<a href="#rfc.section.4.1">4.1.</a> <a href="#apis-leaking-ip-addresses" id="apis-leaking-ip-addresses">APIs leaking IP addresses</a>
+</h1>
+<p id="rfc.section.4.1.p.1">When there is no user consent, the following filtering should be done to prevent private IP address leakage:</p>
+<p></p>
+
+<ol>
+<li>host ICE candidates with an IP address are not exposed as ICE candidate events.</li>
+<li>Server reflexive ICE candidate raddr field is set to 0.0.0.0 and rport to 0.</li>
+<li>SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.</li>
+<li>RTCIceCandidateStats dictionaries exposed to web pages do not contain any &#8216;ip&#8217; member if related to a host ICE candidate.</li>
+</ol>
+<h1 id="rfc.section.4.2">
+<a href="#rfc.section.4.2">4.2.</a> <a href="#generated-names-reuse" id="generated-names-reuse">Generated names reuse</a>
+</h1>
+<p id="rfc.section.4.2.p.1">Dynamically generated names can be used to track users if used too often.  Conversely, registering too many names will also generate useless processing.  The proposed rule is to create and register a new generated name for a given IP address on a per execution context.</p>
+<h1 id="rfc.section.4.3">
+<a href="#rfc.section.4.3">4.3.</a> <a href="#specific-execution-contexts" id="specific-execution-contexts">Specific execution contexts</a>
+</h1>
+<p id="rfc.section.4.3.p.1">Privacy might also be breached if two execution contexts can identify whether they are run in the same device based on a successful peer-to-peer connection.  The proposed rule is to not register any name using Multicast DNS for any ICE agent belonging to:</p>
+<p></p>
+
+<ol>
+<li>A third-party browser execution context, i.e. a context that is not same origin as the top level execution context.</li>
+<li>A private browsing execution context.</li>
+</ol>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#requirements" id="requirements">Specification Requirements</a>
+</h1>
+<p id="rfc.section.5.p.1">The proposal relies on identifying and resolving any Multicast DNS based ICE candidates as part of adding/processing a remote candidate.  <a href="#ICESDP" class="xref">[ICESDP]</a> section 4.1 could be updated to explicitly allow Multicast DNS names in the connection-address field.</p>
+<p id="rfc.section.5.p.2">The proposal relies on adding the ability to register Multicast DNS names at ICE gathering time.  This could be described in <a href="#ICESDP" class="xref">[ICESDP]</a> and/or <a href="#WebRTCSpec" class="xref">[WebRTCSpec]</a>.</p>
+<p id="rfc.section.5.p.3">The proposal allows updating <a href="#IPHandling" class="xref">[IPHandling]</a> so that mode 2 is not the mode used by default when user consent is not required.  Instead, the default mode could be defined as mode 3 with Multicast DNS based ICE candidates.</p>
+<h1 id="rfc.references">
+<a href="#rfc.references">6.</a> Informative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="ICESDP">[ICESDP]</b></td>
+<td class="top">
+<a>Keranen, A.</a>, "<a href="https://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp">Session Description Protocol (SDP) Offer/Answer procedures for Interactive Connectivity Establishment (ICE)</a>", April 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="IPHandling">[IPHandling]</b></td>
+<td class="top">
+<a>Shieh, G.</a>, "<a href="https://tools.ietf.org/html/draft-ietf-rtcweb-ip-handling">WebRTC IP Address Handling Requirements</a>", April 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="IPLeak">[IPLeak]</b></td>
+<td class="top">"<a href="https://ipleak.net">IP/DNS Detect</a>", n.d..</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC4122">[RFC4122]</b></td>
+<td class="top">
+<a>Leach, P.</a>, <a>Mealling, M.</a> and <a>R. Salz</a>, "<a href="https://tools.ietf.org/html/rfc4122">A Universally Unique IDentifier (UUID) URN Namespace</a>", RFC 4122, DOI 10.17487/RFC4122, July 2005.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5245">[RFC5245]</b></td>
+<td class="top">
+<a>Rosenberg, J.</a>, "<a href="https://tools.ietf.org/html/rfc5245">Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal for Offer/Answer Protocols</a>", RFC 5245, DOI 10.17487/RFC5245, April 2010.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6763">[RFC6763]</b></td>
+<td class="top">
+<a>Cheshire, S.</a> and <a>M. Krochmal</a>, "<a href="https://tools.ietf.org/html/rfc6763">DNS-Based Service Discovery</a>", RFC 6763, DOI 10.17487/RFC6763, February 2013.</td>
+</tr>
+<tr>
+<td class="reference"><b id="WebRTCSpec">[WebRTCSpec]</b></td>
+<td class="top">
+<a>Bruaroey, J.</a>, "<a href="https://w3c.github.io/webrtc-pc/">The WebRTC specification</a>", n.d..</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Youenn Fablet</span> 
+	  <span class="n hidden">
+		<span class="family-name">Fablet</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Apple Inc.</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:youenn@apple.com">youenn@apple.com</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>
