@@ -19,6 +19,21 @@ author:
     name: Youenn Fablet
     organization: Apple Inc.
     email: youenn@apple.com
+ -
+    ins: J. De Borst
+    name: Jeroen De Borst
+    organization: Google
+    email: jeroendb@google.com
+ -
+    ins: J. Uberti
+    name: Justin Uberti
+    organization: Google
+    email: juberti@google.com
+ -
+    ins: Q. Wang
+    name: Qingsi Wang
+    organization: Google
+    email: qingsi@google.com
 
 informative:
   RFC4122:
