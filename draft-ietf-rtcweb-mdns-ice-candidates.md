@@ -83,16 +83,13 @@ Introduction {#problems}
 ============
 
 As detailed in {{IPHandling}}, exposing client private IP addresses allows maximizing the probability to successfully create a connection between two clients.
-This information is also used by many web sites as a way to fingerprint and identify users without their consent.
+For that purpose, {{IPHandling}} default mode is currently mode 2, which exposes client private IP addresses.
+This information is used by many web sites as a way to fingerprint and identify users without their consent.
 
-The first approach exposes client private IP addresses by default, as can be seen from websites such as {{IPLeak}}.
-The second approach implemented in the WebKit engine enforces the following policy:
+Implementations can instead rely on mode 3 when no user consent is expressed and switch to mode 2 after user interaction,
+for instance once a user granted the web page access to camera/microphone through navigator.mediaDevices.getUserMedia.
 
-1. By default, use mode 3 as defined in {{IPHandling}}: any host ICE candidate is filtered out.
-
-2. Use mode 2 as defined in {{IPHandling}} if there is an explicit user action to trust the web site: host ICE candidates are exposed to the web site based on the use of navigator.mediaDevices.getUserMedia, which typically prompts the user to grant or deny access to cameras/microphones.
-
-The second approach supports most common audio/video conference applications
+This latter approach supports most common audio/video conference applications
 but leads to failing or suboptimal connections for applications relying solely on data channel.
 This is particularly an issue on unmanaged networks, typically home or small offices where NAT loopback might not be supported.
 
@@ -110,10 +107,10 @@ Additionally, Internet web sites can more easily attack intranet web sites when 
 
 A successful WebRTC connection between two peers is also a potential thread to user privacy.
 When a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.
-Browsers often isolate contexts one from the other.
-Private browsing mode contexts usually do not share any information with regular browsing contexts.
-The WebKit engine isolates third-party iframes in various ways (cookies, ITP) to prevent user tracking.
-Enabling a web application to determine that two contexts run in the same device would defeat some of the protections provided by modern browsers.
+Browsers often define rules to isolate certain browsing contexts from others.
+For instance, a browsing context in private mode is not expected to share any state or information with another browsing context in the regular mode.
+Similarly, browsers may implement mechanisms like cookie partitioning to isolate third-party iframes browsing contexts.
+Enabling a web application to determine that two contexts run in the same device would defeat some of the protections provided by these mechanisms.
 
 Principle {#principle}
 ============
