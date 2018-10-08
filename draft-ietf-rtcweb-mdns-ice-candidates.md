@@ -20,8 +20,8 @@ author:
     organization: Apple Inc.
     email: youenn@apple.com
  -
-    ins: J. De Borst
-    name: Jeroen De Borst
+    ins: J. de Borst
+    name: Jeroen de Borst
     organization: Google
     email: jeroendb@google.com
  -
@@ -37,7 +37,7 @@ author:
 
 informative:
   RFC4122:
-  RFC5245:
+  RFC8445:
   RFC6763:
   ICESDP:
     target: https://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp
@@ -118,13 +118,13 @@ Enabling a web application to determine that two contexts run in the same device
 Principle {#principle}
 ============
 
-This section uses the concept of ICE agent as define in {{RFC5245}}.
+This section uses the concept of ICE agent as define in {{RFC8445}}.
 In the remainder of the document, it is assumed that each browser execution context has its own ICE agent.
 
 ICE Candidate Gathering {#gathering}
 ----------------------------
 
-For any host ICE candidate gathered by a browsing context as part of {{RFC5245}} section 4.1.1, obfuscation of the candidate is done as follows:
+For any host ICE candidate gathered by a browsing context as part of {{RFC8445}} section 5.1.1, obfuscation of the candidate is done as follows:
 
 1. Check whether the context ICE agent registered a name resolving to the ICE host candidate IP address.
 
@@ -145,7 +145,7 @@ ICE Candidate Processing {#processing}
 
 For any remote host ICE candidate received by the ICE agent, the following procedure is used:
 
-1. If the connection-address field value of the ICE candidate does not finish by ".local", process the candidate as defined in {{RFC5245}}.
+1. If the connection-address field value of the ICE candidate does not finish by ".local", process the candidate as defined in {{RFC8445}}.
 
 2. Otherwise, remove the ".local" suffix to the value and resolve it using Multicast DNS.
 
