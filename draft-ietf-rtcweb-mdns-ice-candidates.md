@@ -126,6 +126,8 @@ For any host ICE candidate gathered by a browsing context as part of {{RFC8445}}
 
 7. Replace the IP address of the ICE host candidate with the name with ".local" appended to it. Expose the candidate.
 
+ICE host candidates generated using this procedure SHOULD have an unique mDNS name generated for each host candidate IP address, specifically an ICE agent using an interface with both IPv4 and IPv6 addresses would expose a different mDNS name for each address.
+
 ICE Candidate Processing {#processing}
 ----------------------------
 
@@ -139,8 +141,7 @@ For any remote host ICE candidate received by the ICE agent, the following proce
 
 4. Otherwise, ignore the candidate.
 
-Multicast DNS resolution might end up retrieving both an IPv4 and IPv6 address.
-In that case, the IPv6 address may be used preferably to the IPv4 address.
+An ICE agent that supports mDNS candidates MUST support the situation where the mDNS resolution resuts in more than one IP address. In this case The ICE agent takes exactly one of the resolved IP addresses and ignores the others. The ICE agent SHOULD use the first IP address resolved.
 
 Privacy Guidelines {#guidelines}
 ============
