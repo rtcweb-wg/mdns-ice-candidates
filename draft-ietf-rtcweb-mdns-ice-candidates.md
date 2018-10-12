@@ -141,7 +141,9 @@ For any remote host ICE candidate received by the ICE agent, the following proce
 
 4. Otherwise, ignore the candidate.
 
-An ICE agent that supports mDNS candidates MUST support the situation where the mDNS resolution resuts in more than one IP address. In this case The ICE agent takes exactly one of the resolved IP addresses and ignores the others. The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
+An ICE agent may use a host-name resolver that transparently supports both Multicast and Unicast DNS. In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}}. This leads to the following consideration.
+
+An ICE agent that supports mDNS candidates MUST support the situation where the host-name resolution resuts in more than one IP address. In this case The ICE agent takes exactly one of the resolved IP addresses and ignores the others. The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
 Privacy Guidelines {#guidelines}
 ============
