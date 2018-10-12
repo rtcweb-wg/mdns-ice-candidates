@@ -124,27 +124,29 @@ In the remainder of the document, it is assumed that each browser execution cont
 ICE Candidate Gathering {#gathering}
 ----------------------------
 
-For any host ICE candidate gathered by a browsing context as part of {{RFC8445}} section 5.1.1, obfuscation of the candidate is done as follows:
+For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5.1.1, obfuscation of the candidate is done as follows:
 
-1. Check whether the context ICE agent registered a name resolving to the ICE host candidate IP address.
+1. Check whether there is a usable registered mDNS hostname resolving to the ICE host candidate's IP address.
 
-2. If the ICE agent registered the name, replace the IP address of the ICE host candidate with the name with ".local" appended to it. Expose the candidate and abort these steps.
+2. If there is a registered a hostname, replace the IP address of the ICE host candidate with the hostname. Expose the candidate and abort these steps.
 
 3. Generate a unique name. The unique name SHOULD consist of a version 4 UUID as defined in {{RFC4122}}. The name MUST NOT contain any ".".
 
-4. Append ".local" to the generated name, creating the mDNS host-name.
+4. Append ".local" to the generated name, creating the mDNS hostname.
 
-5. Register the candidate's mDNS host-name using Multicast DNS.
+5. Register the candidate's mDNS hostname using Multicast DNS.
 
-6. If registering of the mDNS host-name fails, abort these steps. The candidate is not exposed.
+6. If registering of the mDNS hostname fails, abort these steps. The candidate is not exposed.
 
-7. Store the mDNS host-name and its related IP address in the ICE agent for future reuse.
+7. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
 
-8. Replace the IP address of the ICE host candidate with its mDNS host-name. Expose the candidate.
+8. Replace the IP address of the ICE host candidate with its mDNS hostname. Expose the candidate.
+
+The use of any registered mDNS hostnames MUST be limited in time and/or scope. Indefinitely reusing the same mDNS hostname candidate would provide applications an even more reliable tracking mechanism than the private IP addresses that this specification is designed to hide. The use of an mDNS name can be restricted to a browser origin, a peer-connection or any other context the implementation chooses.
 
 If the unique name generated in step #3 does not follow the pattern described, the exposed candidate might be used for fingerprinting.
 
-If there are multiple host candidates with different IP addresses, IPv4 and/or IPv6, each would result in a separate mDNS host-name candidate. The number of mDNS host-candidates itself can provide a fingerprinting dimension. If so desired an ICE agent can expose additional mDNS host-name candidates that are not registered.
+If there are multiple host candidates with different IP addresses, IPv4 and/or IPv6, each would result in a separate mDNS hostname candidate. The number of mDNS host-candidates itself can provide a fingerprinting dimension. If so desired an ICE agent can expose additional mDNS hostname candidates that are not registered.
 
 ICE Candidate Processing {#processing}
 ----------------------------
