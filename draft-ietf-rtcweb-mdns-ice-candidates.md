@@ -130,24 +130,30 @@ For any host ICE candidate gathered by a browsing context as part of {{RFC8445}}
 
 2. If the ICE agent registered the name, replace the IP address of the ICE host candidate with the name with ".local" appended to it. Expose the candidate and abort these steps.
 
-3. Generate a random unique name, typically a version 4 UUID as defined in {{RFC4122}}.
+3. Generate a unique name. The unique name SHOULD consist of a version 4 UUID as defined in {{RFC4122}}. The name MUST NOT contain any ".".
 
-4. Register the unique name using Multicast DNS.
+4. Append ".local" to the generated name, creating the mDNS host-name.
 
-5. If registering of the unique name fails, abort these steps. The candidate is not exposed.
+5. Register the candidate's mDNS host-name using Multicast DNS.
 
-6. Store the name and its related IP address in the ICE agent for future reuse.
+6. If registering of the mDNS host-name fails, abort these steps. The candidate is not exposed.
 
-7. Replace the IP address of the ICE host candidate with the name with ".local" appended to it. Expose the candidate.
+7. Store the mDNS host-name and its related IP address in the ICE agent for future reuse.
+
+8. Replace the IP address of the ICE host candidate with its mDNS host-name. Expose the candidate.
+
+If the unique name generated in step #3 does not follow the pattern described, the exposed candidate might be used for fingerprinting.
+
+If there are multiple host candidates with different IP addresses, IPv4 and/or IPv6, each would result in a separate mDNS host-name candidate. The number of mDNS host-candidates itself can provide a fingerprinting dimension. If so desired an ICE agent can expose additional mDNS host-name candidates that are not registered.
 
 ICE Candidate Processing {#processing}
 ----------------------------
 
 For any remote host ICE candidate received by the ICE agent, the following procedure is used:
 
-1. If the connection-address field value of the ICE candidate does not finish by ".local", process the candidate as defined in {{RFC8445}}.
+1. If the connection-address field value of the ICE candidate does not ends with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
 
-2. Otherwise, remove the ".local" suffix to the value and resolve it using Multicast DNS.
+2. Otherwise, use the value and resolve it using Multicast DNS.
 
 3. If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.
 
