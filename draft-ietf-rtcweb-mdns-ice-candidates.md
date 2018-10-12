@@ -38,7 +38,7 @@ author:
 informative:
   RFC4122:
   RFC8445:
-  RFC6763:
+  RFC6762:
   ICESDP:
     target: https://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp
     title: Session Description Protocol (SDP) Offer/Answer procedures for Interactive Connectivity Establishment (ICE)
@@ -77,7 +77,7 @@ connection, client private IP addresses are included in this candidate
 collection. However, disclosure of these addresses has privacy implications.
 This document describes a way to share local IP addresses with other clients
 while preserving client privacy. This is achieved by obfuscating IP addresses
-with dynamically generated Multicast DNS {{RFC6763}} names.
+with dynamically generated Multicast DNS {{RFC6762}} names.
 
 --- middle
 
@@ -141,7 +141,7 @@ For any remote host ICE candidate received by the ICE agent, the following proce
 
 4. Otherwise, ignore the candidate.
 
-An ICE agent may use a host-name resolver that transparently supports both Multicast and Unicast DNS. In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}}. This leads to the following consideration.
+An ICE agent may use a host-name resolver that transparently supports both Multicast and Unicast DNS. In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}} section 3. This leads to the following consideration.
 
 An ICE agent that supports mDNS candidates MUST support the situation where the host-name resolution resuts in more than one IP address. In this case The ICE agent takes exactly one of the resolved IP addresses and ignores the others. The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
