@@ -20,8 +20,8 @@ author:
     organization: Apple Inc.
     email: youenn@apple.com
  -
-    ins: J. De Borst
-    name: Jeroen De Borst
+    ins: J. de Borst
+    name: Jeroen de Borst
     organization: Google
     email: jeroendb@google.com
  -
