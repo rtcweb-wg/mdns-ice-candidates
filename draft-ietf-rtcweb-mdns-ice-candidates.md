@@ -159,31 +159,15 @@ In that case, the IPv6 address may be used preferably to the IPv4 address.
 
 ### Handling of Peer-Reflexive Remote Candidate
 
-A peer-reflexive remote candidate could be learnt and constructed from the
+A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
-check. The peer-reflexive candidate could share the same address as a host
-remote candidate that will be signaled or has been signaled, received and is in
-the process of name resolution. Therefore, the IP obfuscation with mDNS requires
-special handling of peer-reflexive candidates as follows, in addition to the
-standard procedure of constructing a peer-reflexive remote candidate and the
-elimination procedure of redundant candidates defined in {{RFC8445}}.
-
-1. A new STUN attribute is introduced to ICE connectivity check:
-   HAS-HOSTNAME, which is formally defined in Section {{#stunextension}}. An ICE
-   connectivity check sent from a host candidate must have this attribute set.
-
-2. Upon receiving an ICE connectivity check, of which the source transport
-   address does not match any existing remote candidate, including any host remote
-   candidate with a name with ".local" appended to it, of which the IP address is
-   unresolved, construct a peer-reflexive remote candidate as described in
-   {{RFC8445}}, but add it to a separate list of remote candidates. This list of
-   remote candidates (denoted by list-B) is in addition to the regular one
-   described in {{RFC8445}} (denoted by list-A) and is identically used to form
-   candidate pairs as list-A. However, IP addresses of remote candidates from
-   list-B should not be exposed via APIs detailed in the next section.
-
-3. Perform the elimination procedure described in {{RFC8445}} for candidates in
-   both list-A and list-B of remote candidates.
+check. The peer-reflexive candidate could share the same address as a remote
+host ICE candidate that will be signaled or has been signaled, received and is
+in the process of name resolution. In addition to the elimination procedure
+of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
+remove constructed peer-reflexive remote candidates, the address of any existing
+peer-reflexive remote candidate should not be exposed to Web applications by ICE
+agents that implement this proposal, as detailed in Section {{#guidelines}}.
 
 Privacy Guidelines {#guidelines}
 ============
@@ -199,8 +183,7 @@ When there is no user consent, the following filtering should be done to prevent
 
 3. SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.
 
-4. RTCIceCandidateStats dictionaries exposed to web pages do not contain any 'ip' member if related to a host ICE candidate.
-This also applies to any remote candidate in list-B.
+4. RTCIceCandidateStats dictionaries exposed to web pages do not contain any 'address' member if related to a host ICE candidate or a peer-reflexive remote candidate.
 
 Generated names reuse
 ----------------------------
@@ -218,17 +201,6 @@ The proposed rule is to not register any name using Multicast DNS for any ICE ag
 1. A third-party browser execution context, i.e. a context that is not same origin as the top level execution context.
 
 2. A private browsing execution context.
-
-STUN Extension {#stunextension}
-==============
-
-This proposal defines a new STUN attribute: HAS-HOSTNAME.
-
-The HAS-HOSTNAME attribute in an ICE connectivity check indicates that this
-check is sent from a candidate that has a name with ".local" with appended to
-it. The attribute has no content (the Length field of the attribute is zero);
-it serves as a flag. It has an attribute value of _TBD_.
-
 
 Specification Requirements {#requirements}
 ============
