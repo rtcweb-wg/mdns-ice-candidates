@@ -126,7 +126,7 @@ For any host ICE candidate gathered by a browsing context as part of {{RFC8445}}
 
 7. Replace the IP address of the ICE host candidate with the name with ".local" appended to it. Expose the candidate.
 
-ICE host candidates generated using this procedure SHOULD have an unique mDNS name generated for each host candidate IP address, specifically an ICE agent using an interface with both IPv4 and IPv6 addresses SHOULD expose a different mDNS name for each address.
+ICE host candidates generated using this procedure MUST have an unique mDNS name generated for each host candidate IP address, specifically an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
 
 ICE Candidate Processing {#processing}
 ----------------------------
