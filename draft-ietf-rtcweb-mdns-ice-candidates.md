@@ -130,30 +130,22 @@ For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5
 
 2. If there is a registered a hostname, replace the IP address of the ICE host candidate with the hostname. Expose the candidate and abort these steps.
 
-3. Generate a unique name. The unique name SHOULD consist of a version 4 UUID as defined in {{RFC4122}}. The name MUST NOT contain any ".".
+3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4 UUID as defined in {{RFC4122}}, followed by ".local".
 
-4. Append ".local" to the generated name, creating the mDNS hostname.
+4. Register the candidate's mDNS hostname using Multicast DNS.
 
-5. Register the candidate's mDNS hostname using Multicast DNS.
+5. If registering of the mDNS hostname fails, abort these steps. The candidate is not exposed.
 
-6. If registering of the mDNS hostname fails, abort these steps. The candidate is not exposed.
+6. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
 
-7. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
-
-8. Replace the IP address of the ICE host candidate with its mDNS hostname. Expose the candidate.
-
-The use of any registered mDNS hostnames MUST be limited in time and/or scope. Indefinitely reusing the same mDNS hostname candidate would provide applications an even more reliable tracking mechanism than the private IP addresses that this specification is designed to hide. The use of an mDNS name can be restricted to a browser origin, a peer-connection or any other context the implementation chooses.
-
-If the unique name generated in step #3 does not follow the pattern described, the exposed candidate might be used for fingerprinting.
-
-If there are multiple host candidates with different IP addresses, IPv4 and/or IPv6, each would result in a separate mDNS hostname candidate. The number of mDNS host-candidates itself can provide a fingerprinting dimension. If so desired an ICE agent can expose additional mDNS hostname candidates that are not registered.
+7. Replace the IP address of the ICE host candidate with its mDNS hostname. Expose the candidate.
 
 ICE Candidate Processing {#processing}
 ----------------------------
 
 For any remote host ICE candidate received by the ICE agent, the following procedure is used:
 
-1. If the connection-address field value of the ICE candidate does not ends with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
+1. If the connection-address field value of the ICE candidate does not end with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
 
 2. Otherwise, use the value and resolve it using Multicast DNS.
 
@@ -183,9 +175,14 @@ When there is no user consent, the following filtering should be done to prevent
 Generated names reuse
 ----------------------------
 
-Dynamically generated names can be used to track users if used too often.
-Conversely, registering too many names will also generate useless processing.
-The proposed rule is to create and register a new generated name for a given IP address on a per execution context.
+It is important that use of registered mDNS hostnames is limited in time and/or scope. Indefinitely reusing the same mDNS hostname candidate would provide applications an even more reliable tracking mechanism than the private IP addresses that this specification is designed to hide. The use of registered mDNS hostnames SHOULD be scoped by origin, and have the lifetime of the page.
+
+Fingerprinting
+----------------------------
+
+If the generate mDNS hostname candidate does not follow the pattern described, the exposed candidate might be used for fingerprinting.
+
+If there are multiple host candidates with different IP addresses, IPv4 and/or IPv6, each results in a separate mDNS hostname candidate. The number of mDNS hostname candidates can provide a fingerprinting dimension. If so desired an ICE agent MAY expose additional mDNS hostname candidates that are not registered.
 
 Specific execution contexts
 ----------------------------
