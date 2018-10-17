@@ -71,46 +71,35 @@ informative:
 
 --- abstract
 
-WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.
-To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.
-This is currently used as a way to track users.
-This document describes a way to share IP addresses with other clients while preserving client privacy.
-This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS {{RFC6763}}.
+WebRTC applications collect ICE candidates as part of the process of creating
+peer-to-peer connections. To maximize the probability of a direct peer-to-peer
+connection, client private IP addresses are included in this candidate
+collection. However, disclosure of these addresses has privacy implications.
+This document describes a way to share local IP addresses with other clients
+while preserving client privacy. This is achieved by obfuscating IP addresses
+with dynamically generated Multicast DNS {{RFC6763}} names.
 
 --- middle
 
 Introduction {#problems}
 ============
 
-As detailed in {{IPHandling}}, exposing client private IP addresses allows maximizing the probability to successfully create a connection between two clients.
-For that purpose, {{IPHandling}} default mode is currently mode 2, which exposes client private IP addresses.
-This information is used by many web sites as a way to fingerprint and identify users without their consent.
+As detailed in {{IPHandling}}, exposing client private IP addresses by default
+maximizes the probability of successfully creating direct peer-to-peer
+connection between two clients, but creates a significant surface for user
+fingerprinting. {{IPHandling}} recognizes this issue, but also admits that there
+is no current solution to this problem; implementations that choose to use
+Mode 3 to address the privacy concerns often suffer from failing or suboptimal
+connections in WebRTC applications. This is particularly an issue on unmanaged
+networks, typically homes or small offices, where NAT loopback may not be
+supported.
 
-Implementations can instead rely on mode 3 when no user consent is expressed and switch to mode 2 after user interaction,
-for instance once a user granted the web page access to camera/microphone through navigator.mediaDevices.getUserMedia.
-
-This latter approach supports most common audio/video conference applications
-but leads to failing or suboptimal connections for applications relying solely on data channel.
-This is particularly an issue on unmanaged networks, typically home or small offices where NAT loopback might not be supported.
-
-To overcome the shortcomings of the above two approaches, this document proposes to register dynamically generated names using Multicast DNS when gathering ICE candidates.
-These dynamically generated names are used to replace private IP addresses in host ICE candidates.
-Only clients that can resolve these dynamically generated names using Multicast DNS will get access to the actual client IP address.
-
-Privacy Concerns {#concerns}
-============
-
-The gathering of ICE candidates without user consent is a well-known fingerprinting technique to track users.
-This is particularly a concern when users are connected through a NAT which is a usual configuration.
-In such a case, knowing both the private IP address and the public IP address will usually identify uniquely the user device.
-Additionally, Internet web sites can more easily attack intranet web sites when knowing the intranet IP address range.
-
-A successful WebRTC connection between two peers is also a potential thread to user privacy.
-When a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.
-Browsers often define rules to isolate certain browsing contexts from others.
-For instance, a browsing context in private mode is not expected to share any state or information with another browsing context in the regular mode.
-Similarly, browsers may implement mechanisms like cookie partitioning to isolate third-party iframes browsing contexts.
-Enabling a web application to determine that two contexts run in the same device would defeat some of the protections provided by these mechanisms.
+This document proposes an overall solution to this problem by registering
+ephemeral Multicast DNS names for each local private IP address, and then
+providing those names, rather than the IP addresses, to the web application
+when it gathers ICE candidates. WebRTC implementations resolve these names
+to IP addresses and perform ICE processing as usual, but the actual IP addresses
+are not exposed to the web application.
 
 Principle {#principle}
 ============
@@ -179,12 +168,18 @@ The proposed rule is to create and register a new generated name for a given IP 
 Specific execution contexts
 ----------------------------
 
-Privacy might also be breached if two execution contexts can identify whether they are run in the same device based on a successful peer-to-peer connection.
-The proposed rule is to not register any name using Multicast DNS for any ICE agent belonging to:
+As noted in {{IPHandling}}, privacy may be breached if a web application running
+in two browser contexts can determine whether it is running on the same device.
+While the approach in this document prevents the application from directly
+comparing local private IP addresses, a successful local WebRTC connection
+can also present a threat to user privacy. Specifically, when the latency of a
+WebRTC connection latency is close to zero, the probability is high that the
+two peers are running on the same device.
 
-1. A third-party browser execution context, i.e. a context that is not same origin as the top level execution context.
-
-2. A private browsing execution context.
+To avoid this issue, browsers SHOULD NOT register Multicast DNS names for
+WebRTC applications running in a third-party browser execution context (i.e., a
+context that has a different origin than the top-level execution context), or a
+private browser execution context.
 
 Specification Requirements {#requirements}
 ============
