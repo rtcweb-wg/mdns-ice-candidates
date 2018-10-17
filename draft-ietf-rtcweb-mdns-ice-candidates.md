@@ -126,7 +126,8 @@ For any host ICE candidate gathered by a browsing context as part of {{RFC8445}}
 
 7. Replace the IP address of the ICE host candidate with the name with ".local" appended to it. Expose the candidate.
 
-ICE host candidates generated using this procedure MUST have an unique mDNS name generated for each host candidate IP address, specifically an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
+This procedure ensures that a mDNS name is used to replace only one IP address.
+Specifically an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
 
 ICE Candidate Processing {#processing}
 ----------------------------
@@ -140,6 +141,13 @@ For any remote host ICE candidate received by the ICE agent, the following proce
 3. If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.
 
 4. Otherwise, ignore the candidate.
+
+An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.
+In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}} section 3.
+
+An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
+In this case, the ICE agent takes exactly one of the resolved IP addresses and ignores the others.
+The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
 Privacy Guidelines {#guidelines}
 ============
@@ -163,13 +171,6 @@ Generated names reuse
 Dynamically generated names can be used to track users if used too often.
 Conversely, registering too many names will also generate useless processing.
 The proposed rule is to create and register a new generated name for a given IP address on a per execution context.
-
-Hostnames resolving to multiple IP adresses
-----------------------------
-
-An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS. In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}} section 3.
-
-An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address. In this case the ICE agent takes exactly one of the resolved IP addresses and ignores the others. The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
 Specific execution contexts
 ----------------------------
