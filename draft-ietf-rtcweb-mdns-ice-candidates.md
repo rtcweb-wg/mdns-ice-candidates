@@ -38,7 +38,7 @@ author:
 informative:
   RFC4122:
   RFC8445:
-  RFC6763:
+  RFC6762:
   ICESDP:
     target: https://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp
     title: Session Description Protocol (SDP) Offer/Answer procedures for Interactive Connectivity Establishment (ICE)
@@ -77,7 +77,7 @@ connection, client private IP addresses are included in this candidate
 collection. However, disclosure of these addresses has privacy implications.
 This document describes a way to share local IP addresses with other clients
 while preserving client privacy. This is achieved by obfuscating IP addresses
-with dynamically generated Multicast DNS {{RFC6763}} names.
+with dynamically generated Multicast DNS {{RFC6762}} names.
 
 --- middle
 
@@ -126,6 +126,9 @@ For any host ICE candidate gathered by a browsing context as part of {{RFC8445}}
 
 7. Replace the IP address of the ICE host candidate with the name with ".local" appended to it. Expose the candidate.
 
+This procedure ensures that a mDNS name is used to replace only one IP address.
+Specifically an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
+
 ICE Candidate Processing {#processing}
 ----------------------------
 
@@ -139,8 +142,12 @@ For any remote host ICE candidate received by the ICE agent, the following proce
 
 4. Otherwise, ignore the candidate.
 
-Multicast DNS resolution might end up retrieving both an IPv4 and IPv6 address.
-In that case, the IPv6 address may be used preferably to the IPv4 address.
+An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.
+In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}} section 3.
+
+An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
+In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
+The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
 Privacy Guidelines {#guidelines}
 ============
