@@ -299,7 +299,7 @@ address {
   <meta name="generator" content="xml2rfc version 2.8.4 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
-  <meta name="dct.creator" content="Fablet, Y., De Borst, J., Uberti, J., and Q. Wang" />
+  <meta name="dct.creator" content="Fablet, Y., de Borst, J., Uberti, J., and Q. Wang" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-rtcweb-mdns-ice-candidates-00" />
   <meta name="dct.issued" scheme="ISO8601" content="2018-9-12" />
   <meta name="dct.abstract" content="WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.  To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.  This is currently used as a way to track users.  This document describes a way to share IP addresses with other clients while preserving client privacy.  This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS " />
@@ -322,7 +322,7 @@ address {
 </tr>
 <tr>
 <td class="left">Intended status: Informational</td>
-<td class="right">J. De Borst</td>
+<td class="right">J. de Borst</td>
 </tr>
 <tr>
 <td class="left">Expires: March 16, 2019</td>
@@ -395,29 +395,23 @@ address {
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#problems" id="problems">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">As detailed in <a href="#IPHandling" class="xref">[IPHandling]</a>, exposing client private IP addresses allows maximizing the probability to successfully create a connection between two clients.  This information is also used by many web sites as a way to fingerprint and identify users without their consent.</p>
-<p id="rfc.section.1.p.2">The first approach exposes client private IP addresses by default, as can be seen from websites such as <a href="#IPLeak" class="xref">[IPLeak]</a>.  The second approach implemented in the WebKit engine enforces the following policy:</p>
-<p></p>
-
-<ol>
-<li>By default, use mode 3 as defined in <a href="#IPHandling" class="xref">[IPHandling]</a>: any host ICE candidate is filtered out.</li>
-<li>Use mode 2 as defined in <a href="#IPHandling" class="xref">[IPHandling]</a> if there is an explicit user action to trust the web site: host ICE candidates are exposed to the web site based on the use of navigator.mediaDevices.getUserMedia, which typically prompts the user to grant or deny access to cameras/microphones.</li>
-</ol>
-<p id="rfc.section.1.p.4">The second approach supports most common audio/video conference applications but leads to failing or suboptimal connections for applications relying solely on data channel.  This is particularly an issue on unmanaged networks, typically home or small offices where NAT loopback might not be supported.</p>
-<p id="rfc.section.1.p.5">To overcome the shortcomings of the above two approaches, this document proposes to register dynamically generated names using Multicast DNS when gathering ICE candidates.  These dynamically generated names are used to replace private IP addresses in host ICE candidates.  Only clients that can resolve these dynamically generated names using Multicast DNS will get access to the actual client IP address.</p>
+<p id="rfc.section.1.p.1">As detailed in <a href="#IPHandling" class="xref">[IPHandling]</a>, exposing client private IP addresses allows maximizing the probability to successfully create a connection between two clients.  For that purpose, <a href="#IPHandling" class="xref">[IPHandling]</a> default mode is currently mode 2, which exposes client private IP addresses.  This information is used by many web sites as a way to fingerprint and identify users without their consent.</p>
+<p id="rfc.section.1.p.2">Implementations can instead rely on mode 3 when no user consent is expressed and switch to mode 2 after user interaction, for instance once a user granted the web page access to camera/microphone through navigator.mediaDevices.getUserMedia.</p>
+<p id="rfc.section.1.p.3">This latter approach supports most common audio/video conference applications but leads to failing or suboptimal connections for applications relying solely on data channel.  This is particularly an issue on unmanaged networks, typically home or small offices where NAT loopback might not be supported.</p>
+<p id="rfc.section.1.p.4">To overcome the shortcomings of the above two approaches, this document proposes to register dynamically generated names using Multicast DNS when gathering ICE candidates.  These dynamically generated names are used to replace private IP addresses in host ICE candidates.  Only clients that can resolve these dynamically generated names using Multicast DNS will get access to the actual client IP address.</p>
 <h1 id="rfc.section.2">
 <a href="#rfc.section.2">2.</a> <a href="#concerns" id="concerns">Privacy Concerns</a>
 </h1>
 <p id="rfc.section.2.p.1">The gathering of ICE candidates without user consent is a well-known fingerprinting technique to track users.  This is particularly a concern when users are connected through a NAT which is a usual configuration.  In such a case, knowing both the private IP address and the public IP address will usually identify uniquely the user device.  Additionally, Internet web sites can more easily attack intranet web sites when knowing the intranet IP address range.</p>
-<p id="rfc.section.2.p.2">A successful WebRTC connection between two peers is also a potential thread to user privacy.  When a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.  Browsers often isolate contexts one from the other.  Private browsing mode contexts usually do not share any information with regular browsing contexts.  The WebKit engine isolates third-party iframes in various ways (cookies, ITP) to prevent user tracking.  Enabling a web application to determine that two contexts run in the same device would defeat some of the protections provided by modern browsers.</p>
+<p id="rfc.section.2.p.2">A successful WebRTC connection between two peers is also a potential thread to user privacy.  When a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.  Browsers often define rules to isolate certain browsing contexts from others.  For instance, a browsing context in private mode is not expected to share any state or information with another browsing context in the regular mode.  Similarly, browsers may implement mechanisms like cookie partitioning to isolate third-party iframes browsing contexts.  Enabling a web application to determine that two contexts run in the same device would defeat some of the protections provided by these mechanisms.</p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#principle" id="principle">Principle</a>
 </h1>
-<p id="rfc.section.3.p.1">This section uses the concept of ICE agent as define in <a href="#RFC5245" class="xref">[RFC5245]</a>.  In the remainder of the document, it is assumed that each browser execution context has its own ICE agent.</p>
+<p id="rfc.section.3.p.1">This section uses the concept of ICE agent as define in <a href="#RFC8445" class="xref">[RFC8445]</a>.  In the remainder of the document, it is assumed that each browser execution context has its own ICE agent.</p>
 <h1 id="rfc.section.3.1">
 <a href="#rfc.section.3.1">3.1.</a> <a href="#gathering" id="gathering">ICE Candidate Gathering</a>
 </h1>
-<p id="rfc.section.3.1.p.1">For any host ICE candidate gathered by a browsing context as part of <a href="#RFC5245" class="xref">[RFC5245]</a> section 4.1.1, obfuscation of the candidate is done as follows:</p>
+<p id="rfc.section.3.1.p.1">For any host ICE candidate gathered by a browsing context as part of <a href="#RFC8445" class="xref">[RFC8445]</a> section 5.1.1, obfuscation of the candidate is done as follows:</p>
 <p></p>
 
 <ol>
@@ -436,7 +430,7 @@ address {
 <p></p>
 
 <ol>
-<li>If the connection-address field value of the ICE candidate does not finish by &#8220;.local&#8221;, process the candidate as defined in <a href="#RFC5245" class="xref">[RFC5245]</a>.</li>
+<li>If the connection-address field value of the ICE candidate does not finish by &#8220;.local&#8221;, process the candidate as defined in <a href="#RFC8445" class="xref">[RFC8445]</a>.</li>
 <li>Otherwise, remove the &#8220;.local&#8221; suffix to the value and resolve it using Multicast DNS.</li>
 <li>If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.</li>
 <li>Otherwise, ignore the candidate.</li>
@@ -500,14 +494,14 @@ address {
 <a>Leach, P.</a>, <a>Mealling, M.</a> and <a>R. Salz</a>, "<a href="https://tools.ietf.org/html/rfc4122">A Universally Unique IDentifier (UUID) URN Namespace</a>", RFC 4122, DOI 10.17487/RFC4122, July 2005.</td>
 </tr>
 <tr>
-<td class="reference"><b id="RFC5245">[RFC5245]</b></td>
-<td class="top">
-<a>Rosenberg, J.</a>, "<a href="https://tools.ietf.org/html/rfc5245">Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal for Offer/Answer Protocols</a>", RFC 5245, DOI 10.17487/RFC5245, April 2010.</td>
-</tr>
-<tr>
 <td class="reference"><b id="RFC6763">[RFC6763]</b></td>
 <td class="top">
 <a>Cheshire, S.</a> and <a>M. Krochmal</a>, "<a href="https://tools.ietf.org/html/rfc6763">DNS-Based Service Discovery</a>", RFC 6763, DOI 10.17487/RFC6763, February 2013.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8445">[RFC8445]</b></td>
+<td class="top">
+<a>Keranen, A.</a>, <a>Holmberg, C.</a> and <a>J. Rosenberg</a>, "<a href="https://tools.ietf.org/html/rfc8445">Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal</a>", RFC 8445, DOI 10.17487/RFC8445, July 2018.</td>
 </tr>
 <tr>
 <td class="reference"><b id="WebRTCSpec">[WebRTCSpec]</b></td>
@@ -540,9 +534,9 @@ address {
 </div><div class="avoidbreak">
   <address class="vcard">
 	<span class="vcardline">
-	  <span class="fn">Jeroen De Borst</span> 
+	  <span class="fn">Jeroen de Borst</span> 
 	  <span class="n hidden">
-		<span class="family-name">De Borst</span>
+		<span class="family-name">de Borst</span>
 	  </span>
 	</span>
 	<span class="org vcardline">Google</span>
