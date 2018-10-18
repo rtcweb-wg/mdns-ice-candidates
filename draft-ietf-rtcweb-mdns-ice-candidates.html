@@ -9,80 +9,30 @@
 
   
 <style type="text/css">/*<![CDATA[*/
-@viewport {
-  zoom: 1.0;
-  width: extend-to-zoom;
-}
-@-ms-viewport {
-  width: extend-to-zoom;
-  zoom: 1.0;
-}
-
-@media screen and (min-width: 1024px) {
-  body>ul.toc, body>#rfc\.toc {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    right: calc(50vw - 550px);
-    width: 300px;
-    z-index: 1;
-  }
-  #rfc\.toc {
-    top: 55px;
-    overflow: auto;
-    overscroll-behavior: contain;
-  }
-  ul.toc, #rfc\.toc {
-    overflow: auto;
-    overscroll-behavior: contain;
-  }
-  body>ul.toc {
-    top: 140px;
-  }
-
-  body {
-    padding-right: 350px;
-  }
-}
 
 body {
-  font: 16px "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font: 16px "Helvetica Neue","Open Sans",Helvetica,Calibri,sans-serif;
   color: #333;
   font-size-adjust: 0.5;
   line-height: 24px;
   margin: 75px auto;
-  max-width: 724px;
+  max-width: 624px;
+  padding: 0 5px;
 }
 
-.title, .filename, h1, h2, h3, h4 {
-  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+.title, .filename, h1, h2, h3, h4, h5 {
+  font: 16px "Roboto Condensed","Helvetica Neue","Open Sans",Helvetica,Calibri,sans-serif;
   font-size-adjust: 0.5;
-  font-weight: 500;
+  font-weight: bold;
   color: #333;
   line-height: 100%;
-  margin: 0.8em 0 0.3em;
+  margin: 1.2em 0 0.3em;
 }
-.title { font-size: 36px; }
-h1 { font-size: 36px; }
-h2 { font-size: 24px; }
-h3, h4 { font-size: 18px; }
+.title, #rfc\.title h1 { font-size: 32px; }
+h1, section h1, h2, section h2, section h3, nav h2 { font-size: 20px; }
+h3, section h4, h4, section h5 { font-size: 16px; }
 h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
   color: #333;
-}
-
-ul.toc li {
-  list-style: none;
-  text-indent: -2.5em;
-  padding-left: 2.5em;
-  padding-bottom: 5px;
-  margin: 0;
-}
-ul.toc ul {
-  margin: 0;
-}
-/* xml2rfc nests ul directly inside ul which messes with the style badly */
-ul.toc, ul.toc>ul, ul.toc ul>ul {
-  margin: 0 0 0 1.5em;
 }
 
 table {
@@ -111,28 +61,30 @@ td.reference {
 }
 
 
-table.header {
+table.header, table#rfc\.headerblock {
   width: 100%;
 }
-table.header td {
+table.header td, table#rfc\.headerblock td {
   border: none;
   background-color: transparent;
   color: black;
+  padding: 0;
 }
 .filename {
+  display: block;
   color: rgb(119, 119, 119);
-  font-size: 23px;
+  font-size: 20px;
   font-weight: normal;
-  height: auto;
   line-height: 100%;
+  margin: 10px 0 32px;
 }
 #rfc\.abstract+p, #rfc\.abstract p {
-  font-size: 18px;
-  line-height: 27px%;
+  font-size: 20px;
+  line-height: 28px;
 }
 
 samp, tt, code, pre {
-  font: 11pt consolas, monospace;
+  font: 15px Consolas, monospace;
   font-size-adjust: none;
 }
 pre {
@@ -142,13 +94,15 @@ pre {
   padding: 5px;
   margin: 5px;
 }
-.figure {
+.figure, caption {
   font-style: italic;
   margin: 0 1.5em;
+  text-align: left;
 }
 
 address {
-  margin: 10px 0 0;
+  margin: 16px 2px;
+  line-height: 20px;
 }
 .vcard {
   font-style: normal;
@@ -156,8 +110,8 @@ address {
 .vcardline {
   display: block;
 }
-.vcardline .fn {
-  font-weight: bold;
+.vcardline .fn, address b {
+  font-weight: normal;
 }
 .vcardline .hidden {
   display: none;
@@ -211,15 +165,59 @@ a[href]:hover {
   background-color: #eee;
 }
 
-ol, ul, li, p {
+p, ol, ul, li {
   padding: 0;
-  margin: 0.5em 0 0.5em 2em;
 }
-li, p {
-  margin-left: 0;
+p {
+  margin: 0.5em 0;
+}
+ol, ul {
+  margin: 0.2em 0 0.2em 2em;
+}
+li {
+  margin: 0.2em 0;
 }
 address {
   font-style: normal;
+}
+
+ul.toc ul {
+  margin: 0 0 0 2em;
+}
+ul.toc li {
+  list-style: none;
+  margin: 0;
+}
+
+@media screen and (min-width: 924px) {
+  body {
+    padding-right: 350px;
+  }
+  body>ul.toc, body>#rfc\.toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 500px);
+    width: 300px;
+    z-index: 1;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  body>#rfc\.toc {
+    top: 55px;
+  }
+  body>ul.toc {
+    top: 100px;
+  }
+
+  ul.toc {
+    margin: 0 0 0 4px;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  ul.toc ul {
+    margin-left: 1.2em;
+  }
 }
 
 .github-fork-ribbon-wrapper {
@@ -279,31 +277,31 @@ address {
     position: fixed;
   }
 /*]]>*/</style>
+<meta name="viewport" content="initial-scale=1.0">
 
 
   <link href="#rfc.toc" rel="Contents">
 <link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
-<link href="#rfc.section.2" rel="Chapter" title="2 Privacy Concerns">
-<link href="#rfc.section.3" rel="Chapter" title="3 Principle">
-<link href="#rfc.section.3.1" rel="Chapter" title="3.1 ICE Candidate Gathering">
-<link href="#rfc.section.3.2" rel="Chapter" title="3.2 ICE Candidate Processing">
-<link href="#rfc.section.4" rel="Chapter" title="4 Privacy Guidelines">
-<link href="#rfc.section.4.1" rel="Chapter" title="4.1 APIs leaking IP addresses">
-<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Generated names reuse">
-<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Specific execution contexts">
-<link href="#rfc.section.5" rel="Chapter" title="5 Specification Requirements">
-<link href="#rfc.references" rel="Chapter" title="6 Informative References">
+<link href="#rfc.section.2" rel="Chapter" title="2 Principle">
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 ICE Candidate Gathering">
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 ICE Candidate Processing">
+<link href="#rfc.section.3" rel="Chapter" title="3 Privacy Guidelines">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 APIs leaking IP addresses">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Generated names reuse">
+<link href="#rfc.section.3.3" rel="Chapter" title="3.3 Specific execution contexts">
+<link href="#rfc.section.4" rel="Chapter" title="4 Specification Requirements">
+<link href="#rfc.references" rel="Chapter" title="5 Informative References">
 <link href="#rfc.authors" rel="Chapter">
 
 
   <meta name="generator" content="xml2rfc version 2.8.4 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
-  <meta name="dct.creator" content="Fablet, Y., De Borst, J., Uberti, J., and Q. Wang" />
+  <meta name="dct.creator" content="Fablet, Y., de Borst, J., Uberti, J., and Q. Wang" />
   <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-rtcweb-mdns-ice-candidates-00" />
   <meta name="dct.issued" scheme="ISO8601" content="2018-9-12" />
-  <meta name="dct.abstract" content="WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.  To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.  This is currently used as a way to track users.  This document describes a way to share IP addresses with other clients while preserving client privacy.  This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS " />
-  <meta name="description" content="WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.  To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.  This is currently used as a way to track users.  This document describes a way to share IP addresses with other clients while preserving client privacy.  This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS " />
+  <meta name="dct.abstract" content="WebRTC applications collect ICE candidates as part of the process of creating peer-to-peer connections. To maximize the probability of a direct peer-to-peer connection, client private IP addresses are included in this candidate collection. However, disclosure of these addresses has privacy implications.  This document describes a way to share local IP addresses with other clients while preserving client privacy. This is achieved by obfuscating IP addresses with dynamically generated Multicast DNS " />
+  <meta name="description" content="WebRTC applications collect ICE candidates as part of the process of creating peer-to-peer connections. To maximize the probability of a direct peer-to-peer connection, client private IP addresses are included in this candidate collection. However, disclosure of these addresses has privacy implications.  This document describes a way to share local IP addresses with other clients while preserving client privacy. This is achieved by obfuscating IP addresses with dynamically generated Multicast DNS " />
 
 </head>
 
@@ -322,7 +320,7 @@ address {
 </tr>
 <tr>
 <td class="left">Intended status: Informational</td>
-<td class="right">J. De Borst</td>
+<td class="right">J. de Borst</td>
 </tr>
 <tr>
 <td class="left">Expires: March 16, 2019</td>
@@ -349,7 +347,7 @@ address {
   <span class="filename">draft-ietf-rtcweb-mdns-ice-candidates-00</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
-<p>WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.  To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.  This is currently used as a way to track users.  This document describes a way to share IP addresses with other clients while preserving client privacy.  This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS <a href="#RFC6763" class="xref">[RFC6763]</a>.</p>
+<p>WebRTC applications collect ICE candidates as part of the process of creating peer-to-peer connections. To maximize the probability of a direct peer-to-peer connection, client private IP addresses are included in this candidate collection. However, disclosure of these addresses has privacy implications.  This document describes a way to share local IP addresses with other clients while preserving client privacy. This is achieved by obfuscating IP addresses with dynamically generated Multicast DNS <a href="#RFC6762" class="xref">[RFC6762]</a> names.</p>
 <h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
@@ -366,25 +364,23 @@ address {
 
   	<li>1.   <a href="#rfc.section.1">Introduction</a>
 </li>
-<li>2.   <a href="#rfc.section.2">Privacy Concerns</a>
+<li>2.   <a href="#rfc.section.2">Principle</a>
 </li>
-<li>3.   <a href="#rfc.section.3">Principle</a>
+<ul><li>2.1.   <a href="#rfc.section.2.1">ICE Candidate Gathering</a>
 </li>
-<ul><li>3.1.   <a href="#rfc.section.3.1">ICE Candidate Gathering</a>
+<li>2.2.   <a href="#rfc.section.2.2">ICE Candidate Processing</a>
 </li>
-<li>3.2.   <a href="#rfc.section.3.2">ICE Candidate Processing</a>
+</ul><li>3.   <a href="#rfc.section.3">Privacy Guidelines</a>
 </li>
-</ul><li>4.   <a href="#rfc.section.4">Privacy Guidelines</a>
+<ul><li>3.1.   <a href="#rfc.section.3.1">APIs leaking IP addresses</a>
 </li>
-<ul><li>4.1.   <a href="#rfc.section.4.1">APIs leaking IP addresses</a>
+<li>3.2.   <a href="#rfc.section.3.2">Generated names reuse</a>
 </li>
-<li>4.2.   <a href="#rfc.section.4.2">Generated names reuse</a>
+<li>3.3.   <a href="#rfc.section.3.3">Specific execution contexts</a>
 </li>
-<li>4.3.   <a href="#rfc.section.4.3">Specific execution contexts</a>
+</ul><li>4.   <a href="#rfc.section.4">Specification Requirements</a>
 </li>
-</ul><li>5.   <a href="#rfc.section.5">Specification Requirements</a>
-</li>
-<li>6.   <a href="#rfc.references">Informative References</a>
+<li>5.   <a href="#rfc.references">Informative References</a>
 </li>
 <li><a href="#rfc.authors">Authors' Addresses</a>
 </li>
@@ -395,29 +391,16 @@ address {
   <h1 id="rfc.section.1">
 <a href="#rfc.section.1">1.</a> <a href="#problems" id="problems">Introduction</a>
 </h1>
-<p id="rfc.section.1.p.1">As detailed in <a href="#IPHandling" class="xref">[IPHandling]</a>, exposing client private IP addresses allows maximizing the probability to successfully create a connection between two clients.  This information is also used by many web sites as a way to fingerprint and identify users without their consent.</p>
-<p id="rfc.section.1.p.2">The first approach exposes client private IP addresses by default, as can be seen from websites such as <a href="#IPLeak" class="xref">[IPLeak]</a>.  The second approach implemented in the WebKit engine enforces the following policy:</p>
-<p></p>
-
-<ol>
-<li>By default, use mode 3 as defined in <a href="#IPHandling" class="xref">[IPHandling]</a>: any host ICE candidate is filtered out.</li>
-<li>Use mode 2 as defined in <a href="#IPHandling" class="xref">[IPHandling]</a> if there is an explicit user action to trust the web site: host ICE candidates are exposed to the web site based on the use of navigator.mediaDevices.getUserMedia, which typically prompts the user to grant or deny access to cameras/microphones.</li>
-</ol>
-<p id="rfc.section.1.p.4">The second approach supports most common audio/video conference applications but leads to failing or suboptimal connections for applications relying solely on data channel.  This is particularly an issue on unmanaged networks, typically home or small offices where NAT loopback might not be supported.</p>
-<p id="rfc.section.1.p.5">To overcome the shortcomings of the above two approaches, this document proposes to register dynamically generated names using Multicast DNS when gathering ICE candidates.  These dynamically generated names are used to replace private IP addresses in host ICE candidates.  Only clients that can resolve these dynamically generated names using Multicast DNS will get access to the actual client IP address.</p>
+<p id="rfc.section.1.p.1">As detailed in <a href="#IPHandling" class="xref">[IPHandling]</a>, exposing client private IP addresses by default maximizes the probability of successfully creating direct peer-to-peer connection between two clients, but creates a significant surface for user fingerprinting. <a href="#IPHandling" class="xref">[IPHandling]</a> recognizes this issue, but also admits that there is no current solution to this problem; implementations that choose to use Mode 3 to address the privacy concerns often suffer from failing or suboptimal connections in WebRTC applications. This is particularly an issue on unmanaged networks, typically homes or small offices, where NAT loopback may not be supported.</p>
+<p id="rfc.section.1.p.2">This document proposes an overall solution to this problem by registering ephemeral Multicast DNS names for each local private IP address, and then providing those names, rather than the IP addresses, to the web application when it gathers ICE candidates. WebRTC implementations resolve these names to IP addresses and perform ICE processing as usual, but the actual IP addresses are not exposed to the web application.</p>
 <h1 id="rfc.section.2">
-<a href="#rfc.section.2">2.</a> <a href="#concerns" id="concerns">Privacy Concerns</a>
+<a href="#rfc.section.2">2.</a> <a href="#principle" id="principle">Principle</a>
 </h1>
-<p id="rfc.section.2.p.1">The gathering of ICE candidates without user consent is a well-known fingerprinting technique to track users.  This is particularly a concern when users are connected through a NAT which is a usual configuration.  In such a case, knowing both the private IP address and the public IP address will usually identify uniquely the user device.  Additionally, Internet web sites can more easily attack intranet web sites when knowing the intranet IP address range.</p>
-<p id="rfc.section.2.p.2">A successful WebRTC connection between two peers is also a potential thread to user privacy.  When a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.  Browsers often isolate contexts one from the other.  Private browsing mode contexts usually do not share any information with regular browsing contexts.  The WebKit engine isolates third-party iframes in various ways (cookies, ITP) to prevent user tracking.  Enabling a web application to determine that two contexts run in the same device would defeat some of the protections provided by modern browsers.</p>
-<h1 id="rfc.section.3">
-<a href="#rfc.section.3">3.</a> <a href="#principle" id="principle">Principle</a>
+<p id="rfc.section.2.p.1">This section uses the concept of ICE agent as define in <a href="#RFC8445" class="xref">[RFC8445]</a>.  In the remainder of the document, it is assumed that each browser execution context has its own ICE agent.</p>
+<h1 id="rfc.section.2.1">
+<a href="#rfc.section.2.1">2.1.</a> <a href="#gathering" id="gathering">ICE Candidate Gathering</a>
 </h1>
-<p id="rfc.section.3.p.1">This section uses the concept of ICE agent as define in <a href="#RFC5245" class="xref">[RFC5245]</a>.  In the remainder of the document, it is assumed that each browser execution context has its own ICE agent.</p>
-<h1 id="rfc.section.3.1">
-<a href="#rfc.section.3.1">3.1.</a> <a href="#gathering" id="gathering">ICE Candidate Gathering</a>
-</h1>
-<p id="rfc.section.3.1.p.1">For any host ICE candidate gathered by a browsing context as part of <a href="#RFC5245" class="xref">[RFC5245]</a> section 4.1.1, obfuscation of the candidate is done as follows:</p>
+<p id="rfc.section.2.1.p.1">For any host ICE candidate gathered by a browsing context as part of <a href="#RFC8445" class="xref">[RFC8445]</a> section 5.1.1, obfuscation of the candidate is done as follows:</p>
 <p></p>
 
 <ol>
@@ -429,26 +412,28 @@ address {
 <li>Store the name and its related IP address in the ICE agent for future reuse.</li>
 <li>Replace the IP address of the ICE host candidate with the name with &#8220;.local&#8221; appended to it. Expose the candidate.</li>
 </ol>
-<h1 id="rfc.section.3.2">
-<a href="#rfc.section.3.2">3.2.</a> <a href="#processing" id="processing">ICE Candidate Processing</a>
+<p id="rfc.section.2.1.p.3">This procedure ensures that a mDNS name is used to replace only one IP address.  Specifically an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.</p>
+<h1 id="rfc.section.2.2">
+<a href="#rfc.section.2.2">2.2.</a> <a href="#processing" id="processing">ICE Candidate Processing</a>
 </h1>
-<p id="rfc.section.3.2.p.1">For any remote host ICE candidate received by the ICE agent, the following procedure is used:</p>
+<p id="rfc.section.2.2.p.1">For any remote host ICE candidate received by the ICE agent, the following procedure is used:</p>
 <p></p>
 
 <ol>
-<li>If the connection-address field value of the ICE candidate does not finish by &#8220;.local&#8221;, process the candidate as defined in <a href="#RFC5245" class="xref">[RFC5245]</a>.</li>
+<li>If the connection-address field value of the ICE candidate does not finish by &#8220;.local&#8221;, process the candidate as defined in <a href="#RFC8445" class="xref">[RFC8445]</a>.</li>
 <li>Otherwise, remove the &#8220;.local&#8221; suffix to the value and resolve it using Multicast DNS.</li>
 <li>If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.</li>
 <li>Otherwise, ignore the candidate.</li>
 </ol>
-<p id="rfc.section.3.2.p.3">Multicast DNS resolution might end up retrieving both an IPv4 and IPv6 address.  In that case, the IPv6 address may be used preferably to the IPv4 address.</p>
-<h1 id="rfc.section.4">
-<a href="#rfc.section.4">4.</a> <a href="#guidelines" id="guidelines">Privacy Guidelines</a>
+<p id="rfc.section.2.2.p.3">An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.  In this case the resolution of a &#8220;.local&#8221; name may happen through Unicast DNS, see <a href="#RFC6762" class="xref">[RFC6762]</a> section 3.</p>
+<p id="rfc.section.2.2.p.4">An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.  In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.  The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.</p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#guidelines" id="guidelines">Privacy Guidelines</a>
 </h1>
-<h1 id="rfc.section.4.1">
-<a href="#rfc.section.4.1">4.1.</a> <a href="#apis-leaking-ip-addresses" id="apis-leaking-ip-addresses">APIs leaking IP addresses</a>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#apis-leaking-ip-addresses" id="apis-leaking-ip-addresses">APIs leaking IP addresses</a>
 </h1>
-<p id="rfc.section.4.1.p.1">When there is no user consent, the following filtering should be done to prevent private IP address leakage:</p>
+<p id="rfc.section.3.1.p.1">When there is no user consent, the following filtering should be done to prevent private IP address leakage:</p>
 <p></p>
 
 <ol>
@@ -457,28 +442,23 @@ address {
 <li>SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.</li>
 <li>RTCIceCandidateStats dictionaries exposed to web pages do not contain any &#8216;ip&#8217; member if related to a host ICE candidate.</li>
 </ol>
-<h1 id="rfc.section.4.2">
-<a href="#rfc.section.4.2">4.2.</a> <a href="#generated-names-reuse" id="generated-names-reuse">Generated names reuse</a>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#generated-names-reuse" id="generated-names-reuse">Generated names reuse</a>
 </h1>
-<p id="rfc.section.4.2.p.1">Dynamically generated names can be used to track users if used too often.  Conversely, registering too many names will also generate useless processing.  The proposed rule is to create and register a new generated name for a given IP address on a per execution context.</p>
-<h1 id="rfc.section.4.3">
-<a href="#rfc.section.4.3">4.3.</a> <a href="#specific-execution-contexts" id="specific-execution-contexts">Specific execution contexts</a>
+<p id="rfc.section.3.2.p.1">Dynamically generated names can be used to track users if used too often.  Conversely, registering too many names will also generate useless processing.  The proposed rule is to create and register a new generated name for a given IP address on a per execution context.</p>
+<h1 id="rfc.section.3.3">
+<a href="#rfc.section.3.3">3.3.</a> <a href="#specific-execution-contexts" id="specific-execution-contexts">Specific execution contexts</a>
 </h1>
-<p id="rfc.section.4.3.p.1">Privacy might also be breached if two execution contexts can identify whether they are run in the same device based on a successful peer-to-peer connection.  The proposed rule is to not register any name using Multicast DNS for any ICE agent belonging to:</p>
-<p></p>
-
-<ol>
-<li>A third-party browser execution context, i.e. a context that is not same origin as the top level execution context.</li>
-<li>A private browsing execution context.</li>
-</ol>
-<h1 id="rfc.section.5">
-<a href="#rfc.section.5">5.</a> <a href="#requirements" id="requirements">Specification Requirements</a>
+<p id="rfc.section.3.3.p.1">As noted in <a href="#IPHandling" class="xref">[IPHandling]</a>, privacy may be breached if a web application running in two browser contexts can determine whether it is running on the same device.  While the approach in this document prevents the application from directly comparing local private IP addresses, a successful local WebRTC connection can also present a threat to user privacy. Specifically, when the latency of a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.</p>
+<p id="rfc.section.3.3.p.2">To avoid this issue, browsers SHOULD NOT register Multicast DNS names for WebRTC applications running in a third-party browser execution context (i.e., a context that has a different origin than the top-level execution context), or a private browser execution context.</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#requirements" id="requirements">Specification Requirements</a>
 </h1>
-<p id="rfc.section.5.p.1">The proposal relies on identifying and resolving any Multicast DNS based ICE candidates as part of adding/processing a remote candidate.  <a href="#ICESDP" class="xref">[ICESDP]</a> section 4.1 could be updated to explicitly allow Multicast DNS names in the connection-address field.</p>
-<p id="rfc.section.5.p.2">The proposal relies on adding the ability to register Multicast DNS names at ICE gathering time.  This could be described in <a href="#ICESDP" class="xref">[ICESDP]</a> and/or <a href="#WebRTCSpec" class="xref">[WebRTCSpec]</a>.</p>
-<p id="rfc.section.5.p.3">The proposal allows updating <a href="#IPHandling" class="xref">[IPHandling]</a> so that mode 2 is not the mode used by default when user consent is not required.  Instead, the default mode could be defined as mode 3 with Multicast DNS based ICE candidates.</p>
+<p id="rfc.section.4.p.1">The proposal relies on identifying and resolving any Multicast DNS based ICE candidates as part of adding/processing a remote candidate.  <a href="#ICESDP" class="xref">[ICESDP]</a> section 4.1 could be updated to explicitly allow Multicast DNS names in the connection-address field.</p>
+<p id="rfc.section.4.p.2">The proposal relies on adding the ability to register Multicast DNS names at ICE gathering time.  This could be described in <a href="#ICESDP" class="xref">[ICESDP]</a> and/or <a href="#WebRTCSpec" class="xref">[WebRTCSpec]</a>.</p>
+<p id="rfc.section.4.p.3">The proposal allows updating <a href="#IPHandling" class="xref">[IPHandling]</a> so that mode 2 is not the mode used by default when user consent is not required.  Instead, the default mode could be defined as mode 3 with Multicast DNS based ICE candidates.</p>
 <h1 id="rfc.references">
-<a href="#rfc.references">6.</a> Informative References</h1>
+<a href="#rfc.references">5.</a> Informative References</h1>
 <table><tbody>
 <tr>
 <td class="reference"><b id="ICESDP">[ICESDP]</b></td>
@@ -500,14 +480,14 @@ address {
 <a>Leach, P.</a>, <a>Mealling, M.</a> and <a>R. Salz</a>, "<a href="https://tools.ietf.org/html/rfc4122">A Universally Unique IDentifier (UUID) URN Namespace</a>", RFC 4122, DOI 10.17487/RFC4122, July 2005.</td>
 </tr>
 <tr>
-<td class="reference"><b id="RFC5245">[RFC5245]</b></td>
+<td class="reference"><b id="RFC6762">[RFC6762]</b></td>
 <td class="top">
-<a>Rosenberg, J.</a>, "<a href="https://tools.ietf.org/html/rfc5245">Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal for Offer/Answer Protocols</a>", RFC 5245, DOI 10.17487/RFC5245, April 2010.</td>
+<a>Cheshire, S.</a> and <a>M. Krochmal</a>, "<a href="https://tools.ietf.org/html/rfc6762">Multicast DNS</a>", RFC 6762, DOI 10.17487/RFC6762, February 2013.</td>
 </tr>
 <tr>
-<td class="reference"><b id="RFC6763">[RFC6763]</b></td>
+<td class="reference"><b id="RFC8445">[RFC8445]</b></td>
 <td class="top">
-<a>Cheshire, S.</a> and <a>M. Krochmal</a>, "<a href="https://tools.ietf.org/html/rfc6763">DNS-Based Service Discovery</a>", RFC 6763, DOI 10.17487/RFC6763, February 2013.</td>
+<a>Keranen, A.</a>, <a>Holmberg, C.</a> and <a>J. Rosenberg</a>, "<a href="https://tools.ietf.org/html/rfc8445">Interactive Connectivity Establishment (ICE): A Protocol for Network Address Translator (NAT) Traversal</a>", RFC 8445, DOI 10.17487/RFC8445, July 2018.</td>
 </tr>
 <tr>
 <td class="reference"><b id="WebRTCSpec">[WebRTCSpec]</b></td>
@@ -540,9 +520,9 @@ address {
 </div><div class="avoidbreak">
   <address class="vcard">
 	<span class="vcardline">
-	  <span class="fn">Jeroen De Borst</span> 
+	  <span class="fn">Jeroen de Borst</span> 
 	  <span class="n hidden">
-		<span class="family-name">De Borst</span>
+		<span class="family-name">de Borst</span>
 	  </span>
 	</span>
 	<span class="org vcardline">Google</span>

@@ -38,7 +38,7 @@ author:
 informative:
   RFC4122:
   RFC8445:
-  RFC6763:
+  RFC6762:
   ICESDP:
     target: https://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp
     title: Session Description Protocol (SDP) Offer/Answer procedures for Interactive Connectivity Establishment (ICE)
@@ -71,90 +71,103 @@ informative:
 
 --- abstract
 
-WebRTC applications rely on ICE candidates to enable peer-to-peer connections between clients in as many network configurations as possible.
-To maximize the probability to create a direct peer-to-peer connection, client private IP addresses are often exposed without user consent.
-This is currently used as a way to track users.
-This document describes a way to share IP addresses with other clients while preserving client privacy.
-This is achieved by obfuscating IP addresses using dynamically generated names resolvable through Multicast DNS {{RFC6763}}.
+WebRTC applications collect ICE candidates as part of the process of creating
+peer-to-peer connections. To maximize the probability of a direct peer-to-peer
+connection, client private IP addresses are included in this candidate
+collection. However, disclosure of these addresses has privacy implications.
+This document describes a way to share local IP addresses with other clients
+while preserving client privacy. This is achieved by obfuscating IP addresses
+with dynamically generated Multicast DNS (mDNS) {{RFC6762}} names.
 
 --- middle
 
 Introduction {#problems}
 ============
 
-As detailed in {{IPHandling}}, exposing client private IP addresses allows maximizing the probability to successfully create a connection between two clients.
-This information is also used by many web sites as a way to fingerprint and identify users without their consent.
+As detailed in {{IPHandling}}, exposing client private IP addresses by default
+maximizes the probability of successfully creating direct peer-to-peer
+connection between two clients, but creates a significant surface for user
+fingerprinting. {{IPHandling}} recognizes this issue, but also admits that there
+is no current solution to this problem; implementations that choose to use
+Mode 3 to address the privacy concerns often suffer from failing or suboptimal
+connections in WebRTC applications. This is particularly an issue on unmanaged
+networks, typically homes or small offices, where NAT loopback may not be
+supported.
 
-The first approach exposes client private IP addresses by default, as can be seen from websites such as {{IPLeak}}.
-The second approach implemented in the WebKit engine enforces the following policy:
-
-1. By default, use mode 3 as defined in {{IPHandling}}: any host ICE candidate is filtered out.
-
-2. Use mode 2 as defined in {{IPHandling}} if there is an explicit user action to trust the web site: host ICE candidates are exposed to the web site based on the use of navigator.mediaDevices.getUserMedia, which typically prompts the user to grant or deny access to cameras/microphones.
-
-The second approach supports most common audio/video conference applications
-but leads to failing or suboptimal connections for applications relying solely on data channel.
-This is particularly an issue on unmanaged networks, typically home or small offices where NAT loopback might not be supported.
-
-To overcome the shortcomings of the above two approaches, this document proposes to register dynamically generated names using Multicast DNS when gathering ICE candidates.
-These dynamically generated names are used to replace private IP addresses in host ICE candidates.
-Only clients that can resolve these dynamically generated names using Multicast DNS will get access to the actual client IP address.
-
-Privacy Concerns {#concerns}
-============
-
-The gathering of ICE candidates without user consent is a well-known fingerprinting technique to track users.
-This is particularly a concern when users are connected through a NAT which is a usual configuration.
-In such a case, knowing both the private IP address and the public IP address will usually identify uniquely the user device.
-Additionally, Internet web sites can more easily attack intranet web sites when knowing the intranet IP address range.
-
-A successful WebRTC connection between two peers is also a potential thread to user privacy.
-When a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.
-Browsers often isolate contexts one from the other.
-Private browsing mode contexts usually do not share any information with regular browsing contexts.
-The WebKit engine isolates third-party iframes in various ways (cookies, ITP) to prevent user tracking.
-Enabling a web application to determine that two contexts run in the same device would defeat some of the protections provided by modern browsers.
+This document proposes an overall solution to this problem by registering
+ephemeral mDNS names for each local private IP address, and then
+providing those names, rather than the IP addresses, to the web application
+when it gathers ICE candidates. WebRTC implementations resolve these names
+to IP addresses and perform ICE processing as usual, but the actual IP addresses
+are not exposed to the web application.
 
 Principle {#principle}
 ============
 
 This section uses the concept of ICE agent as define in {{RFC8445}}.
-In the remainder of the document, it is assumed that each browsing context has its own ICE agent.
+In the remainder of the document, it is assumed that each browser execution context has its own ICE agent.
 
 ICE Candidate Gathering {#gathering}
 ----------------------------
 
-For any host ICE candidate gathered by a browsing context as part of {{RFC8445}} section 5.1.1, obfuscation of the candidate is done as follows:
+For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5.1.1, obfuscation of the candidate is done as follows:
 
-1. Check whether the context ICE agent registered a name resolving to the host ICE candidate IP address.
+1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE host candidate's IP address. If one exists, skip ahead to Step 6.
 
-2. If the ICE agent registered the name, replace the IP address of the host ICE candidate with the name with ".local" appended to it. Expose the candidate and abort these steps.
+2. If there is a registered hostname, replace the IP address of the ICE host candidate with the hostname. Expose the candidate and abort these steps.
 
-3. Generate a random unique name, typically a version 4 UUID as defined in {{RFC4122}}.
+3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4 UUID as defined in {{RFC4122}}, followed by ".local".
 
-4. Register the unique name using Multicast DNS.
+4. Register the candidate's mDNS hostname as defined in {{RFC6762}}.
 
-5. If registering of the unique name fails, abort these steps. The candidate is not exposed.
+5. If registering of the mDNS hostname fails, abort these steps. The candidate is not exposed.
 
-6. Store the name and its related IP address in the ICE agent for future reuse.
+6. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
 
-7. Replace the IP address of the host ICE candidate with the name with ".local" appended to it. Expose the candidate.
+7. Replace the IP address of the ICE host candidate with its mDNS hostname. Expose the candidate.
+
+An ICE agent can implement this procedure in any way so long as it produces equivalent results to this procedure.
+
+An implementation may for instance pre-register mDNS hostnames by executing steps 3 to 5 and prepopulate an ICE agent accordingly.
+By doing so, only steps 1 and 2 of the above procedure will be executed at the time of gathering candidates.
+
+An implementation may also detect that mDNS is not supported by the available network interfaces.
+The ICE agent may skip step 3 and 4 and directly decide to not expose the host candidate.
+
+This procedure ensures that a mDNS name is used to replace only one IP address.
+Specifically an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
 
 ICE Candidate Processing {#processing}
 ----------------------------
 
 For any remote host ICE candidate received by the ICE agent, the following procedure is used:
 
-1. If the connection-address field value of the ICE candidate does not finish by ".local", process the candidate as defined in {{RFC8445}}.
+1. If the connection-address field value of the ICE candidate does not end with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
 
-2. Otherwise, remove the ".local" suffix to the value and resolve it using Multicast DNS.
+2. Otherwise, resolve the candidate using mDNS.
 
-3. If it resolves to an IP address, replace the value of the host ICE candidate by the resolved IP address and continue processing of the candidate.
+3. If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.
 
 4. Otherwise, ignore the candidate.
 
-Multicast DNS resolution might end up retrieving both an IPv4 and IPv6 address.
-In that case, the IPv6 address may be used preferably to the IPv4 address.
+An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.
+In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}} section 3.
+
+An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
+In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
+The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
+
+### Handling of Peer-Reflexive Remote Candidate
+
+A peer-reflexive remote candidate could be learned and constructed from the
+source transport address of the STUN Binding request as an ICE connectivity
+check. The peer-reflexive candidate could share the same address as a remote
+host ICE candidate that will be signaled or has been signaled, received and is
+in the process of name resolution. In addition to the elimination procedure
+of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
+remove constructed peer-reflexive remote candidates, the address of any existing
+peer-reflexive remote candidate should not be exposed to Web applications by ICE
+agents that implement this proposal, as detailed in Section {{#guidelines}}.
 
 Privacy Guidelines {#guidelines}
 ============
@@ -170,25 +183,32 @@ When there is no user consent, the following filtering should be done to prevent
 
 3. SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.
 
-4. RTCIceCandidateStats dictionaries exposed to web pages do not contain any 'ip' member if related to a host ICE candidate.
+4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
 Generated names reuse
 ----------------------------
 
-Dynamically generated names can be used to track users if used too often.
-Conversely, registering too many names will also generate useless processing or
-flood the local network with mDNS messages, as detailed in Section {{#security}}.
-The proposed rule is to create and register a new generated name for a given IP address per browsing context.
+It is important that use of registered mDNS hostnames is limited in time and/or scope. Indefinitely reusing the same mDNS hostname candidate would provide applications an even more reliable tracking mechanism than the private IP addresses that this specification is designed to hide. The use of registered mDNS hostnames SHOULD be scoped by origin, and have the lifetime of the page.
 
-Specific browsing contexts
+If the generated mDNS hostname candidate does not follow the pattern described, the exposed candidate might be used for fingerprinting.
+
+If there are multiple host candidates with different IP addresses, IPv4 and/or IPv6, each results in a separate mDNS hostname candidate. The number of mDNS hostname candidates can provide a fingerprinting dimension. If so desired an ICE agent MAY expose additional mDNS hostname candidates that are not registered.
+
+Specific execution contexts
 ----------------------------
 
-Privacy might also be breached if two browsing contexts can identify whether they are run in the same device based on a successful peer-to-peer connection.
-The proposed rule is to not register any name using Multicast DNS for any ICE agent belonging to:
+As noted in {{IPHandling}}, privacy may be breached if a web application running
+in two browser contexts can determine whether it is running on the same device.
+While the approach in this document prevents the application from directly
+comparing local private IP addresses, a successful local WebRTC connection
+can also present a threat to user privacy. Specifically, when the latency of a
+WebRTC connection latency is close to zero, the probability is high that the
+two peers are running on the same device.
 
-1. A third-party browsing context, i.e. a context that is not same origin as the top level browsing context.
-
-2. A private browsing context.
+To avoid this issue, browsers SHOULD NOT register mDNS names for
+WebRTC applications running in a third-party browser execution context (i.e., a
+context that has a different origin than the top-level execution context), or a
+private browser execution context.
 
 Security Considerations {#security}
 ======================
@@ -206,22 +226,22 @@ resolving mDNS names. In particular,
 announcing responses ({{RFC6762}, Section 8}), and this is performed at the
 beginning of ICE gathering;
 
-- the addition of remote host ICE candidates with mDNS names generates mDNS
+- the addition of remote ICE host candidates with mDNS names generates mDNS
 queries for names of each candidate;
 
-- the removal of names could happen when the browsing context of the ICE agent
+- the removal of names could happen when the execution context of the ICE agent
 is destroyed in an implementation, and goodbye responses should be sent to
 invalidate records generated by the ICE agent in the local network
 ({{RFC6762}}, Section 10.1).
 
 A malicious Web application could flood the local network with mDNS messages by:
 
-- creating browsing contexts that create ICE agents and start gathering of
-  local host ICE candidates;
+- creating execution contexts that create ICE agents and start gathering of
+  local ICE host candidates;
 
 - destroying these local candidates soon after the name registration is done;
 
-- adding fictitious remote host ICE candidates with mDNS names.
+- adding fictitious remote ICE host candidates with mDNS names.
 
 
 {{RFC6762}} defines a per-record multicast rate limiting rule, in which a given
@@ -239,7 +259,7 @@ Malicious Responses to Deny Name Registration
 If the optional probing queries are implemented for the name registration, a
 malicious endpoint in the local network, which is capable of responding mDNS
 queries, could send responses to block the use of the generated names. This
-would lead to the discarding of this host ICE candidate as in Step 5 in Section
+would lead to the discarding of this ICE host candidate as in Step 5 in Section
 {{#gathering}}.
 
 The above attack can be mitigated by skipping the probing when registering a
@@ -248,7 +268,7 @@ randomly generated for the probabilistic uniqueness (e.g. a version 4 UUID) in
 Step 3 in Section {{#gathering}}. However, a similar attack can be performed by
 exploiting the negative responses (defined in {{RFC6762}}, Section 8.1), in
 which NSEC resource records are sent to claim the nonexistence of records
-related to the gathered host ICE candidates.
+related to the gathered ICE host candidates.
 
 The existence of malicious endpoints in the local network poses a generic
 threat, and requires dedicated protocol suites to mitigate, which is beyond the
@@ -257,11 +277,11 @@ scope of this proposal.
 Specification Requirements {#requirements}
 ============
 
-The proposal relies on identifying and resolving any Multicast DNS based ICE candidates as part of adding/processing a remote candidate.
-{{ICESDP}} section 4.1 could be updated to explicitly allow Multicast DNS names in the connection-address field.
+The proposal relies on identifying and resolving any mDNS-based ICE candidates as part of adding/processing a remote candidate.
+{{ICESDP}} section 4.1 could be updated to explicitly allow mDNS names in the connection-address field.
 
-The proposal relies on adding the ability to register Multicast DNS names at ICE gathering time.
+The proposal relies on adding the ability to register mDNS names at ICE gathering time.
 This could be described in {{ICESDP}} and/or {{WebRTCSpec}}.
 
 The proposal allows updating {{IPHandling}} so that mode 2 is not the mode used by default when user consent is not required.
-Instead, the default mode could be defined as mode 3 with Multicast DNS based ICE candidates.
+Instead, the default mode could be defined as mode 3 with mDNS-based ICE candidates.
