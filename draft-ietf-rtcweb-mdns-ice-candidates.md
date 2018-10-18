@@ -112,9 +112,9 @@ ICE Candidate Gathering {#gathering}
 
 For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5.1.1, obfuscation of the candidate is done as follows:
 
-1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE host candidate's IP address. If one exists, skip ahead to Step 6.
+1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
 
-2. If there is a registered hostname, replace the IP address of the ICE host candidate with the hostname. Expose the candidate and abort these steps.
+2. If there is a registered hostname, replace the IP address of the ICE candidate with the hostname. Expose the candidate and abort these steps.
 
 3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4 UUID as defined in {{RFC4122}}, followed by ".local".
 
@@ -124,7 +124,7 @@ For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5
 
 6. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
 
-7. Replace the IP address of the ICE host candidate with its mDNS hostname. Expose the candidate.
+7. Replace the IP address of the ICE candidate with its mDNS hostname. Expose the candidate.
 
 An ICE agent can implement this procedure in any way so long as it produces equivalent results to this procedure.
 
@@ -140,13 +140,13 @@ Specifically an ICE agent using an interface with both IPv4 and IPv6 addresses M
 ICE Candidate Processing {#processing}
 ----------------------------
 
-For any remote ICE host candidate received by the ICE agent, the following procedure is used:
+For any remote ICE candidate received by the ICE agent, the following procedure is used:
 
 1. If the connection-address field value of the ICE candidate does not end with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
 
 2. Otherwise, resolve the candidate using mDNS.
 
-3. If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.
+3. If it resolves to an IP address, replace the value of the ICE candidate by the resolved IP address and continue processing of the candidate.
 
 4. Otherwise, ignore the candidate.
 
@@ -162,7 +162,7 @@ The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwi
 A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
 check. The peer-reflexive candidate could share the same address as a remote
-ICE host candidate that will be signaled or has been signaled, received and is
+ICE candidate that will be signaled or has been signaled, received and is
 in the process of name resolution. In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
@@ -177,11 +177,11 @@ APIs leaking IP addresses
 
 When there is no user consent, the following filtering should be done to prevent private IP address leakage:
 
-1. ICE host candidates with an IP address are not exposed as ICE candidate events.
+1. ICE candidates with an IP address are not exposed as ICE candidate events.
 
 2. Server reflexive ICE candidate raddr field is set to 0.0.0.0 and rport to 0.
 
-3. SDP does not expose any a=candidate line corresponding to a ICE host candidate which contains an IP address.
+3. SDP does not expose any a=candidate line corresponding to an ICE candidate which contains an IP address.
 
 4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
