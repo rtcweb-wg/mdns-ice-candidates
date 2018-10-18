@@ -157,6 +157,18 @@ An ICE agent that supports mDNS candidates MUST support the situation where the 
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
+### Handling of Peer-Reflexive Remote Candidate
+
+A peer-reflexive remote candidate could be learned and constructed from the
+source transport address of the STUN Binding request as an ICE connectivity
+check. The peer-reflexive candidate could share the same address as a remote
+host ICE candidate that will be signaled or has been signaled, received and is
+in the process of name resolution. In addition to the elimination procedure
+of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
+remove constructed peer-reflexive remote candidates, the address of any existing
+peer-reflexive remote candidate should not be exposed to Web applications by ICE
+agents that implement this proposal, as detailed in Section {{#guidelines}}.
+
 Privacy Guidelines {#guidelines}
 ============
 
@@ -171,7 +183,7 @@ When there is no user consent, the following filtering should be done to prevent
 
 3. SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.
 
-4. RTCIceCandidateStats dictionaries exposed to web pages do not contain any 'ip' member if related to a host ICE candidate.
+4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
 Generated names reuse
 ----------------------------
