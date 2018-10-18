@@ -77,7 +77,7 @@ connection, client private IP addresses are included in this candidate
 collection. However, disclosure of these addresses has privacy implications.
 This document describes a way to share local IP addresses with other clients
 while preserving client privacy. This is achieved by obfuscating IP addresses
-with dynamically generated Multicast DNS {{RFC6762}} names.
+with dynamically generated Multicast DNS (mDNS) {{RFC6762}} names.
 
 --- middle
 
@@ -95,7 +95,7 @@ networks, typically homes or small offices, where NAT loopback may not be
 supported.
 
 This document proposes an overall solution to this problem by registering
-ephemeral Multicast DNS names for each local private IP address, and then
+ephemeral mDNS names for each local private IP address, and then
 providing those names, rather than the IP addresses, to the web application
 when it gathers ICE candidates. WebRTC implementations resolve these names
 to IP addresses and perform ICE processing as usual, but the actual IP addresses
@@ -118,7 +118,7 @@ For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5
 
 3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4 UUID as defined in {{RFC4122}}, followed by ".local".
 
-4. Register the candidate's mDNS hostname using Multicast DNS.
+4. Register the candidate's mDNS hostname as defined in {{RFC6762}}.
 
 5. If registering of the mDNS hostname fails, abort these steps. The candidate is not exposed.
 
@@ -144,7 +144,7 @@ For any remote host ICE candidate received by the ICE agent, the following proce
 
 1. If the connection-address field value of the ICE candidate does not end with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
 
-2. Otherwise, use the value and resolve it using Multicast DNS.
+2. Otherwise, resolve the candidate using mDNS.
 
 3. If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.
 
@@ -205,7 +205,7 @@ can also present a threat to user privacy. Specifically, when the latency of a
 WebRTC connection latency is close to zero, the probability is high that the
 two peers are running on the same device.
 
-To avoid this issue, browsers SHOULD NOT register Multicast DNS names for
+To avoid this issue, browsers SHOULD NOT register mDNS names for
 WebRTC applications running in a third-party browser execution context (i.e., a
 context that has a different origin than the top-level execution context), or a
 private browser execution context.
@@ -213,11 +213,11 @@ private browser execution context.
 Specification Requirements {#requirements}
 ============
 
-The proposal relies on identifying and resolving any Multicast DNS based ICE candidates as part of adding/processing a remote candidate.
-{{ICESDP}} section 4.1 could be updated to explicitly allow Multicast DNS names in the connection-address field.
+The proposal relies on identifying and resolving any mDNS-based ICE candidates as part of adding/processing a remote candidate.
+{{ICESDP}} section 4.1 could be updated to explicitly allow mDNS names in the connection-address field.
 
-The proposal relies on adding the ability to register Multicast DNS names at ICE gathering time.
+The proposal relies on adding the ability to register mDNS names at ICE gathering time.
 This could be described in {{ICESDP}} and/or {{WebRTCSpec}}.
 
 The proposal allows updating {{IPHandling}} so that mode 2 is not the mode used by default when user consent is not required.
-Instead, the default mode could be defined as mode 3 with Multicast DNS based ICE candidates.
+Instead, the default mode could be defined as mode 3 with mDNS-based ICE candidates.
