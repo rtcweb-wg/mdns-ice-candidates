@@ -168,7 +168,7 @@ When there is no user consent, the following filtering should be done to prevent
 
 3. SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.
 
-4. RTCIceCandidateStats dictionaries exposed to web pages do not contain any 'address' member if related to a host ICE candidate or a peer-reflexive remote candidate.
+4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
 Generated names reuse
 ----------------------------
