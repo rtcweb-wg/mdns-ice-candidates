@@ -144,7 +144,7 @@ For any remote ICE candidate received by the ICE agent, the following procedure 
 
 2. Otherwise, resolve the candidate using mDNS.
 
-3. If it resolves to an IP address, replace the value of the ICE candidate by the resolved IP address and continue processing of the candidate.
+3. If it resolves to an IP address, replace the mDNS hostname of the ICE candidate with the resolved IP address and continue processing of the candidate.
 
 4. Otherwise, ignore the candidate.
 
