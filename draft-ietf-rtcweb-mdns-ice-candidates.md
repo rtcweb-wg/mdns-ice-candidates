@@ -186,7 +186,12 @@ When there is no user consent, the following filtering should be done to prevent
 Generated names reuse
 ----------------------------
 
-It is important that use of registered mDNS hostnames is limited in time and/or scope. Indefinitely reusing the same mDNS hostname candidate would provide applications an even more reliable tracking mechanism than the private IP addresses that this specification is designed to hide. The use of registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the lifetime of the page.
+It is important that use of registered mDNS hostnames is limited in time 
+and/or scope. Indefinitely reusing the same mDNS hostname candidate would 
+provide applications an even more reliable tracking mechanism than the private
+IP addresses that this specification is designed to hide. The use of 
+registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the 
+lifetime of the page.
 
 Specific execution contexts
 ----------------------------
