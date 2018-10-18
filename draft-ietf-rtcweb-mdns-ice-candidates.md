@@ -126,7 +126,7 @@ ICE Candidate Gathering {#gathering}
 
 For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5.1.1, obfuscation of the candidate is done as follows:
 
-1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE host candidate's IP address.
+1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE host candidate's IP address. If one exists, skip ahead to Step 6.
 
 2. If there is a registered hostname, replace the IP address of the ICE host candidate with the hostname. Expose the candidate and abort these steps.
 
