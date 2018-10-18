@@ -274,6 +274,16 @@ The existence of malicious endpoints in the local network poses a generic
 threat, and requires dedicated protocol suites to mitigate, which is beyond the
 scope of this proposal.
 
+Monitoring of Sessions
+-----------------------
+
+A malicious endpoint in the local network may also record other endpoints who are registering,
+unregistering, and resolving mDNS names. By doing so, they can create a session log that
+shows which endpoints are communicating, and for how long. If both endpoints in the 
+session are on the same network, the fact they are communicating can be discovered.
+
+As above, mitigation of this threat is beyond the scope of this proposal.
+
 Specification Requirements {#requirements}
 ============
 
