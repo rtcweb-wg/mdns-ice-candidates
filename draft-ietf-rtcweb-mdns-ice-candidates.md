@@ -159,9 +159,9 @@ The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwi
 
 A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
-check. The peer-reflexive candidate could share the same address as a remote
-ICE candidate that will be signaled or has been signaled, received and is
-in the process of name resolution. In addition to the elimination procedure
+check. The peer-reflexive candidate could share the same address as a remote mDNS
+ICE candidate whose name is
+in the process of being resolved. In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
 peer-reflexive remote candidate should not be exposed to Web applications by ICE
