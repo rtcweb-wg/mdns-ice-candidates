@@ -192,8 +192,6 @@ It is important that use of registered mDNS hostnames is limited in time and/or 
 
 If the generated mDNS hostname candidate does not follow the pattern described, the exposed candidate might be used for fingerprinting.
 
-If there are multiple host candidates with different IP addresses, IPv4 and/or IPv6, each results in a separate mDNS hostname candidate. The number of mDNS hostname candidates can provide a fingerprinting dimension. If so desired an ICE agent MAY expose additional mDNS hostname candidates that are not registered.
-
 Specific execution contexts
 ----------------------------
 
