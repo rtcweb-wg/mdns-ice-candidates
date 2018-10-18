@@ -128,14 +128,15 @@ For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5
 
 An ICE agent can implement this procedure in any way so long as it produces equivalent results to this procedure.
 
-An implementation may for instance pre-register mDNS hostnames by executing steps 3 to 5 and prepopulate an ICE agent accordingly.
-By doing so, only steps 1 and 2 of the above procedure will be executed at the time of gathering candidates.
+An implementation may for instance pre-register mDNS hostnames by executing steps 3 to 5 and prepopulate an ICE agent accordingly. By doing so, only steps 1 and 2 of the above procedure will be executed at the time of gathering candidates.
 
 An implementation may also detect that mDNS is not supported by the available network interfaces.
 The ICE agent may skip step 3 and 4 and directly decide to not expose the host candidate.
 
 This procedure ensures that a mDNS name is used to replace only one IP address.
 Specifically an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
+
+Any server-reflexive candidates generated from a mDNS local candidate MUST have their raddr field set to 0.0.0.0 and their rport field set to 0.
 
 ICE Candidate Processing {#processing}
 ----------------------------
@@ -157,7 +158,8 @@ An ICE agent that supports mDNS candidates MUST support the situation where the 
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
-### Handling of Peer-Reflexive Remote Candidate
+Implications for Statistics {#statistics}
+----------------------------
 
 A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
@@ -166,24 +168,16 @@ host ICE candidate that will be signaled or has been signaled, received and is
 in the process of name resolution. In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
-peer-reflexive remote candidate should not be exposed to Web applications by ICE
-agents that implement this proposal, as detailed in Section {{#guidelines}}.
+peer-reflexive remote candidate should not be exposed to web applications by ICE
+agents that implement this proposal.
+
+Specifically, statistics related to ICE candidates MUST NOT contain the 
+resolved IP address of a remote mDNS candidate or the IP address of a 
+peer-reflexive candidate, unless that IP address has already been learned through
+other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
 Privacy Guidelines {#guidelines}
 ============
-
-APIs leaking IP addresses
-----------------------------
-
-When there is no user consent, the following filtering should be done to prevent private IP address leakage:
-
-1. host ICE candidates with an IP address are not exposed as ICE candidate events.
-
-2. Server reflexive ICE candidate raddr field is set to 0.0.0.0 and rport to 0.
-
-3. SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.
-
-4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
 Generated names reuse
 ----------------------------
