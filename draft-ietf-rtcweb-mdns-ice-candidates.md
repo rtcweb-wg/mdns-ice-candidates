@@ -140,7 +140,7 @@ Specifically an ICE agent using an interface with both IPv4 and IPv6 addresses M
 ICE Candidate Processing {#processing}
 ----------------------------
 
-For any remote host ICE candidate received by the ICE agent, the following procedure is used:
+For any remote ICE host candidate received by the ICE agent, the following procedure is used:
 
 1. If the connection-address field value of the ICE candidate does not end with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
 
@@ -162,7 +162,7 @@ The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwi
 A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
 check. The peer-reflexive candidate could share the same address as a remote
-host ICE candidate that will be signaled or has been signaled, received and is
+ICE host candidate that will be signaled or has been signaled, received and is
 in the process of name resolution. In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
@@ -177,11 +177,11 @@ APIs leaking IP addresses
 
 When there is no user consent, the following filtering should be done to prevent private IP address leakage:
 
-1. host ICE candidates with an IP address are not exposed as ICE candidate events.
+1. ICE host candidates with an IP address are not exposed as ICE candidate events.
 
 2. Server reflexive ICE candidate raddr field is set to 0.0.0.0 and rport to 0.
 
-3. SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.
+3. SDP does not expose any a=candidate line corresponding to a ICE host candidate which contains an IP address.
 
 4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
