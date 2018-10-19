@@ -104,7 +104,7 @@ are not exposed to the web application.
 Principle {#principle}
 ============
 
-This section uses the concept of ICE agent as define in {{RFC8445}}. In the
+This section uses the concept of ICE agent as defined in {{RFC8445}}. In the
 remainder of the document, it is assumed that each browsing context has its own ICE agent.
 
 ICE Candidate Gathering {#gathering}
