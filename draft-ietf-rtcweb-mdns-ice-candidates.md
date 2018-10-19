@@ -207,7 +207,7 @@ mDNS candidate is signaled after the STUN checks begin.
           prflx candidate |                                         | <Register
           2.2.2.2 created |                                         |  mDNS name N2
                           |                                         |  for 2.2.2.2>
-                          |<---------- mDNS Candidate N2 -----------|                                         
+                          |<---------- mDNS Candidate N2 -----------|
                           |                                         |
 
 In this example, a peer-reflexive candidate is generated because the 
@@ -216,8 +216,8 @@ received.
 
                   ICE Agent 1 (1.1.1.1)                      ICE Agent 2 (2.2.2.2)
             <Register     |                                         | <Register
-             mDNS name N1 |                                         |  mDNS name N2                                       
-             for 1.1.1.1> |                                         |  for 2.2.2.2>   
+             mDNS name N1 |                                         |  mDNS name N2
+             for 1.1.1.1> |                                         |  for 2.2.2.2>
                           |----------- mDNS Candidate N1 ---------->|
                           |<---------- mDNS Candidate N2 -----------|
     <Resolve              |                                         | <Resolve 
