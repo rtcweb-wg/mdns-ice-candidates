@@ -178,6 +178,19 @@ peer-reflexive candidate, despite using mDNS.
                     |<---------- mDNS Candidate N2 -----------|                                         
                     |                                         |
 
+ICE Agent 1 (1.1.1.1)                                       ICE Agent 2 (2.2.2.2)
+      <Register           |                                         | <Register
+      mDNS name N1>       |                                         | mDNS name N2>                                       
+                          |----------- mDNS Candidate N1 ---------->|
+                          |<---------- mDNS Candidate N2 -----------|        
+<Resolve                  |                                         | <Resolve 
+ ...                      |                                         | mDNS name N1>
+ mDNS                     |<======== STUN check to 1.1.1.1 =========|
+ ...     <prflx candidate |                                         |
+ name    2.2.2.2 created> |                                         |
+ ...                      |                                         |
+ N2>                      |                                         |
+
 In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
