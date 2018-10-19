@@ -222,7 +222,7 @@ browser or the operating platform of the browser for registering, removing or
 resolving mDNS names. In particular,
 
 - the registration of name requires optional probing queries and mandatory
-announcing responses ({{RFC6762}, Section 8}), and this is performed at the
+announcing responses ({{RFC6762}}, Section 8), and this is performed at the
 beginning of ICE gathering;
 
 - the addition of remote ICE host candidates with mDNS names generates mDNS
