@@ -171,7 +171,7 @@ addresses from being exposed to web applications through other means.
 
 Statistics related to ICE candidates that are accessible to the web
 application MUST NOT contain the IP address of a local or remote mDNS
-mDNS candidate; the mDNS name SHOULD be used instead.
+candidate; the mDNS name SHOULD be used instead.
 
 In addition, a peer-reflexive remote candidate may be constructed 
 from a remote host IP address as a result of an ICE connectivity
