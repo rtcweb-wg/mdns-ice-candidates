@@ -68,6 +68,9 @@ informative:
       ins: B. Aboba
       ins: T. Brandstetter
       ins: J.I. Bruaroey
+  HTMLSpec:
+    target: https://html.spec.whatwg.org
+    title: HTML Living Standard
 
 --- abstract
 
@@ -105,7 +108,8 @@ Principle {#principle}
 ============
 
 This section uses the concept of ICE agent as defined in {{RFC8445}}. In the
-remainder of the document, it is assumed that each browsing context has its own ICE agent.
+remainder of the document, it is assumed that each browsing context (as defined
+in Section 7.1 of {{HTMLSpec}}) has its own ICE agent.
 
 ICE Candidate Gathering {#gathering}
 ----------------------------
