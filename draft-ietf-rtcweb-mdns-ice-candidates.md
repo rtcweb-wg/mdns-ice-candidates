@@ -161,12 +161,30 @@ A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
 check. The peer-reflexive candidate could share the same address as a remote
 host ICE candidate that will be signaled or has been signaled, received and is
-in the process of name resolution. In addition to the elimination procedure
+in the process of name resolution. See the example below, in which the
+initiating web application learns the IP of the remote peer via a
+peer-reflexive candidate, despite using mDNS.
+
+            ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
+      <Register     |                                         |
+      mDNS name N1> |                                         |
+                    |----------- mDNS Candidate N1 ---------->|
+                    |                                         | <Resolve 
+                    |                                         | mDNS name N1>
+                    |<======== STUN check to 1.1.1.1 =========|
+    prflx candidate |                                         |
+    2.2.2.2 created |                                         | <Register
+                    |                                         | mDNS name N2>
+                    |<---------- mDNS Candidate N2 -----------|                                         
+                    |                                         |
+
+In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
 peer-reflexive remote candidate should not be exposed to Web applications by ICE
 agents that implement this proposal, as detailed in Section {{#guidelines}}.
 
+   
 Privacy Guidelines {#guidelines}
 ============
 
