@@ -181,7 +181,7 @@ resolution delays.
 
 To prevent disclosure of the host IP address to the application in
 this scenario, statistics related to ICE candidates MUST NOT 
-contain the the IP address of any peer-reflexive candidate, unless that IP
+contain the IP address of any peer-reflexive candidate, unless that IP
 has already been learned through signaling of a candidate with the
 same address and either the same or a different port; this includes cases
 where the signaled candidate is discarded as redundant according to 
