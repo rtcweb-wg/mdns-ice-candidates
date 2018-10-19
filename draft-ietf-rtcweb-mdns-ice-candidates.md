@@ -112,7 +112,7 @@ ICE Candidate Gathering {#gathering}
 
 For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5.1.1, the candidate is processed as follows:
 
-1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE host candidate's IP address. If one exists, skip ahead to Step 6.
+1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
 
 2. Generate a unique mDNS hostname. The unique name MUST consist of a version 4 UUID as defined in {{RFC4122}}, followed by ".local".
 
@@ -122,7 +122,7 @@ For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5
 
 5. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
 
-6. Replace the IP address of the ICE host candidate with its mDNS hostname, and expose the candidate as usual.
+6. Replace the IP address of the ICE candidate with its mDNS hostname, and expose the candidate as usual.
 
 An ICE agent can implement this procedure in any way so long as it produces equivalent results to this procedure.
 
@@ -138,13 +138,13 @@ Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses 
 ICE Candidate Processing {#processing}
 ----------------------------
 
-For any remote host ICE candidate received by the ICE agent, the following procedure is used:
+For any remote ICE candidate received by the ICE agent, the following procedure is used:
 
 1. If the connection-address field value of the ICE candidate does not end with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
 
 2. Otherwise, resolve the candidate using mDNS.
 
-3. If it resolves to an IP address, replace the value of the ICE host candidate by the resolved IP address and continue processing of the candidate.
+3. If it resolves to an IP address, replace the mDNS hostname of the ICE candidate with the resolved IP address and continue processing of the candidate.
 
 4. Otherwise, ignore the candidate.
 
@@ -160,8 +160,8 @@ The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwi
 A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
 check. The peer-reflexive candidate could share the same address as a remote
-host ICE candidate that will be signaled or has been signaled, received and is
-in the process of name resolution. See the example below, in which the
+mDNS candidate that is in the process of being signaled or 
+name resolution. See the example below, in which the
 initiating web application learns the IP of the remote peer via a
 peer-reflexive candidate, despite using mDNS.
 
@@ -183,7 +183,6 @@ of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
 peer-reflexive remote candidate should not be exposed to Web applications by ICE
 agents that implement this proposal, as detailed in Section {{#guidelines}}.
-
    
 Privacy Guidelines {#guidelines}
 ============
@@ -193,11 +192,11 @@ APIs leaking IP addresses
 
 When there is no user consent, the following filtering should be done to prevent private IP address leakage:
 
-1. host ICE candidates with an IP address are not exposed as ICE candidate events.
+1. ICE candidates with an IP address are not exposed as ICE candidate events.
 
 2. Server reflexive ICE candidate raddr field is set to 0.0.0.0 and rport to 0.
 
-3. SDP does not expose any a=candidate line corresponding to a host ICE candidate which contains an IP address.
+3. SDP does not expose any a=candidate line corresponding to an ICE candidate which contains an IP address.
 
 4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
@@ -226,6 +225,80 @@ To avoid this issue, browsers SHOULD NOT register mDNS names for
 WebRTC applications running in a third-party browser execution context (i.e., a
 context that has a different origin than the top-level execution context), or a
 private browser execution context.
+
+Security Considerations {#security}
+======================
+
+mDNS Message Flooding
+---------------------
+
+The implementation of this proposal requires the mDNS querying capability of the
+browser for registering mDNS names or adding remote ICE host candidates with
+such names. It also requires the mDNS responding capability of either the
+browser or the operating platform of the browser for registering, removing or
+resolving mDNS names. In particular,
+
+- the registration of name requires optional probing queries and mandatory
+announcing responses ({{RFC6762}}, Section 8), and this is performed at the
+beginning of ICE gathering;
+
+- the addition of remote ICE host candidates with mDNS names generates mDNS
+queries for names of each candidate;
+
+- the removal of names could happen when the execution context of the ICE agent
+is destroyed in an implementation, and goodbye responses should be sent to
+invalidate records generated by the ICE agent in the local network
+({{RFC6762}}, Section 10.1).
+
+A malicious Web application could flood the local network with mDNS messages by:
+
+- creating execution contexts that create ICE agents and start gathering of
+  local ICE host candidates;
+
+- destroying these local candidates soon after the name registration is done;
+
+- adding fictitious remote ICE host candidates with mDNS names.
+
+
+{{RFC6762}} defines a per-record multicast rate limiting rule, in which a given
+record on a given interface cannot be sent less than one second since its last
+transmission. This rate limiting rule however does not mitigate the above
+attacks, in which new names, hence new records, are constantly created and sent.
+A browser-wide mDNS message rate limit MUST be provided for all messages
+that can be indirectly dispatched by a web application, namely the probing
+queries, announcement responses, resolution queries, and goodbye responses
+associated with mDNS.
+
+Malicious Responses to Deny Name Registration
+---------------------------------------------
+
+If the optional probing queries are implemented for the name registration, a
+malicious endpoint in the local network, which is capable of responding mDNS
+queries, could send responses to block the use of the generated names. This
+would lead to the discarding of this ICE host candidate as in Step 5 in Section
+{{#gathering}}.
+
+The above attack can be mitigated by skipping the probing when registering a
+name, which also conforms to Section 8 in {{RFC6762}}, given that the name is
+randomly generated for the probabilistic uniqueness (e.g. a version 4 UUID) in
+Step 3 in Section {{#gathering}}. However, a similar attack can be performed by
+exploiting the negative responses (defined in {{RFC6762}}, Section 8.1), in
+which NSEC resource records are sent to claim the nonexistence of records
+related to the gathered ICE host candidates.
+
+The existence of malicious endpoints in the local network poses a generic
+threat, and requires dedicated protocol suites to mitigate, which is beyond the
+scope of this proposal.
+
+Monitoring of Sessions
+-----------------------
+
+A malicious endpoint in the local network may also record other endpoints who are registering,
+unregistering, and resolving mDNS names. By doing so, they can create a session log that
+shows which endpoints are communicating, and for how long. If both endpoints in the 
+session are on the same network, the fact they are communicating can be discovered.
+
+As above, mitigation of this threat is beyond the scope of this proposal.
 
 Specification Requirements {#requirements}
 ============
