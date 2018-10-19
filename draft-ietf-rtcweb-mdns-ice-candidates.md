@@ -247,7 +247,10 @@ A malicious Web application could flood the local network with mDNS messages by:
 record on a given interface cannot be sent less than one second since its last
 transmission. This rate limiting rule however does not mitigate the above
 attacks, in which new names, hence new records, are constantly created and sent.
-A per-message multicast rate limiting rule on a given interface MUST be provided
+A browser-wide mDNS message rate limit MUST be provided for all messages
+that can be indirectly dispatched by a web application, namely the probing
+queries, announcement responses, resolution queries, and goodbye responses
+associated with mDNS.
 by ICE implementations that implement this proposal, and this rule MUST be
 applied to mDNS messages that can be created by a Web application, namely the
 (optional) probing queries, announcing responses, resolution queries and goodbye
