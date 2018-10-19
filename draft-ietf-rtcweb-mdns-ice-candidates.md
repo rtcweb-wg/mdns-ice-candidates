@@ -161,9 +161,11 @@ A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
 check. The peer-reflexive candidate could share the same address as a remote
 mDNS candidate that is in the process of being signaled or 
-name resolution. See the example below, in which the
+name resolution. See the examples below, in which the
 initiating web application learns the IP of the remote peer via a
 peer-reflexive candidate, despite using mDNS.
+
+Example 1, a STUN ping is received before the candidate
 
             ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
       <Register     |                                         |
@@ -178,18 +180,22 @@ peer-reflexive candidate, despite using mDNS.
                     |<---------- mDNS Candidate N2 -----------|                                         
                     |                                         |
 
-ICE Agent 1 (1.1.1.1)                                       ICE Agent 2 (2.2.2.2)
-      <Register           |                                         | <Register
-      mDNS name N1>       |                                         | mDNS name N2>                                       
-                          |----------- mDNS Candidate N1 ---------->|
-                          |<---------- mDNS Candidate N2 -----------|        
-<Resolve                  |                                         | <Resolve 
- ...                      |                                         | mDNS name N1>
- mDNS                     |<======== STUN check to 1.1.1.1 =========|
- ...     <prflx candidate |                                         |
- name    2.2.2.2 created> |                                         |
- ...                      |                                         |
- N2>                      |                                         |
+Example 2, a STUN ping is received while the mDNS resolution is in progress
+
+            ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
+      <Register     |                                         | <Register
+      mDNS name N1> |                                         | mDNS name N2>                                       
+                    |----------- mDNS Candidate N1 ---------->|
+                    |<---------- mDNS Candidate N2 -----------|        
+                    |                                         | <Resolve 
+                    |----> mDNS query for N2                  | mDNS name N1>
+                    |                                         |
+                    |<======== STUN check to 1.1.1.1 =========|
+    prflx candidate |                                         |
+    2.2.2.2 created |                                         |
+                    |                                         |
+                    |<---- mDNS result for N2 (2.2.2.2)       |
+                    |                                         |
 
 In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
