@@ -157,26 +157,35 @@ An ICE agent that supports mDNS candidates MUST support the situation where the 
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
-Implications for Statistics {#statistics}
+Privacy Guidelines {#privacy}
+============
+
+Implications for APIs {#apis}
 ----------------------------
 
-A peer-reflexive remote candidate could be learned and constructed from the
-source transport address of the STUN Binding request as an ICE connectivity
-check. The peer-reflexive candidate could share the same address as a remote
-host ICE candidate that will be signaled or has been signaled, received and is
-in the process of name resolution. In addition to the elimination procedure
-of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
-remove constructed peer-reflexive remote candidates, the address of any existing
-peer-reflexive remote candidate should not be exposed to web applications by ICE
-agents that implement this proposal.
+The goal of this mechanism is to keep knowledge of host IP addresses
+within the ICE agent while continuing to allow the application to
+transmit ICE candidates. Besides keeping host IP addresses out of 
+ICE candidates, implementations must take steps to prevent host IP 
+addresses from being exposed to web applications through other means.
 
-Specifically, statistics related to ICE candidates MUST NOT contain the 
-resolved IP address of a remote mDNS candidate or the IP address of a 
-peer-reflexive candidate, unless that IP address has already been learned through
-other means, e.g., receiving it in a separate server-reflexive remote candidate.
+Statistics related to ICE candidates that are accessible to the web
+application MUST NOT contain the IP address of a local or remote mDNS
+mDNS candidate; the mDNS name SHOULD be used instead.
 
-Privacy Guidelines {#guidelines}
-============
+In addition, a peer-reflexive remote candidate may be constructed 
+from a remote host IP address as a result of an ICE connectivity
+check, as described in Section 7.3.1.3 of {{RFC8445}}. This check
+may arrive before the candidate due to signaling or mDNS
+resolution delays. 
+
+To prevent disclosure of the host IP address to the application in
+this scenario, statistics related to ICE candidates MUST NOT 
+contain the the IP address of any peer-reflexive candidate, unless that IP
+has already been learned through signaling of a candidate with the
+same address and either the same or a different port; this includes cases
+where the signaled candidate is discarded as redundant according to 
+Section 5.1.3 of {{RFC8445}}.
 
 Generated names reuse
 ----------------------------
