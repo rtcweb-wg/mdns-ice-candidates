@@ -68,6 +68,9 @@ informative:
       ins: B. Aboba
       ins: T. Brandstetter
       ins: J.I. Bruaroey
+  HTMLSpec:
+    target: https://html.spec.whatwg.org
+    title: HTML Living Standard
 
 --- abstract
 
@@ -104,8 +107,9 @@ are not exposed to the web application.
 Principle {#principle}
 ============
 
-This section uses the concept of ICE agent as define in {{RFC8445}}.
-In the remainder of the document, it is assumed that each browser execution context has its own ICE agent.
+This section uses the concept of ICE agent as defined in {{RFC8445}}. In the
+remainder of the document, it is assumed that each browsing context (as defined
+in Section 7.1 of {{HTMLSpec}}) has its own ICE agent.
 
 ICE Candidate Gathering {#gathering}
 ----------------------------
@@ -157,9 +161,68 @@ In this case the resolution of a ".local" name may happen through Unicast DNS, s
 An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
+  
+Examples
+========
 
+In this example, mDNS candidates are exchanged between peers and resolved
+to obtain the corresponding IP addresses.
+
+                  ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
+            <Register     |                                         |
+             mDNS name N1 |                                         |
+             for 1.1.1.1> |                                         |
+                          |----------- mDNS Candidate N1 ---------->|
+                          |                                         | <Register
+                          |                                         |  mDNS name N2
+                          |                                         |  for 2.2.2.2>
+                          |<---------- mDNS Candidate N2 -----------|
+           <Resolve       |                                         | <Resolve 
+            mDNS name N2> |                                         |  mDNS name N1>
+                          |<======== STUN check to 1.1.1.1 =========|
+                          |========= STUN check to 2.2.2.2 ========>|
+                          |                                         |
+
+The following two examples indicate how peer-reflexive candidates for host IP
+addresses can be created due to timing differences. 
+
+In this example, a peer-reflexive candidate is generated because the 
+mDNS candidate is signaled after the STUN checks begin.
+
+                  ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
+            <Register     |                                         |
+             mDNS name N1 |                                         |
+             for 1.1.1.1> |                                         |
+                          |----------- mDNS Candidate N1 ---------->|
+                          |                                         | <Resolve 
+                          |                                         |  mDNS name N1>
+                          |<======== STUN check to 1.1.1.1 =========|
+          prflx candidate |                                         | <Register
+          2.2.2.2 created |                                         |  mDNS name N2
+                          |                                         |  for 2.2.2.2>
+                          |<---------- mDNS Candidate N2 -----------|
+                          |                                         |
+
+In this example, a peer-reflexive candidate is generated because the 
+mDNS resolution for name N2 does not complete until after the STUN checks are 
+received.
+
+                  ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
+            <Register     |                                         | <Register
+             mDNS name N1 |                                         |  mDNS name N2
+             for 1.1.1.1> |                                         |  for 2.2.2.2>
+                          |----------- mDNS Candidate N1 ---------->|
+                          |<---------- mDNS Candidate N2 -----------|
+    <Resolve              |                                         | <Resolve 
+     ...                  |                                         |  mDNS name N1>
+     mDNS                 |<======== STUN check to 1.1.1.1 =========|
+     ...  prflx candidate |                                         |
+     name 2.2.2.2 created |                                         |
+     ...                  |                                         |
+     N2>                  |                                         |
+ 
 Privacy Considerations {#privacy}
-======================
+==================================
 
 Statistics 
 ----------
@@ -178,7 +241,7 @@ In addition, a peer-reflexive remote candidate may be constructed
 from a remote host IP address as a result of an ICE connectivity
 check, as described in Section 7.3.1.3 of {{RFC8445}}. This check
 may arrive before the candidate due to signaling or mDNS
-resolution delays. 
+resolution delays, as shown in the examples above.
 
 To prevent disclosure of the host IP address to the application in
 this scenario, statistics related to ICE candidates MUST NOT 
@@ -198,21 +261,21 @@ IP addresses that this specification is designed to hide. The use of
 registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the 
 lifetime of the page.
 
-Specific execution contexts
+Specific browsing contexts
 ----------------------------
 
 As noted in {{IPHandling}}, privacy may be breached if a web application running
-in two browser contexts can determine whether it is running on the same device.
+in two browsing contexts can determine whether it is running on the same device.
 While the approach in this document prevents the application from directly
 comparing local private IP addresses, a successful local WebRTC connection
 can also present a threat to user privacy. Specifically, when the latency of a
 WebRTC connection latency is close to zero, the probability is high that the
 two peers are running on the same device.
 
-To avoid this issue, browsers SHOULD NOT register mDNS names for
-WebRTC applications running in a third-party browser execution context (i.e., a
-context that has a different origin than the top-level execution context), or a
-private browser execution context.
+To avoid this issue, browsers SHOULD NOT register mDNS names for WebRTC
+applications running in a third-party browsing context (i.e., a context that
+has a different origin than the top-level browsing context), or a private
+browsing context.
 
 Security Considerations {#security}
 =======================
@@ -233,14 +296,14 @@ beginning of ICE gathering;
 - the addition of remote ICE host candidates with mDNS names generates mDNS
 queries for names of each candidate;
 
-- the removal of names could happen when the execution context of the ICE agent
+- the removal of names could happen when the browsing context of the ICE agent
 is destroyed in an implementation, and goodbye responses should be sent to
 invalidate records generated by the ICE agent in the local network
 ({{RFC6762}}, Section 10.1).
 
 A malicious Web application could flood the local network with mDNS messages by:
 
-- creating execution contexts that create ICE agents and start gathering of
+- creating browsing contexts that create ICE agents and start gathering of
   local ICE host candidates;
 
 - destroying these local candidates soon after the name registration is done;
