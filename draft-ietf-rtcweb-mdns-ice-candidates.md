@@ -214,7 +214,7 @@ In this example, a peer-reflexive candidate is generated because the
 mDNS resolution for name N2 does not complete until after the STUN checks are 
 received.
 
-                  ICE Agent 1 (1.1.1.1)                      ICE Agent 2 (2.2.2.2)
+                  ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
             <Register     |                                         | <Register
              mDNS name N1 |                                         |  mDNS name N2
              for 1.1.1.1> |                                         |  for 2.2.2.2>
