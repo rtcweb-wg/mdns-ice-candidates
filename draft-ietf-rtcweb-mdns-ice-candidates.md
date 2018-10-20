@@ -252,7 +252,7 @@ same address and either the same or a different port; this includes cases
 where the signaled candidate is discarded as redundant according to 
 Section 5.1.3 of {{RFC8445}}.
 
-Interactions with TURN servers 
+Interactions With TURN Servers 
 ------------------------------
 
 When sending data to a TURN {{RFC5766}} server, the sending client tells
@@ -268,6 +268,11 @@ and remote mDNS candidates. Note that the converse is not an issue; the
 ICE agent MAY form candidate pairs between its own mDNS candidates and
 remote relay candidates, as in this situation host IPs will not be sent
 directly to the TURN server.
+
+This restriction has no effect on connectivity; in the cases where 
+host IP addresses are private and need to be wrapped with mDNS names,
+they will be unreachable from the TURN server, and as noted above,
+the reverse path will continue to work normally.
 
 Generated names reuse
 ---------------------
