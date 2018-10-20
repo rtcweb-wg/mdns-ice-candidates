@@ -114,7 +114,7 @@ in Section 7.1 of {{HTMLSpec}}) has its own ICE agent.
 ICE Candidate Gathering {#gathering}
 ----------------------------
 
-For any host candidate gathered by an ICE agent as part of {{RFC8445}} Section 5.1.1, the candidate is processed as follows:
+For any host candidate gathered by an ICE agent as part of {{RFC8445}} Section 5.1.1, the candidate is handled as follows:
 
 1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
 
@@ -126,8 +126,8 @@ For any host candidate gathered by an ICE agent as part of {{RFC8445}} Section 5
 
 5. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
 
-6. Replace the IP address of the ICE candidate with its mDNS hostname, expose
-and exchange the candidate with the using protocol as described in {{RFC8445}} Section 5.3.
+6. Replace the IP address of the ICE candidate with its mDNS hostname and provide
+the candidate to the web application.
 
 An ICE agent can implement this procedure in any way so long as it produces equivalent results to this procedure.
 
