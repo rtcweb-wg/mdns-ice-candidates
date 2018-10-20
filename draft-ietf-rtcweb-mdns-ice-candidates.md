@@ -138,9 +138,15 @@ An implementation may also detect that mDNS is not supported by the available ne
 The ICE agent may skip steps 2 and 3 and directly decide to not expose the host candidate.
 
 This procedure ensures that a mDNS name is used to replace only one IP address.
-Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
+Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST 
+expose a different mDNS name for each address.
 
-Any server-reflexive candidates generated from a mDNS local candidate MUST have their raddr field set to 0.0.0.0 and their rport field set to 0.
+Any server-reflexive candidates generated from a mDNS local candidate MUST have 
+their raddr field set to 0.0.0.0 and their rport field set to 0.
+
+Any candidates exposed to the web application via local descriptions MUST be
+identical to those provided during candidate gathering (i.e., MUST NOT
+contain private host IP addresses).
 
 ICE Candidate Processing {#processing}
 ----------------------------
