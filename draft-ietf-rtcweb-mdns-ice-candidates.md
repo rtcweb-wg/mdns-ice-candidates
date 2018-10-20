@@ -251,6 +251,23 @@ same address and either the same or a different port; this includes cases
 where the signaled candidate is discarded as redundant according to 
 Section 5.1.3 of {{RFC8445}}.
 
+Interactions with TURN servers 
+------------------------------
+
+When sending data to a TURN {{RFC5766}} server, the sending client tells
+the server the destination IP and port for the data. This means that
+if the the client uses TURN to send to an IP that was obtained by mDNS
+resolution, the TURN server will learn the underlying host IP and port,
+and this information can then be relayed to the web application,
+defeating the value of the mDNS wrapping. 
+
+To prevent disclosure of the host IP address to a TURN server, the ICE
+agent MUST NOT form candidate pairs between its own relay candidates
+and remote mDNS candidates. Note that the converse is not an issue; the
+ICE agent MAY form a candidate pairs between its own mDNS candidates and
+remote relay candidates, as in this situation host IPs will not be sent
+directly to the TURN server.
+
 Generated names reuse
 ---------------------
 
