@@ -164,15 +164,14 @@ The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwi
 A peer-reflexive remote candidate could be learned and constructed from the
 source transport address of the STUN Binding request as an ICE connectivity
 check. The peer-reflexive candidate could share the same address as a remote
-mDNS candidate that is in the process of being signaled or 
-name resolution. 
+mDNS candidate that is in the process of being signaled or name resolution.
 
 In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
 peer-reflexive remote candidate should not be exposed to Web applications by ICE
-agents that implement this proposal, as detailed in Section {{#guidelines}}.
-  
+agents that implement this proposal, as detailed in Section {{guidelines}}.
+
 Examples
 ========
 
@@ -188,14 +187,14 @@ to obtain the corresponding IP addresses.
                           |                                         |  mDNS name N2
                           |                                         |  for 2.2.2.2>
                           |<---------- mDNS Candidate N2 -----------|
-           <Resolve       |                                         | <Resolve 
+           <Resolve       |                                         | <Resolve
             mDNS name N2> |                                         |  mDNS name N1>
                           |<======== STUN check to 1.1.1.1 =========|
                           |========= STUN check to 2.2.2.2 ========>|
                           |                                         |
 
 The following two examples indicate how peer-reflexive candidates for host IP
-addresses can be created due to timing differences. 
+addresses can be created due to timing differences.
 
 In this example, a peer-reflexive candidate is generated because the 
 mDNS candidate is signaled after the STUN checks begin.
@@ -205,7 +204,7 @@ mDNS candidate is signaled after the STUN checks begin.
              mDNS name N1 |                                         |
              for 1.1.1.1> |                                         |
                           |----------- mDNS Candidate N1 ---------->|
-                          |                                         | <Resolve 
+                          |                                         | <Resolve
                           |                                         |  mDNS name N1>
                           |<======== STUN check to 1.1.1.1 =========|
           prflx candidate |                                         | <Register
@@ -214,8 +213,8 @@ mDNS candidate is signaled after the STUN checks begin.
                           |<---------- mDNS Candidate N2 -----------|
                           |                                         |
 
-In this example, a peer-reflexive candidate is generated because the 
-mDNS resolution for name N2 does not complete until after the STUN checks are 
+In this example, a peer-reflexive candidate is generated because the
+mDNS resolution for name N2 does not complete until after the STUN checks are
 received.
 
                   ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
@@ -231,7 +230,7 @@ received.
      name 2.2.2.2 created |                                         |
      ...                  |                                         |
      N2>                  |                                         |
- 
+
 Privacy Guidelines {#guidelines}
 ============
 
@@ -324,12 +323,12 @@ If the optional probing queries are implemented for the name registration, a
 malicious endpoint in the local network, which is capable of responding mDNS
 queries, could send responses to block the use of the generated names. This
 would lead to the discarding of this ICE host candidate as in Step 5 in Section
-{{#gathering}}.
+{{gathering}}.
 
 The above attack can be mitigated by skipping the probing when registering a
 name, which also conforms to Section 8 in {{RFC6762}}, given that the name is
 randomly generated for the probabilistic uniqueness (e.g. a version 4 UUID) in
-Step 3 in Section {{#gathering}}. However, a similar attack can be performed by
+Step 3 in Section {{gathering}}. However, a similar attack can be performed by
 exploiting the negative responses (defined in {{RFC6762}}, Section 8.1), in
 which NSEC resource records are sent to claim the nonexistence of records
 related to the gathered ICE host candidates.
