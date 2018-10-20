@@ -234,7 +234,7 @@ received.
 Privacy Guidelines {#guidelines}
 ============
 
-APIs leaking IP addresses
+APIs Leaking IP Addresses
 ----------------------------
 
 When there is no user consent, the following filtering should be done to prevent private IP address leakage:
@@ -247,7 +247,7 @@ When there is no user consent, the following filtering should be done to prevent
 
 4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
 
-Generated names reuse
+Generated Names Reuse
 ----------------------------
 
 It is important that use of registered mDNS hostnames is limited in time 
@@ -257,7 +257,7 @@ IP addresses that this specification is designed to hide. The use of
 registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the 
 lifetime of the page.
 
-Specific browsing contexts
+Specific Browsing Contexts
 ----------------------------
 
 As noted in {{IPHandling}}, privacy may be breached if a web application running
