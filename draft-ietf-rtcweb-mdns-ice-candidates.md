@@ -226,7 +226,7 @@ received.
      name 2.2.2.2 created |                                         |
      ...                  |                                         |
      N2>                  |                                         |
- 
+
 Privacy Considerations {#privacy}
 ==================================
 
@@ -257,7 +257,7 @@ same address and either the same or a different port; this includes cases
 where the signaled candidate is discarded as redundant according to 
 Section 5.1.3 of {{RFC8445}}.
 
-Generated names reuse
+Generated Names Reuse
 ---------------------
 
 It is important that use of registered mDNS hostnames is limited in time 
@@ -267,7 +267,7 @@ IP addresses that this specification is designed to hide. The use of
 registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the 
 lifetime of the page.
 
-Specific browsing contexts
+Specific Browsing Contexts
 ----------------------------
 
 As noted in {{IPHandling}}, privacy may be breached if a web application running
