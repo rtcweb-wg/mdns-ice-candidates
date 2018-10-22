@@ -115,7 +115,7 @@ in Section 7.1 of {{HTMLSpec}}) has its own ICE agent.
 ICE Candidate Gathering {#gathering}
 ----------------------------
 
-For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5.1.1, the candidate is processed as follows:
+For any host candidate gathered by an ICE agent as part of {{RFC8445}}, Section 5.1.1, the candidate is handled as follows:
 
 1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
 
@@ -127,7 +127,8 @@ For any host candidate gathered by an ICE agent as part of {{RFC8445}} section 5
 
 5. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
 
-6. Replace the IP address of the ICE candidate with its mDNS hostname, and expose the candidate as usual.
+6. Replace the IP address of the ICE candidate with its mDNS hostname and provide
+the candidate to the web application.
 
 An ICE agent can implement this procedure in any way so long as it produces equivalent results to this procedure.
 
@@ -137,8 +138,16 @@ By doing so, only step 6 of the above procedure will be executed at the time of 
 An implementation may also detect that mDNS is not supported by the available network interfaces.
 The ICE agent may skip steps 2 and 3 and directly decide to not expose the host candidate.
 
-This procedure ensures that a mDNS name is used to replace only one IP address.
-Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
+This procedure ensures that an mDNS name is used to replace only one IP address.
+Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST 
+expose a different mDNS name for each address.
+
+Any server-reflexive candidates generated from an mDNS local candidate MUST have 
+their raddr field set to 0.0.0.0 and their rport field set to 0.
+
+Any candidates exposed to the web application via local descriptions MUST be
+identical to those provided during candidate gathering (i.e., MUST NOT
+contain private host IP addresses).
 
 ICE Candidate Processing {#processing}
 ----------------------------
@@ -154,24 +163,11 @@ For any remote ICE candidate received by the ICE agent, the following procedure 
 4. Otherwise, ignore the candidate.
 
 An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.
-In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}} section 3.
+In this case the resolution of a ".local" name may happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
 
 An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
-
-### Handling of Peer-Reflexive Remote Candidate
-
-A peer-reflexive remote candidate could be learned and constructed from the
-source transport address of the STUN Binding request as an ICE connectivity
-check. The peer-reflexive candidate could share the same address as a remote
-mDNS candidate that is in the process of being signaled or name resolution.
-
-In addition to the elimination procedure
-of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
-remove constructed peer-reflexive remote candidates, the address of any existing
-peer-reflexive remote candidate should not be exposed to Web applications by ICE
-agents that implement this proposal, as detailed in {{guidelines}}.
 
 Examples
 ========
@@ -232,21 +228,58 @@ received.
      ...                  |                                         |
      N2>                  |                                         |
 
-Privacy Guidelines {#guidelines}
-============
+Privacy Considerations {#privacy}
+==================================
 
-APIs Leaking IP Addresses
-----------------------------
+The goal of this mechanism is to keep knowledge of private host IP
+addresses within the ICE agent while continuing to allow the 
+application to transmit ICE candidates. Besides keeping private
+host IP addresses out of ICE candidates, implementations must take
+steps to prevent these IP addresses from being exposed to web 
+applications through other means.
 
-When there is no user consent, the following filtering should be done to prevent private IP address leakage:
+Statistics 
+----------
 
-1. ICE candidates with an IP address are not exposed as ICE candidate events.
+Statistics related to ICE candidates that are accessible to the web
+application MUST NOT contain the IP address of a local or remote mDNS
+candidate; the mDNS name SHOULD be used instead.
 
-2. Server reflexive ICE candidate raddr field is set to 0.0.0.0 and rport to 0.
+In addition, a peer-reflexive remote candidate may be constructed 
+from a remote host IP address as a result of an ICE connectivity
+check, as described in Section 7.3.1.3 of {{RFC8445}}. This check
+may arrive before the candidate due to signaling or mDNS
+resolution delays, as shown in the examples above.
 
-3. SDP does not expose any a=candidate line corresponding to an ICE candidate which contains an IP address.
+To prevent disclosure of the host IP address to the application in
+this scenario, statistics related to ICE candidates MUST NOT 
+contain the IP address of any peer-reflexive candidate, unless that IP
+has already been learned through signaling of a candidate with the
+same address and either the same or a different port; this includes cases
+where the signaled candidate is discarded as redundant according to 
+Section 5.1.3 of {{RFC8445}}.
 
-4. Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.
+Interactions With TURN Servers 
+------------------------------
+
+When sending data to a TURN {{RFC5766}} server, the sending client tells
+the server the destination IP and port for the data. This means that
+if the client uses TURN to send to an IP that was obtained by mDNS
+resolution, the TURN server will learn the underlying host IP and port,
+and this information can then be relayed to the web application,
+defeating the value of the mDNS wrapping. 
+
+To prevent disclosure of the host IP address to a TURN server, the ICE
+agent MUST NOT form candidate pairs between its own relay candidates
+and remote mDNS candidates. Note that the converse is not an issue; the
+ICE agent MAY form candidate pairs between its own mDNS candidates and
+remote relay candidates, as in this situation host IPs will not be sent
+directly to the TURN server.
+
+This restriction has no effect on connectivity; in the cases where 
+host IP addresses are private and need to be wrapped with mDNS names,
+they will be unreachable from the TURN server, and as noted above,
+the reverse path will continue to work normally.
 
 Interactions With TURN Servers
 ------------------------------
@@ -271,7 +304,7 @@ they will be unreachable from the TURN server, and as noted above,
 the reverse path will continue to work normally.
 
 Generated Names Reuse
-----------------------------
+---------------------
 
 It is important that use of registered mDNS hostnames is limited in time 
 and/or scope. Indefinitely reusing the same mDNS hostname candidate would 
@@ -297,7 +330,7 @@ has a different origin than the top-level browsing context), or a private
 browsing context.
 
 Security Considerations {#security}
-======================
+=======================
 
 mDNS Message Flooding
 ---------------------
@@ -360,7 +393,7 @@ threat, and requires dedicated protocol suites to mitigate, which is beyond the
 scope of this proposal.
 
 Monitoring of Sessions
------------------------
+----------------------
 
 A malicious endpoint in the local network may also record other endpoints who are registering,
 unregistering, and resolving mDNS names. By doing so, they can create a session log that
