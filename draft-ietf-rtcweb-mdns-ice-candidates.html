@@ -306,7 +306,7 @@ ul.toc li {
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Fablet, Y., de Borst, J., Uberti, J., and Q. Wang" />
-  <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-rtcweb-mdns-ice-candidates-01" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-rtcweb-mdns-ice-candidates-02" />
   <meta name="dct.issued" scheme="ISO8601" content="2018-10-22" />
   <meta name="dct.abstract" content="WebRTC applications collect ICE candidates as part of the process of creating peer-to-peer connections. To maximize the probability of a direct peer-to-peer connection, client private IP addresses are included in this candidate collection. However, disclosure of these addresses has privacy implications.  This document describes a way to share local IP addresses with other clients while preserving client privacy. This is achieved by obfuscating IP addresses with dynamically generated Multicast DNS (mDNS) " />
   <meta name="description" content="WebRTC applications collect ICE candidates as part of the process of creating peer-to-peer connections. To maximize the probability of a direct peer-to-peer connection, client private IP addresses are included in this candidate collection. However, disclosure of these addresses has privacy implications.  This document describes a way to share local IP addresses with other clients while preserving client privacy. This is achieved by obfuscating IP addresses with dynamically generated Multicast DNS (mDNS) " />
@@ -352,7 +352,7 @@ ul.toc li {
   </table>
 
   <p class="title">Using Multicast DNS to protect privacy when exposing ICE candidates<br />
-  <span class="filename">draft-ietf-rtcweb-mdns-ice-candidates-01</span></p>
+  <span class="filename">draft-ietf-rtcweb-mdns-ice-candidates-02</span></p>
   
   <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
 <p>WebRTC applications collect ICE candidates as part of the process of creating peer-to-peer connections. To maximize the probability of a direct peer-to-peer connection, client private IP addresses are included in this candidate collection. However, disclosure of these addresses has privacy implications.  This document describes a way to share local IP addresses with other clients while preserving client privacy. This is achieved by obfuscating IP addresses with dynamically generated Multicast DNS (mDNS) <a href="#RFC6762" class="xref">[RFC6762]</a> names.</p>
@@ -504,7 +504,7 @@ ul.toc li {
          for 1.1.1.1&gt; |                                 |  for 2.2.2.2&gt;
                       |------- mDNS Candidate N1 ------&gt;|
                       |&lt;------ mDNS Candidate N2 -------|
-&lt;Resolve              |                                 | &lt;Resolve 
+&lt;Resolve              |                                 | &lt;Resolve
  ...                  |                                 |  mDNS name N1&gt;
  mDNS                 |&lt;==== STUN check to 1.1.1.1 =====|
  ...  prflx candidate |                                 |
