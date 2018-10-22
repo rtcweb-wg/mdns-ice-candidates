@@ -388,6 +388,11 @@ session are on the same network, the fact they are communicating can be discover
 
 As above, mitigation of this threat is beyond the scope of this proposal.
 
+IANA Considerations
+===================
+
+This document requires no actions from IANA.
+
 Specification Requirements {#requirements}
 ============
 
