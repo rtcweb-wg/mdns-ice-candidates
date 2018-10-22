@@ -36,6 +36,7 @@ author:
     email: qingsi@google.com
 
 informative:
+  RFC2119:
   RFC4122:
   RFC5766:
   RFC6762:
@@ -104,6 +105,13 @@ providing those names, rather than the IP addresses, to the web application
 when it gathers ICE candidates. WebRTC implementations resolve these names
 to IP addresses and perform ICE processing as usual, but the actual IP addresses
 are not exposed to the web application.
+
+Terminology
+===========
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+document are to be interpreted as described in {{RFC2119}}.
 
 Principle {#principle}
 ============
