@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<reference  anchor='RFC4122' target='https://www.rfc-editor.org/info/rfc4122'>
+<front>
+<title>A Universally Unique IDentifier (UUID) URN Namespace</title>
+<author initials='P.' surname='Leach' fullname='P. Leach'><organization /></author>
+<author initials='M.' surname='Mealling' fullname='M. Mealling'><organization /></author>
+<author initials='R.' surname='Salz' fullname='R. Salz'><organization /></author>
+<date year='2005' month='July' />
+<abstract><t>This specification defines a Uniform Resource Name namespace for UUIDs (Universally Unique IDentifier), also known as GUIDs (Globally Unique IDentifier).  A UUID is 128 bits long, and can guarantee uniqueness across space and time.  UUIDs were originally used in the Apollo Network Computing System and later in the Open Software Foundation\'s (OSF) Distributed Computing Environment (DCE), and then in Microsoft Windows platforms.</t><t>This specification is derived from the DCE specification with the kind permission of the OSF (now known as The Open Group).  Information from earlier versions of the DCE specification have been incorporated into this document.  [STANDARDS-TRACK]</t></abstract>
+</front>
+<seriesInfo name='RFC' value='4122'/>
+<seriesInfo name='DOI' value='10.17487/RFC4122'/>
+</reference>
