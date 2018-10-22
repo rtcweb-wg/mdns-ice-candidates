@@ -178,7 +178,7 @@ to obtain the corresponding IP addresses.
                   ICE Agent 1 (1.1.1.1)             ICE Agent 2 (2.2.2.2)
             <Register     |                                 |
              mDNS name N1 |                                 |
-             for 1.1.1.1                                    |
+             for 1.1.1.1> |                                 |
                           |------- mDNS Candidate N1 ------>|
                           |                                 | <Register
                           |                                 |  mDNS name N2
