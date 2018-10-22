@@ -402,6 +402,11 @@ session are on the same network, the fact they are communicating can be discover
 
 As above, mitigation of this threat is beyond the scope of this proposal.
 
+IANA Considerations
+===================
+
+This document requires no actions from IANA.
+
 Specification Requirements {#requirements}
 ============
 
@@ -413,8 +418,3 @@ This could be described in {{ICESDP}} and/or {{WebRTCSpec}}.
 
 The proposal allows updating {{IPHandling}} so that mode 2 is not the mode used by default when user consent is not required.
 Instead, the default mode could be defined as mode 3 with mDNS-based ICE candidates.
-
-IANA Considerations
-===================
-
-This document requires no actions from IANA.
