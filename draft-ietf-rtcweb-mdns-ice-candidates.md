@@ -1,8 +1,8 @@
 ---
 title: Using Multicast DNS to protect privacy when exposing ICE candidates
 abbrev: mdns-ice-candidates
-docname: draft-ietf-rtcweb-mdns-ice-candidates-00
-date: 2018-09-12
+docname: draft-ietf-rtcweb-mdns-ice-candidates-01
+date: 2018-10-22
 category: info
 
 ipr: trust200902
