@@ -231,14 +231,15 @@ received.
 Privacy Considerations {#privacy}
 ==================================
 
+The goal of this mechanism is to keep knowledge of private host IP
+addresses within the ICE agent while continuing to allow the 
+application to transmit ICE candidates. Besides keeping private
+host IP addresses out of ICE candidates, implementations must take
+steps to prevent these IP addresses from being exposed to web 
+applications through other means.
+
 Statistics 
 ----------
-
-The goal of this mechanism is to keep knowledge of host IP addresses
-within the ICE agent while continuing to allow the application to
-transmit ICE candidates. Besides keeping host IP addresses out of 
-ICE candidates, implementations must take steps to prevent host IP 
-addresses from being exposed to web applications through other means.
 
 Statistics related to ICE candidates that are accessible to the web
 application MUST NOT contain the IP address of a local or remote mDNS
