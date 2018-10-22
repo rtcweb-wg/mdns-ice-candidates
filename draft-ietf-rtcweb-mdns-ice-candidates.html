@@ -288,9 +288,10 @@ ul.toc li {
 <link href="#rfc.section.2.2.1" rel="Chapter" title="2.2.1 Handling of Peer-Reflexive Remote Candidate">
 <link href="#rfc.section.3" rel="Chapter" title="3 Examples">
 <link href="#rfc.section.4" rel="Chapter" title="4 Privacy Guidelines">
-<link href="#rfc.section.4.1" rel="Chapter" title="4.1 APIs leaking IP addresses">
-<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Generated names reuse">
-<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Specific browsing contexts">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 APIs Leaking IP Addresses">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Interactions With TURN Servers">
+<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Generated Names Reuse">
+<link href="#rfc.section.4.4" rel="Chapter" title="4.4 Specific Browsing Contexts">
 <link href="#rfc.section.5" rel="Chapter" title="5 Security Considerations">
 <link href="#rfc.section.5.1" rel="Chapter" title="5.1 mDNS Message Flooding">
 <link href="#rfc.section.5.2" rel="Chapter" title="5.2 Malicious Responses to Deny Name Registration">
@@ -382,11 +383,13 @@ ul.toc li {
 </li>
 <li>4.   <a href="#rfc.section.4">Privacy Guidelines</a>
 </li>
-<ul><li>4.1.   <a href="#rfc.section.4.1">APIs leaking IP addresses</a>
+<ul><li>4.1.   <a href="#rfc.section.4.1">APIs Leaking IP Addresses</a>
 </li>
-<li>4.2.   <a href="#rfc.section.4.2">Generated names reuse</a>
+<li>4.2.   <a href="#rfc.section.4.2">Interactions With TURN Servers</a>
 </li>
-<li>4.3.   <a href="#rfc.section.4.3">Specific browsing contexts</a>
+<li>4.3.   <a href="#rfc.section.4.3">Generated Names Reuse</a>
+</li>
+<li>4.4.   <a href="#rfc.section.4.4">Specific Browsing Contexts</a>
 </li>
 </ul><li>5.   <a href="#rfc.section.5">Security Considerations</a>
 </li>
@@ -451,7 +454,7 @@ ul.toc li {
 <a href="#rfc.section.2.2.1">2.2.1.</a> <a href="#handling-of-peer-reflexive-remote-candidate" id="handling-of-peer-reflexive-remote-candidate">Handling of Peer-Reflexive Remote Candidate</a>
 </h1>
 <p id="rfc.section.2.2.1.p.1">A peer-reflexive remote candidate could be learned and constructed from the source transport address of the STUN Binding request as an ICE connectivity check. The peer-reflexive candidate could share the same address as a remote mDNS candidate that is in the process of being signaled or name resolution.</p>
-<p id="rfc.section.2.2.1.p.2">In addition to the elimination procedure of redundant candidates defined in Section 5.1.3 of <a href="#RFC8445" class="xref">[RFC8445]</a>, which could remove constructed peer-reflexive remote candidates, the address of any existing peer-reflexive remote candidate should not be exposed to Web applications by ICE agents that implement this proposal, as detailed in Section <a href="#guidelines" class="xref">Section 4</a>.</p>
+<p id="rfc.section.2.2.1.p.2">In addition to the elimination procedure of redundant candidates defined in Section 5.1.3 of <a href="#RFC8445" class="xref">[RFC8445]</a>, which could remove constructed peer-reflexive remote candidates, the address of any existing peer-reflexive remote candidate should not be exposed to Web applications by ICE agents that implement this proposal, as detailed in <a href="#guidelines" class="xref">Section 4</a>.</p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#examples" id="examples">Examples</a>
 </h1>
@@ -509,7 +512,7 @@ ul.toc li {
 <a href="#rfc.section.4">4.</a> <a href="#guidelines" id="guidelines">Privacy Guidelines</a>
 </h1>
 <h1 id="rfc.section.4.1">
-<a href="#rfc.section.4.1">4.1.</a> <a href="#apis-leaking-ip-addresses" id="apis-leaking-ip-addresses">APIs leaking IP addresses</a>
+<a href="#rfc.section.4.1">4.1.</a> <a href="#apis-leaking-ip-addresses" id="apis-leaking-ip-addresses">APIs Leaking IP Addresses</a>
 </h1>
 <p id="rfc.section.4.1.p.1">When there is no user consent, the following filtering should be done to prevent private IP address leakage:</p>
 <p></p>
@@ -521,14 +524,20 @@ ul.toc li {
 <li>Statistics related to ICE candidates MUST NOT contain the resolved IP address of a remote mDNS candidate or the IP address of a peer-reflexive candidate, unless that IP address has already been learned through other means, e.g., receiving it in a separate server-reflexive remote candidate.</li>
 </ol>
 <h1 id="rfc.section.4.2">
-<a href="#rfc.section.4.2">4.2.</a> <a href="#generated-names-reuse" id="generated-names-reuse">Generated names reuse</a>
+<a href="#rfc.section.4.2">4.2.</a> <a href="#interactions-with-turn-servers" id="interactions-with-turn-servers">Interactions With TURN Servers</a>
 </h1>
-<p id="rfc.section.4.2.p.1">It is important that use of registered mDNS hostnames is limited in time and/or scope. Indefinitely reusing the same mDNS hostname candidate would provide applications an even more reliable tracking mechanism than the private IP addresses that this specification is designed to hide. The use of registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the lifetime of the page.</p>
+<p id="rfc.section.4.2.p.1">When sending data to a TURN <a href="#RFC5766" class="xref">[RFC5766]</a> server, the sending client tells the server the destination IP and port for the data. This means that if the client uses TURN to send to an IP that was obtained by mDNS resolution, the TURN server will learn the underlying host IP and port, and this information can then be relayed to the web application, defeating the value of the mDNS wrapping.</p>
+<p id="rfc.section.4.2.p.2">To prevent disclosure of the host IP address to a TURN server, the ICE agent MUST NOT form candidate pairs between its own relay candidates and remote mDNS candidates. Note that the converse is not an issue; the ICE agent MAY form candidate pairs between its own mDNS candidates and remote relay candidates, as in this situation host IPs will not be sent directly to the TURN server.</p>
+<p id="rfc.section.4.2.p.3">This restriction has no effect on connectivity; in the cases where host IP addresses are private and need to be wrapped with mDNS names, they will be unreachable from the TURN server, and as noted above, the reverse path will continue to work normally.</p>
 <h1 id="rfc.section.4.3">
-<a href="#rfc.section.4.3">4.3.</a> <a href="#specific-browsing-contexts" id="specific-browsing-contexts">Specific browsing contexts</a>
+<a href="#rfc.section.4.3">4.3.</a> <a href="#generated-names-reuse" id="generated-names-reuse">Generated Names Reuse</a>
 </h1>
-<p id="rfc.section.4.3.p.1">As noted in <a href="#IPHandling" class="xref">[IPHandling]</a>, privacy may be breached if a web application running in two browsing contexts can determine whether it is running on the same device.  While the approach in this document prevents the application from directly comparing local private IP addresses, a successful local WebRTC connection can also present a threat to user privacy. Specifically, when the latency of a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.</p>
-<p id="rfc.section.4.3.p.2">To avoid this issue, browsers SHOULD NOT register mDNS names for WebRTC applications running in a third-party browsing context (i.e., a context that has a different origin than the top-level browsing context), or a private browsing context.</p>
+<p id="rfc.section.4.3.p.1">It is important that use of registered mDNS hostnames is limited in time and/or scope. Indefinitely reusing the same mDNS hostname candidate would provide applications an even more reliable tracking mechanism than the private IP addresses that this specification is designed to hide. The use of registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the lifetime of the page.</p>
+<h1 id="rfc.section.4.4">
+<a href="#rfc.section.4.4">4.4.</a> <a href="#specific-browsing-contexts" id="specific-browsing-contexts">Specific Browsing Contexts</a>
+</h1>
+<p id="rfc.section.4.4.p.1">As noted in <a href="#IPHandling" class="xref">[IPHandling]</a>, privacy may be breached if a web application running in two browsing contexts can determine whether it is running on the same device.  While the approach in this document prevents the application from directly comparing local private IP addresses, a successful local WebRTC connection can also present a threat to user privacy. Specifically, when the latency of a WebRTC connection latency is close to zero, the probability is high that the two peers are running on the same device.</p>
+<p id="rfc.section.4.4.p.2">To avoid this issue, browsers SHOULD NOT register mDNS names for WebRTC applications running in a third-party browsing context (i.e., a context that has a different origin than the top-level browsing context), or a private browsing context.</p>
 <h1 id="rfc.section.5">
 <a href="#rfc.section.5">5.</a> <a href="#security" id="security">Security Considerations</a>
 </h1>
@@ -555,8 +564,8 @@ ul.toc li {
 <h1 id="rfc.section.5.2">
 <a href="#rfc.section.5.2">5.2.</a> <a href="#malicious-responses-to-deny-name-registration" id="malicious-responses-to-deny-name-registration">Malicious Responses to Deny Name Registration</a>
 </h1>
-<p id="rfc.section.5.2.p.1">If the optional probing queries are implemented for the name registration, a malicious endpoint in the local network, which is capable of responding mDNS queries, could send responses to block the use of the generated names. This would lead to the discarding of this ICE host candidate as in Step 5 in Section <a href="#gathering" class="xref">Section 2.1</a>.</p>
-<p id="rfc.section.5.2.p.2">The above attack can be mitigated by skipping the probing when registering a name, which also conforms to Section 8 in <a href="#RFC6762" class="xref">[RFC6762]</a>, given that the name is randomly generated for the probabilistic uniqueness (e.g. a version 4 UUID) in Step 3 in Section <a href="#gathering" class="xref">Section 2.1</a>. However, a similar attack can be performed by exploiting the negative responses (defined in <a href="#RFC6762" class="xref">[RFC6762]</a>, Section 8.1), in which NSEC resource records are sent to claim the nonexistence of records related to the gathered ICE host candidates.</p>
+<p id="rfc.section.5.2.p.1">If the optional probing queries are implemented for the name registration, a malicious endpoint in the local network, which is capable of responding mDNS queries, could send responses to block the use of the generated names. This would lead to the discarding of this ICE host candidate as in Step 5 in <a href="#gathering" class="xref">Section 2.1</a>.</p>
+<p id="rfc.section.5.2.p.2">The above attack can be mitigated by skipping the probing when registering a name, which also conforms to Section 8 in <a href="#RFC6762" class="xref">[RFC6762]</a>, given that the name is randomly generated for the probabilistic uniqueness (e.g. a version 4 UUID) in Step 3 in <a href="#gathering" class="xref">Section 2.1</a>. However, a similar attack can be performed by exploiting the negative responses (defined in <a href="#RFC6762" class="xref">[RFC6762]</a>, Section 8.1), in which NSEC resource records are sent to claim the nonexistence of records related to the gathered ICE host candidates.</p>
 <p id="rfc.section.5.2.p.3">The existence of malicious endpoints in the local network poses a generic threat, and requires dedicated protocol suites to mitigate, which is beyond the scope of this proposal.</p>
 <h1 id="rfc.section.5.3">
 <a href="#rfc.section.5.3">5.3.</a> <a href="#monitoring-of-sessions" id="monitoring-of-sessions">Monitoring of Sessions</a>
@@ -594,6 +603,11 @@ ul.toc li {
 <td class="reference"><b id="RFC4122">[RFC4122]</b></td>
 <td class="top">
 <a>Leach, P.</a>, <a>Mealling, M.</a> and <a>R. Salz</a>, "<a href="https://tools.ietf.org/html/rfc4122">A Universally Unique IDentifier (UUID) URN Namespace</a>", RFC 4122, DOI 10.17487/RFC4122, July 2005.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5766">[RFC5766]</b></td>
+<td class="top">
+<a>Mahy, R.</a>, <a>Matthews, P.</a> and <a>J. Rosenberg</a>, "<a href="https://tools.ietf.org/html/rfc5766">Traversal Using Relays around NAT (TURN): Relay Extensions to Session Traversal Utilities for NAT (STUN)</a>", RFC 5766, DOI 10.17487/RFC5766, April 2010.</td>
 </tr>
 <tr>
 <td class="reference"><b id="RFC6762">[RFC6762]</b></td>
