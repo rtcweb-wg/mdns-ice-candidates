@@ -139,9 +139,15 @@ An implementation may also detect that mDNS is not supported by the available ne
 The ICE agent may skip steps 2 and 3 and directly decide to not expose the host candidate.
 
 This procedure ensures that a mDNS name is used to replace only one IP address.
-Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST expose a different mDNS name for each address.
+Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST 
+expose a different mDNS name for each address.
 
-Any server-reflexive candidates generated from a mDNS local candidate MUST have their raddr field set to 0.0.0.0 and their rport field set to 0.
+Any server-reflexive candidates generated from a mDNS local candidate MUST have 
+their raddr field set to 0.0.0.0 and their rport field set to 0.
+
+Any candidates exposed to the web application via local descriptions MUST be
+identical to those provided during candidate gathering (i.e., MUST NOT
+contain private host IP addresses).
 
 ICE Candidate Processing {#processing}
 ----------------------------
@@ -162,7 +168,7 @@ In this case the resolution of a ".local" name may happen through Unicast DNS, s
 An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
-  
+
 Examples
 ========
 
@@ -178,14 +184,14 @@ to obtain the corresponding IP addresses.
                           |                                         |  mDNS name N2
                           |                                         |  for 2.2.2.2>
                           |<---------- mDNS Candidate N2 -----------|
-           <Resolve       |                                         | <Resolve 
+           <Resolve       |                                         | <Resolve
             mDNS name N2> |                                         |  mDNS name N1>
                           |<======== STUN check to 1.1.1.1 =========|
                           |========= STUN check to 2.2.2.2 ========>|
                           |                                         |
 
 The following two examples indicate how peer-reflexive candidates for host IP
-addresses can be created due to timing differences. 
+addresses can be created due to timing differences.
 
 In this example, a peer-reflexive candidate is generated because the 
 mDNS candidate is signaled after the STUN checks begin.
@@ -195,7 +201,7 @@ mDNS candidate is signaled after the STUN checks begin.
              mDNS name N1 |                                         |
              for 1.1.1.1> |                                         |
                           |----------- mDNS Candidate N1 ---------->|
-                          |                                         | <Resolve 
+                          |                                         | <Resolve
                           |                                         |  mDNS name N1>
                           |<======== STUN check to 1.1.1.1 =========|
           prflx candidate |                                         | <Register
@@ -204,8 +210,8 @@ mDNS candidate is signaled after the STUN checks begin.
                           |<---------- mDNS Candidate N2 -----------|
                           |                                         |
 
-In this example, a peer-reflexive candidate is generated because the 
-mDNS resolution for name N2 does not complete until after the STUN checks are 
+In this example, a peer-reflexive candidate is generated because the
+mDNS resolution for name N2 does not complete until after the STUN checks are
 received.
 
                   ICE Agent 1 (1.1.1.1)                     ICE Agent 2 (2.2.2.2)
@@ -221,7 +227,7 @@ received.
      name 2.2.2.2 created |                                         |
      ...                  |                                         |
      N2>                  |                                         |
- 
+
 Privacy Considerations {#privacy}
 ==================================
 
@@ -274,7 +280,7 @@ host IP addresses are private and need to be wrapped with mDNS names,
 they will be unreachable from the TURN server, and as noted above,
 the reverse path will continue to work normally.
 
-Generated names reuse
+Generated Names Reuse
 ---------------------
 
 It is important that use of registered mDNS hostnames is limited in time 
@@ -284,7 +290,7 @@ IP addresses that this specification is designed to hide. The use of
 registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the 
 lifetime of the page.
 
-Specific browsing contexts
+Specific Browsing Contexts
 ----------------------------
 
 As noted in {{IPHandling}}, privacy may be breached if a web application running
@@ -350,12 +356,12 @@ If the optional probing queries are implemented for the name registration, a
 malicious endpoint in the local network, which is capable of responding mDNS
 queries, could send responses to block the use of the generated names. This
 would lead to the discarding of this ICE host candidate as in Step 5 in Section
-{{#gathering}}.
+{{gathering}}.
 
 The above attack can be mitigated by skipping the probing when registering a
 name, which also conforms to Section 8 in {{RFC6762}}, given that the name is
 randomly generated for the probabilistic uniqueness (e.g. a version 4 UUID) in
-Step 3 in Section {{#gathering}}. However, a similar attack can be performed by
+Step 3 in Section {{gathering}}. However, a similar attack can be performed by
 exploiting the negative responses (defined in {{RFC6762}}, Section 8.1), in
 which NSEC resource records are sent to claim the nonexistence of records
 related to the gathered ICE host candidates.
