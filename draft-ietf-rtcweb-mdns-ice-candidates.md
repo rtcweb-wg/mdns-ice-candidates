@@ -1,7 +1,7 @@
 ---
 title: Using Multicast DNS to protect privacy when exposing ICE candidates
 abbrev: mdns-ice-candidates
-docname: draft-ietf-rtcweb-mdns-ice-candidates-01
+docname: draft-ietf-rtcweb-mdns-ice-candidates-02
 date: 2018-10-22
 category: info
 
@@ -147,10 +147,10 @@ An implementation may also detect that mDNS is not supported by the available ne
 The ICE agent may skip steps 2 and 3 and directly decide to not expose the host candidate.
 
 This procedure ensures that an mDNS name is used to replace only one IP address.
-Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST 
+Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST
 expose a different mDNS name for each address.
 
-Any server-reflexive candidates generated from an mDNS local candidate MUST have 
+Any server-reflexive candidates generated from an mDNS local candidate MUST have
 their raddr field set to 0.0.0.0 and their rport field set to 0.
 
 Any candidates exposed to the web application via local descriptions MUST be
@@ -201,7 +201,7 @@ to obtain the corresponding IP addresses.
 The following two examples indicate how peer-reflexive candidates for host IP
 addresses can be created due to timing differences.
 
-In this example, a peer-reflexive candidate is generated because the 
+In this example, a peer-reflexive candidate is generated because the
 mDNS candidate is signaled after the STUN checks begin.
 
                   ICE Agent 1 (1.1.1.1)             ICE Agent 2 (2.2.2.2)
@@ -228,7 +228,7 @@ received.
              for 1.1.1.1> |                                 |  for 2.2.2.2>
                           |------- mDNS Candidate N1 ------>|
                           |<------ mDNS Candidate N2 -------|
-    <Resolve              |                                 | <Resolve 
+    <Resolve              |                                 | <Resolve
      ...                  |                                 |  mDNS name N1>
      mDNS                 |<==== STUN check to 1.1.1.1 =====|
      ...  prflx candidate |                                 |
@@ -240,34 +240,34 @@ Privacy Considerations {#privacy}
 ==================================
 
 The goal of this mechanism is to keep knowledge of private host IP
-addresses within the ICE agent while continuing to allow the 
+addresses within the ICE agent while continuing to allow the
 application to transmit ICE candidates. Besides keeping private
 host IP addresses out of ICE candidates, implementations must take
-steps to prevent these IP addresses from being exposed to web 
+steps to prevent these IP addresses from being exposed to web
 applications through other means.
 
-Statistics 
+Statistics
 ----------
 
 Statistics related to ICE candidates that are accessible to the web
 application MUST NOT contain the IP address of a local or remote mDNS
 candidate; the mDNS name SHOULD be used instead.
 
-In addition, a peer-reflexive remote candidate may be constructed 
+In addition, a peer-reflexive remote candidate may be constructed
 from a remote host IP address as a result of an ICE connectivity
 check, as described in Section 7.3.1.3 of {{RFC8445}}. This check
 may arrive before the candidate due to signaling or mDNS
 resolution delays, as shown in the examples above.
 
 To prevent disclosure of the host IP address to the application in
-this scenario, statistics related to ICE candidates MUST NOT 
+this scenario, statistics related to ICE candidates MUST NOT
 contain the IP address of any peer-reflexive candidate, unless that IP
 has already been learned through signaling of a candidate with the
 same address and either the same or a different port; this includes cases
-where the signaled candidate is discarded as redundant according to 
+where the signaled candidate is discarded as redundant according to
 Section 5.1.3 of {{RFC8445}}.
 
-Interactions With TURN Servers 
+Interactions With TURN Servers
 ------------------------------
 
 When sending data to a TURN {{RFC5766}} server, the sending client tells
@@ -275,7 +275,7 @@ the server the destination IP and port for the data. This means that
 if the client uses TURN to send to an IP that was obtained by mDNS
 resolution, the TURN server will learn the underlying host IP and port,
 and this information can then be relayed to the web application,
-defeating the value of the mDNS wrapping. 
+defeating the value of the mDNS wrapping.
 
 To prevent disclosure of the host IP address to a TURN server, the ICE
 agent MUST NOT form candidate pairs between its own relay candidates
@@ -284,7 +284,7 @@ ICE agent MAY form candidate pairs between its own mDNS candidates and
 remote relay candidates, as in this situation host IPs will not be sent
 directly to the TURN server.
 
-This restriction has no effect on connectivity; in the cases where 
+This restriction has no effect on connectivity; in the cases where
 host IP addresses are private and need to be wrapped with mDNS names,
 they will be unreachable from the TURN server, and as noted above,
 the reverse path will continue to work normally.
@@ -292,11 +292,11 @@ the reverse path will continue to work normally.
 Generated Names Reuse
 ---------------------
 
-It is important that use of registered mDNS hostnames is limited in time 
-and/or scope. Indefinitely reusing the same mDNS hostname candidate would 
+It is important that use of registered mDNS hostnames is limited in time
+and/or scope. Indefinitely reusing the same mDNS hostname candidate would
 provide applications an even more reliable tracking mechanism than the private
-IP addresses that this specification is designed to hide. The use of 
-registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the 
+IP addresses that this specification is designed to hide. The use of
+registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the
 lifetime of the page.
 
 Specific Browsing Contexts
