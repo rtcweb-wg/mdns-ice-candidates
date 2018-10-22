@@ -115,7 +115,7 @@ in Section 7.1 of {{HTMLSpec}}) has its own ICE agent.
 ICE Candidate Gathering {#gathering}
 ----------------------------
 
-For any host candidate gathered by an ICE agent as part of {{RFC8445}} Section 5.1.1, the candidate is handled as follows:
+For any host candidate gathered by an ICE agent as part of {{RFC8445}}, Section 5.1.1, the candidate is handled as follows:
 
 1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
 
@@ -138,11 +138,11 @@ By doing so, only step 6 of the above procedure will be executed at the time of 
 An implementation may also detect that mDNS is not supported by the available network interfaces.
 The ICE agent may skip steps 2 and 3 and directly decide to not expose the host candidate.
 
-This procedure ensures that a mDNS name is used to replace only one IP address.
+This procedure ensures that an mDNS name is used to replace only one IP address.
 Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST 
 expose a different mDNS name for each address.
 
-Any server-reflexive candidates generated from a mDNS local candidate MUST have 
+Any server-reflexive candidates generated from an mDNS local candidate MUST have 
 their raddr field set to 0.0.0.0 and their rport field set to 0.
 
 Any candidates exposed to the web application via local descriptions MUST be
@@ -163,7 +163,7 @@ For any remote ICE candidate received by the ICE agent, the following procedure 
 4. Otherwise, ignore the candidate.
 
 An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.
-In this case the resolution of a ".local" name may happen through Unicast DNS, see {{RFC6762}} section 3.
+In this case the resolution of a ".local" name may happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
 
 An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
