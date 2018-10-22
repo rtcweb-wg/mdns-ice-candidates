@@ -171,7 +171,7 @@ In addition to the elimination procedure
 of redundant candidates defined in Section 5.1.3 of {{RFC8445}}, which could
 remove constructed peer-reflexive remote candidates, the address of any existing
 peer-reflexive remote candidate should not be exposed to Web applications by ICE
-agents that implement this proposal, as detailed in Section {{guidelines}}.
+agents that implement this proposal, as detailed in {{guidelines}}.
 
 Examples
 ========
@@ -345,13 +345,12 @@ Malicious Responses to Deny Name Registration
 If the optional probing queries are implemented for the name registration, a
 malicious endpoint in the local network, which is capable of responding mDNS
 queries, could send responses to block the use of the generated names. This
-would lead to the discarding of this ICE host candidate as in Step 5 in Section
-{{gathering}}.
+would lead to the discarding of this ICE host candidate as in Step 5 in {{gathering}}.
 
 The above attack can be mitigated by skipping the probing when registering a
 name, which also conforms to Section 8 in {{RFC6762}}, given that the name is
 randomly generated for the probabilistic uniqueness (e.g. a version 4 UUID) in
-Step 3 in Section {{gathering}}. However, a similar attack can be performed by
+Step 3 in {{gathering}}. However, a similar attack can be performed by
 exploiting the negative responses (defined in {{RFC6762}}, Section 8.1), in
 which NSEC resource records are sent to claim the nonexistence of records
 related to the gathered ICE host candidates.
@@ -365,7 +364,7 @@ Monitoring of Sessions
 
 A malicious endpoint in the local network may also record other endpoints who are registering,
 unregistering, and resolving mDNS names. By doing so, they can create a session log that
-shows which endpoints are communicating, and for how long. If both endpoints in the 
+shows which endpoints are communicating, and for how long. If both endpoints in the
 session are on the same network, the fact they are communicating can be discovered.
 
 As above, mitigation of this threat is beyond the scope of this proposal.
