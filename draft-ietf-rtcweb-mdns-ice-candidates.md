@@ -1,8 +1,8 @@
 ---
 title: Using Multicast DNS to protect privacy when exposing ICE candidates
 abbrev: mdns-ice-candidates
-docname: draft-ietf-rtcweb-mdns-ice-candidates-00
-date: 2018-09-12
+docname: draft-ietf-rtcweb-mdns-ice-candidates-01
+date: 2018-10-22
 category: info
 
 ipr: trust200902
@@ -280,6 +280,28 @@ host IP addresses are private and need to be wrapped with mDNS names,
 they will be unreachable from the TURN server, and as noted above,
 the reverse path will continue to work normally.
 
+Interactions With TURN Servers
+------------------------------
+
+When sending data to a TURN {{RFC5766}} server, the sending client tells
+the server the destination IP and port for the data. This means that
+if the client uses TURN to send to an IP that was obtained by mDNS
+resolution, the TURN server will learn the underlying host IP and port,
+and this information can then be relayed to the web application,
+defeating the value of the mDNS wrapping.
+
+To prevent disclosure of the host IP address to a TURN server, the ICE
+agent MUST NOT form candidate pairs between its own relay candidates
+and remote mDNS candidates. Note that the converse is not an issue; the
+ICE agent MAY form candidate pairs between its own mDNS candidates and
+remote relay candidates, as in this situation host IPs will not be sent
+directly to the TURN server.
+
+This restriction has no effect on connectivity; in the cases where
+host IP addresses are private and need to be wrapped with mDNS names,
+they will be unreachable from the TURN server, and as noted above,
+the reverse path will continue to work normally.
+
 Generated Names Reuse
 ---------------------
 
@@ -355,13 +377,12 @@ Malicious Responses to Deny Name Registration
 If the optional probing queries are implemented for the name registration, a
 malicious endpoint in the local network, which is capable of responding mDNS
 queries, could send responses to block the use of the generated names. This
-would lead to the discarding of this ICE host candidate as in Step 5 in Section
-{{gathering}}.
+would lead to the discarding of this ICE host candidate as in Step 5 in {{gathering}}.
 
 The above attack can be mitigated by skipping the probing when registering a
 name, which also conforms to Section 8 in {{RFC6762}}, given that the name is
 randomly generated for the probabilistic uniqueness (e.g. a version 4 UUID) in
-Step 3 in Section {{gathering}}. However, a similar attack can be performed by
+Step 3 in {{gathering}}. However, a similar attack can be performed by
 exploiting the negative responses (defined in {{RFC6762}}, Section 8.1), in
 which NSEC resource records are sent to claim the nonexistence of records
 related to the gathered ICE host candidates.
@@ -375,7 +396,7 @@ Monitoring of Sessions
 
 A malicious endpoint in the local network may also record other endpoints who are registering,
 unregistering, and resolving mDNS names. By doing so, they can create a session log that
-shows which endpoints are communicating, and for how long. If both endpoints in the 
+shows which endpoints are communicating, and for how long. If both endpoints in the
 session are on the same network, the fact they are communicating can be discovered.
 
 As above, mitigation of this threat is beyond the scope of this proposal.
