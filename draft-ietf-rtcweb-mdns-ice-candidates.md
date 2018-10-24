@@ -315,6 +315,14 @@ applications running in a third-party browsing context (i.e., a context that
 has a different origin than the top-level browsing context), or a private
 browsing context.
 
+Network Interface Enumeration
+----------------------------
+
+The number of mDNS hostname candidates might provide a fingerprinting dimension.
+This is in particular the case for network interfaces whose existence are not exposed
+through other means like STUN or TURN servers.
+No new information is provided when restricting mDNS hostname candidates to default route only.
+
 Security Considerations {#security}
 =======================
 
