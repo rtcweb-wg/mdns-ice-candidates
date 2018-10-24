@@ -56,9 +56,6 @@ informative:
       ins: J. Uberti
       ins: G. Shieh
     date: 2018-04-18
-  IPLeak:
-    target: https://ipleak.net
-    title:  IP/DNS Detect
   WebRTCSpec:
     target: https://w3c.github.io/webrtc-pc/
     title:  The WebRTC specification
