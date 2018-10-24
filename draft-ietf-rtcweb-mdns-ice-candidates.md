@@ -79,7 +79,7 @@ connection, client private IP addresses are included in this candidate
 collection. However, disclosure of these addresses has privacy implications.
 This document describes a way to share local IP addresses with other clients
 while preserving client privacy. This is achieved by obfuscating IP addresses
-with dynamically generated Multicast DNS (mDNS) {{RFC6762}} names.
+with dynamically generated Multicast DNS (mDNS) names.
 
 --- middle
 
@@ -97,7 +97,7 @@ networks, typically homes or small offices, where NAT loopback may not be
 supported.
 
 This document proposes an overall solution to this problem by registering
-ephemeral mDNS names for each local private IP address, and then
+ephemeral mDNS {{RFC6762}} names for each local private IP address, and then
 providing those names, rather than the IP addresses, to the web application
 when it gathers ICE candidates. WebRTC implementations resolve these names
 to IP addresses and perform ICE processing as usual, but the actual IP addresses
