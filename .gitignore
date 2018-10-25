@@ -1,0 +1,5 @@
+*.swp       
+lib
+.refcache/*
+.targets.mk 
+draft-*
