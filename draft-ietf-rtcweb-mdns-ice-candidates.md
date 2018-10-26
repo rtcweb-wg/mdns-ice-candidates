@@ -174,6 +174,33 @@ An ICE agent that supports mDNS candidates MUST support the situation where the 
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
+Limitations
+===========
+
+With typical ICE, endpoints on the same network will typically be able to
+establish a direct connection between their local IP addresses. With this
+technique, a direct connection is still possible, but only if at least one side
+can properly resolve the provided mDNS candidates. This may not be possible in
+all scenarios.
+
+First, some networks may entirely disable mDNS.  Second, mDNS queries have
+limited scope. On large networks, this may mean that a mDNS name cannot be
+resolved if the remote endpoint is too many segments away.
+
+When mDNS fails, ICE will attempt to fall back to either NAT hairpin,
+if supported, or TURN relay, if not. As noted in {{IPHandling}}, this may
+result in increased latency and reduced connectivity/increased cost (depending
+on whether the application chooses to use TURN).
+
+Note that backward compatibility does not present a significant issue in this
+situation. When an endpoint that supports mDNS communicates with an endpoint
+that does not, the legacy endpoint will still provide its local IP addresses,
+and accordingly a direct connection can still be attempted, even though
+the legacy endpoint cannot resolve the mDNS names provided by the new endpoint.
+
+The exact impact of this technique is being researched experimentally and will
+be provided before publication of this document.
+
 Examples
 ========
 
