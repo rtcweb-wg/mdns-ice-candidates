@@ -121,7 +121,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 document are to be interpreted as described in {{RFC2119}}.
 
 Principle {#principle}
-============
+======================
 
 This section uses the concept of ICE agent as defined in {{RFC8445}}. In the
 remainder of the document, it is assumed that each browsing context (as defined
