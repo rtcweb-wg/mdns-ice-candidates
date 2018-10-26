@@ -189,14 +189,17 @@ resolved if the remote endpoint is too many segments away.
 
 When mDNS fails, ICE will attempt to fall back to either NAT hairpin,
 if supported, or TURN relay, if not. As noted in {{IPHandling}}, this may
-result in increased latency and reduced connectivity/increased cost (depending
-on whether the application chooses to use TURN).
+result in increased media latency and reduced connectivity/increased cost
+(depending on whether the application chooses to use TURN).
 
 Note that backward compatibility does not present a significant issue in this
 situation. When an endpoint that supports mDNS communicates with an endpoint
 that does not, the legacy endpoint will still provide its local IP addresses,
 and accordingly a direct connection can still be attempted, even though
 the legacy endpoint cannot resolve the mDNS names provided by the new endpoint.
+In the event the legacy endpoint attempts to resolve the mDNS name using Unicast
+DNS, this may cause ICE to take somewhat longer to complete, but should not
+have any effect on connectivity or media latency.
 
 The exact impact of this technique is being researched experimentally and will
 be provided before publication of this document.
