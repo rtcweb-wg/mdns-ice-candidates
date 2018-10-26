@@ -86,22 +86,32 @@ with dynamically generated Multicast DNS (mDNS) names.
 Introduction {#problems}
 ============
 
-As detailed in {{IPHandling}}, exposing client private IP addresses by default
-maximizes the probability of successfully creating direct peer-to-peer
-connection between two clients, but creates a significant surface for user
-fingerprinting. {{IPHandling}} recognizes this issue, but also admits that there
-is no current solution to this problem; implementations that choose to use
-Mode 3 to address the privacy concerns often suffer from failing or suboptimal
-connections in WebRTC applications. This is particularly an issue on unmanaged
-networks, typically homes or small offices, where NAT loopback may not be
-supported.
+As detailed in {{IPHandling}}, exposing client private IP addresses by
+default to web applications maximizes the probability of successfully creating
+direct peer-to-peer connections between clients, but creates a significant
+surface for user fingerprinting. {{IPHandling}} recognizes this issue, but also
+admits that there is no current solution to this problem; implementations that
+choose to use Mode 3 to address the privacy concerns often suffer from failing
+or suboptimal connections in WebRTC applications. This is particularly an issue
+on unmanaged networks, typically homes or small offices, where NAT loopback may
+not be supported.
 
-This document proposes an overall solution to this problem by registering
-ephemeral mDNS {{RFC6762}} names for each local private IP address, and then
-providing those names, rather than the IP addresses, to the web application
-when it gathers ICE candidates. WebRTC implementations resolve these names
-to IP addresses and perform ICE processing as usual, but the actual IP addresses
-are not exposed to the web application.
+This document proposes an overall solution to this problem by providing a
+mechanism for WebRTC implementations to register
+ephemeral mDNS {{RFC6762}} names for local private IP addresses, and then
+provide those names, rather than the IP addresses, in the ICE candidates
+they surface to web applications.
+
+Upon receiving ICE candidates with mDNS names, remote clients
+will resolve these names to IP addresses and
+perform ICE processing as usual. In the case where the remote client is a web
+application, the WebRTC implementation will manage this resolution internally
+and will not disclose the actual IP addresses to the application, as above.
+
+While this technique is intended to benefit WebRTC implementations in web
+browsers, by preventing collection of private IP addresses by arbitrary web
+pages, it can also be used by any endpoint that wants to avoid disclosing
+information about its local network to remote peers on other networks.
 
 Terminology
 ===========
@@ -118,7 +128,12 @@ remainder of the document, it is assumed that each browsing context (as defined
 in Section 7.1 of {{HTMLSpec}}) has its own ICE agent.
 
 ICE Candidate Gathering {#gathering}
-----------------------------
+------------------------------------
+
+This section outlines how mDNS should be used by ICE agents to conceal local
+IP addresses. Naturally, if the ICE agent does not want to conceal its IPs,
+e.g., if it has a priori knowledge that its addresses are in fact public,
+this processing is unnecessary.
 
 For any host candidate gathered by an ICE agent as part of {{RFC8445}}, Section 5.1.1, the candidate is handled as follows:
 
@@ -155,24 +170,34 @@ identical to those provided during candidate gathering (i.e., MUST NOT
 contain private host IP addresses).
 
 ICE Candidate Processing {#processing}
-----------------------------
+--------------------------------------
 
-For any remote ICE candidate received by the ICE agent, the following procedure is used:
+This section outlines how received ICE candidates with mDNS names are
+processed by ICE agents, and is relevant to all scenarios.
 
-1. If the connection-address field value of the ICE candidate does not end with ".local" or if the value contains more than one ".", then process the candidate as defined in {{RFC8445}}.
+For any remote ICE candidate received by the ICE agent, the following procedure
+is used:
+
+1. If the connection-address field value of the ICE candidate does not end with
+".local" or if the value contains more than one ".", then process the candidate
+as defined in {{RFC8445}}.
 
 2. Otherwise, resolve the candidate using mDNS.
 
-3. If it resolves to an IP address, replace the mDNS hostname of the ICE candidate with the resolved IP address and continue processing of the candidate.
+3. If it resolves to an IP address, replace the mDNS hostname of the ICE
+candidate with the resolved IP address and continue processing of the candidate.
 
 4. Otherwise, ignore the candidate.
 
-An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.
-In this case the resolution of a ".local" name may happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
+An ICE agent may use a hostname resolver that transparently supports both
+Multicast and Unicast DNS. In this case the resolution of a ".local" name may
+happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
 
-An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
-In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
-The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
+An ICE agent that supports mDNS candidates MUST support the situation where the
+hostname resolution results in more than one IP address. In this case, the ICE
+agent MUST take exactly one of the resolved IP addresses and ignore the others.
+The ICE agent SHOULD use the first IPv6 address resolved, if one exists, or
+the first IPv4 address, if not.
 
 Examples
 ========
