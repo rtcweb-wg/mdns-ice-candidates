@@ -197,7 +197,7 @@ situation. When an endpoint that supports mDNS communicates with an endpoint
 that does not, the legacy endpoint will still provide its local IP addresses,
 and accordingly a direct connection can still be attempted, even though
 the legacy endpoint cannot resolve the mDNS names provided by the new endpoint.
-In the event the legacy endpoint attempts to resolve the mDNS name using Unicast
+In the event the legacy endpoint attempts to resolve mDNS names using Unicast
 DNS, this may cause ICE to take somewhat longer to complete, but should not
 have any effect on connectivity or media latency.
 
