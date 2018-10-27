@@ -36,9 +36,12 @@ author:
     email: qingsi@google.com
 
 informative:
+  RFC1918:
   RFC2119:
   RFC4122:
+  RFC4941:
   RFC5766:
+  RFC6146:
   RFC6762:
   RFC8445:
   ICESDP:
@@ -352,7 +355,7 @@ remote endpoint. However, determining this ahead of time is not straightforward;
 while the fact that an IPv4 address is private can sometimes be inferred by its
 value, e.g., whether it is an {{RFC1918}} address, the reverse is not
 necessarily true. IPv6 addresses present their own complications, e.g.,
-private IPv6 addresses as a result of NAT64 {{RFC6164}}.
+private IPv6 addresses as a result of NAT64 {{RFC6146}}.
 
 Instead, the determination of whether an address is public can be reliably made
 as part of the ICE gathering process, namely, if the query to the
