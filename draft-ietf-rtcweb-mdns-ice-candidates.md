@@ -120,7 +120,20 @@ in Section 7.1 of {{HTMLSpec}}) has its own ICE agent.
 ICE Candidate Gathering {#gathering}
 ----------------------------
 
-For any host candidate gathered by an ICE agent as part of {{RFC8445}}, Section 5.1.1, the candidate is handled as follows:
+This section outlines how mDNS should be used by ICE agents to conceal local
+IP addresses.
+
+For each host candidate gathered by an ICE agent as part of the gathering
+process described in {{RFC8445}}, Section 5.1.1, the candidate is handled as
+described below. However, in certain cases, the ICE agent may decide that
+it does not need to conceal a candidate IP, and this processing may be skipped
+for that candidate.
+
+This may be because the ICE agent has a priori knowledge that the candidate
+address is in fact public, or because the agent has made a policy decision to
+not conceal certain types of IP addresses (e.g., those with built-in privacy
+protections) as a calculated choice to improve connectivity. This topic is
+discussed further in {#privacy} below.
 
 1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
 
@@ -192,14 +205,18 @@ if supported, or TURN relay, if not. As noted in {{IPHandling}}, this may
 result in increased media latency and reduced connectivity/increased cost
 (depending on whether the application chooses to use TURN).
 
-Note that backward compatibility does not present a significant issue in this
-situation. When an endpoint that supports mDNS communicates with an endpoint
-that does not, the legacy endpoint will still provide its local IP addresses,
-and accordingly a direct connection can still be attempted, even though
-the legacy endpoint cannot resolve the mDNS names provided by the new endpoint.
-In the event the legacy endpoint attempts to resolve mDNS names using Unicast
-DNS, this may cause ICE to take somewhat longer to complete, but should not
-have any effect on connectivity or media latency.
+One potential mitigation, as discussed in {#privacy}, is to not conceal
+candidates created from {{RFC4941}} IPv6 addresses. This permits connectivity
+even in large internal networks or where mDNS is disabled.
+
+Note that backward compatibility does not present a significant issue for the
+mDNS technique. When an endpoint that supports mDNS communicates with an
+endpoint that does not, the legacy endpoint will still provide its local IP
+addresses, and accordingly a direct connection can still be attempted, even
+though the legacy endpoint cannot resolve the mDNS names provided by the new
+endpoint. In the event the legacy endpoint attempts to resolve mDNS names using
+Unicast DNS, this may cause ICE to take somewhat longer to complete, but should
+not have any effect on connectivity or media latency.
 
 The exact impact of this technique is being researched experimentally and will
 be provided before publication of this document.
@@ -326,8 +343,36 @@ IP addresses that this specification is designed to hide. The use of
 registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the
 lifetime of the page.
 
+Determination of Address Privacy
+--------------------------------
+
+Naturally, an address that is already exposed to the Internet does not need to
+be protected by mDNS, as it can be trivially observed by the web server or
+remote endpoint. However, determining this ahead of time is not straightforward;
+while the fact that an IPv4 address is private can sometimes be inferred by its
+value, e.g., whether it is an {{RFC1918}} address, the reverse is not
+necessarily true. IPv6 addresses present their own complications, e.g.,
+private IPv6 addresses as a result of NAT64 {{RFC6164}}.
+
+Instead, the determination of whether an address is public can be reliably made
+as part of the ICE gathering process, namely, if the query to the
+STUN {{RFC5389}} server returns the same value as the local address. This can
+be done for both IPv4 and IPv6 local addresses, provided that the application
+has configured both IPv4 and IPv6 STUN servers. Implementations MAY cache this
+information about address privacy to speed up future ICE gathering.
+
+Special Handling for IPv6 Addresses
+-----------------------------------
+
+As noted in {{IPHandling}}, private IPv4 addresses are especially problematic
+because of their unbounded lifetime. However, the {{RFC4941}} IPv6
+addresses recommended for WebRTC have inherent privacy protections, namely
+a short lifetime and the lack of any stateful information. Accordingly,
+implementations MAY choose to not obscure {{RFC4941}} addresses with mDNS names
+as a tradeoff for improved peer-to-peer connectivity.
+
 Specific Browsing Contexts
-----------------------------
+--------------------------
 
 As noted in {{IPHandling}}, privacy may be breached if a web application running
 in two browsing contexts can determine whether it is running on the same device.
