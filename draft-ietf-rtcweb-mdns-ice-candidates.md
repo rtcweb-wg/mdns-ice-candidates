@@ -40,6 +40,7 @@ informative:
   RFC2119:
   RFC4122:
   RFC4941:
+  RFC5389:
   RFC5766:
   RFC6146:
   RFC6762:
