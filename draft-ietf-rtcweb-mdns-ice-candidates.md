@@ -316,11 +316,10 @@ has a different origin than the top-level browsing context), or a private
 browsing context.
 
 Network Interface Enumeration
-----------------------------
+-----------------------------
 
-The number of mDNS hostname candidates might provide a fingerprinting dimension.
-This is in particular the case for network interfaces whose existence are not exposed
-through other means like STUN or TURN servers.
+Even when local IP addresses are not exposed, the number of mDNS hostname candidates can still provide a fingerprinting dimension.
+This is in particular the case for network interfaces with limited connectivity that will not generate any server-reflexive or relay candidate.
 No new information is provided when restricting mDNS hostname candidates to default route only.
 
 Security Considerations {#security}
