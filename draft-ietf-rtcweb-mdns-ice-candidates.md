@@ -177,8 +177,16 @@ The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwi
 Examples
 ========
 
+The examples below show how the mDNS technique is used during ICE
+processing. The first example shows the typical case, and the 
+other two examples demonstrate how peer-reflexive candidates for
+local IP addresses can be created due to timing differences.
+
+Normal handling
+---------------
+
 In this example, mDNS candidates are exchanged between peers and resolved
-to obtain the corresponding IP addresses.
+normally to obtain the corresponding IP addresses.
 
                   ICE Agent 1 (1.1.1.1)             ICE Agent 2 (2.2.2.2)
             <Register     |                                 |
@@ -195,8 +203,8 @@ to obtain the corresponding IP addresses.
                           |===== STUN check to 2.2.2.2 ====>|
                           |                                 |
 
-The following two examples indicate how peer-reflexive candidates for host IP
-addresses can be created due to timing differences.
+Peer-reflexive Candidate From Slow Signaling
+--------------------------------------------
 
 In this example, a peer-reflexive candidate is generated because the
 mDNS candidate is signaled after the STUN checks begin.
@@ -214,6 +222,9 @@ mDNS candidate is signaled after the STUN checks begin.
                           |                                 |  for 2.2.2.2>
                           |<------ mDNS Candidate N2 -------|
                           |                                 |
+
+Peer-reflexive Candidate From Slow Resolution
+---------------------------------------------
 
 In this example, a peer-reflexive candidate is generated because the
 mDNS resolution for name N2 does not complete until after the STUN checks are
