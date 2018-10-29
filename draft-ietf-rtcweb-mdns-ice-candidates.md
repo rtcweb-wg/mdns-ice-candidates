@@ -177,14 +177,17 @@ The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwi
 Limitations
 ===========
 
-With typical ICE, endpoints on the same network will typically be able to
-establish a direct connection between their local IP addresses. With this
+Reduced Connectivity
+--------------------
+
+With typical ICE, endpoints on the same network will usually be able to
+establish a direct connection between their local IP addresses. When using the mDNS
 technique, a direct connection is still possible, but only if at least one side
 can properly resolve the provided mDNS candidates. This may not be possible in
 all scenarios.
 
 First, some networks may entirely disable mDNS.  Second, mDNS queries have
-limited scope. On large networks, this may mean that a mDNS name cannot be
+limited scope. On large networks, this may mean that an mDNS name cannot be
 resolved if the remote endpoint is too many segments away.
 
 When mDNS fails, ICE will attempt to fall back to either NAT hairpin,
@@ -192,17 +195,33 @@ if supported, or TURN relay, if not. As noted in {{IPHandling}}, this may
 result in increased media latency and reduced connectivity/increased cost
 (depending on whether the application chooses to use TURN).
 
-Note that backward compatibility does not present a significant issue in this
-situation. When an endpoint that supports mDNS communicates with an endpoint
+The exact impact of this technique is being researched experimentally and will
+be provided before publication of this document.
+
+Connection Setup Latency
+------------------------
+
+As noted in {#principle}, ICE agents using the mDNS technique are responsible
+for registering and resolving mDNS names as part of the ICE process. These
+steps may delay establishment of a direct peer-to-peer connection, compared to
+when raw local IP addresses are used.
+
+Given that these mDNS registrations and queries are typically occurring on a
+local network, any associated delays should be small. Also, as noted in
+{#gathering}, pre-registration can be employed to eliminate gathering delays
+entirely.
+
+Backward Compatibility
+----------------------
+
+Note that backward compatibility does not present a significant issue for the
+mDNS technique. When an endpoint that supports mDNS communicates with an endpoint
 that does not, the legacy endpoint will still provide its local IP addresses,
 and accordingly a direct connection can still be attempted, even though
 the legacy endpoint cannot resolve the mDNS names provided by the new endpoint.
 In the event the legacy endpoint attempts to resolve mDNS names using Unicast
-DNS, this may cause ICE to take somewhat longer to complete, but should not
-have any effect on connectivity or media latency.
-
-The exact impact of this technique is being researched experimentally and will
-be provided before publication of this document.
+DNS, this may cause ICE to take somewhat longer to fully complete, but should
+not have any effect on connectivity or connection setup time.
 
 Examples
 ========
