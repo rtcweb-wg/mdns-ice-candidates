@@ -111,7 +111,7 @@ of private IP addresses by arbitrary web pages, it can also be used by any
 endpoint that wants to avoid disclosing information about its local network
 to remote peers on other networks.
 
-WebRTC and WebRTC-compatible {{Overview}} endpoints that receive ICE 
+WebRTC and WebRTC-compatible endpoints {{Overview}} that receive ICE 
 candidates with mDNS names will resolve these names to IP addresses and 
 perform ICE processing as usual. In the case where the
 endpoint is a web application, the WebRTC implementation will manage this 
