@@ -386,8 +386,8 @@ STUN returns the same IP address value for an address that has already
 been communicated as an mDNS candidate during the current ICE gathering phase,
 the ICE agent MUST NOT eliminate the candidate as redundant and MUST send
 the IP address as a server-reflexive candidate. This allows the ICE agent
-to send mDNS candidates immediately, even if the associated addresses may not
-be private.
+to send mDNS candidates immediately (i.e., without waiting for STUN),
+even if the associated addresses may not be private.
 
 Once an address has been identified as public, the ICE agent MAY cache this
 information and omit mDNS protection for that address in future ICE gathering
