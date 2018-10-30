@@ -227,13 +227,13 @@ Examples
 ========
 
 The examples below show how the mDNS technique is used during ICE processing.
-The first examples illustrates an mDNS candidate gathered with a version 4 UUID
+The first example illustrates an mDNS candidate gathered with a version 4 UUID
 name. The second example shows the typical case of exchanging mDNS candidates,
 and other two examples demonstrate how peer-reflexive candidates for local IP
 addresses can be created due to timing differences.
 
 mDNS Candidate
--------------
+--------------
 
 The exchange of ICE candidates relies on out-of-band signaling, and we
 demonstrate below an mDNS candidate signaled with the SDP Offer/Answer procedure
