@@ -167,6 +167,12 @@ For any remote ICE candidate received by the ICE agent, the following procedure 
 
 4. Otherwise, ignore the candidate.
 
+An ICE agent may add additional restrictions to resolve the ICE candidate using
+mDNS as this mechanism allows attackers to send network traffic to devices with
+well-know mDNS names. If the source providing the ICE candidates is not trusted,
+for instance a web page, the ICE agent MAY decide to not resolve mDNS names that
+are not version 4 UUID as defined in {{RFC4122}}.
+
 An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.
 In this case the resolution of a ".local" name may happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
 
