@@ -56,6 +56,12 @@ informative:
       ins: J. Uberti
       ins: G. Shieh
     date: 2018-04-18
+  Overview:
+    target: https://tools.ietf.org/html/draft-ietf-rtcweb-overview
+    title: Overview: Real Time Protocols for Browser-based Applications
+    author:
+      ins: H. Alvestrand
+    date: 2017-11-12
   WebRTCSpec:
     target: https://w3c.github.io/webrtc-pc/
     title:  The WebRTC specification
@@ -86,32 +92,31 @@ with dynamically generated Multicast DNS (mDNS) names.
 Introduction {#problems}
 ============
 
-As detailed in {{IPHandling}}, exposing client private IP addresses by
-default to web applications maximizes the probability of successfully creating
-direct peer-to-peer connections between clients, but creates a significant
-surface for user fingerprinting. {{IPHandling}} recognizes this issue, but also
-admits that there is no current solution to this problem; implementations that
-choose to use Mode 3 to address the privacy concerns often suffer from failing
-or suboptimal connections in WebRTC applications. This is particularly an issue
-on unmanaged networks, typically homes or small offices, where NAT loopback may
-not be supported.
+As detailed in {{IPHandling}}, exposing client private IP addresses by default to web applications
+maximizes the probability of successfully creating direct peer-to-peer 
+connections between clients, but creates a significant surface for user 
+fingerprinting. {{IPHandling}} recognizes this issue, but also admits that there
+is no current solution to this problem; implementations that choose to use
+Mode 3 to address the privacy concerns often suffer from failing or suboptimal
+connections in WebRTC applications. This is particularly an issue on unmanaged
+networks, typically homes or small offices, where NAT loopback may not be
+supported.
 
 This document proposes an overall solution to this problem by providing a
-mechanism for WebRTC implementations to register
-ephemeral mDNS {{RFC6762}} names for local private IP addresses, and then
-provide those names, rather than the IP addresses, in the ICE candidates
-they surface to web applications.
+mechanism for WebRTC implementations to register ephemeral mDNS {{RFC6762}}
+names for local private IP addresses, and then provide those names, rather than
+the IP addresses, in their ICE candidates. While this technique is intended
+to benefit WebRTC implementations in web browsers, by preventing collection
+of private IP addresses by arbitrary web pages, it can also be used by any
+endpoint that wants to avoid disclosing information about its local network
+to remote peers on other networks.
 
-Upon receiving ICE candidates with mDNS names, remote clients
-will resolve these names to IP addresses and
-perform ICE processing as usual. In the case where the remote client is a web
-application, the WebRTC implementation will manage this resolution internally
-and will not disclose the actual IP addresses to the application, as above.
-
-While this technique is intended to benefit WebRTC implementations in web
-browsers, by preventing collection of private IP addresses by arbitrary web
-pages, it can also be used by any endpoint that wants to avoid disclosing
-information about its local network to remote peers on other networks.
+WebRTC and WebRTC-compatible {{Overview}} endpoints that receive ICE 
+candidates with mDNS names will resolve these names to IP addresses and 
+perform ICE processing as usual. In the case where the
+endpoint is a web application, the WebRTC implementation will manage this 
+resolution internally and will not disclose the actual IP addresses to the
+application.
 
 Terminology
 ===========
