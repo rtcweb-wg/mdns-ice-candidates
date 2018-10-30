@@ -323,13 +323,10 @@ candidates can still provide a fingerprinting dimension. This is in particular
 the case for network interfaces with limited connectivity that will not generate
 any server-reflexive or relay candidate.
 
-Ideally, the number of discoverable server-reflexive candidates will be equal
-or greater than the number of exposed mDNS hostname candidates.
-An implementation SHOULD make sure to limit the number of mDNS hostname
-candidates close to the number of discoverable server-reflexive candidates.
-
-Note that no new information is provided when restricting mDNS hostname
-candidates to default route only.
+The more mDNS names an endpoint exposes through mDNS hostname candidates, the
+higher is the fingerprinting risk. One countermeasure is to limit this number to
+a small value. Note also that exposing only default route candidates
+will prevent any such risk.
 
 Security Considerations {#security}
 =======================
