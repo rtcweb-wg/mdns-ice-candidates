@@ -383,7 +383,7 @@ STUN {{RFC5389}} server returns the same value as the local address. This can
 be done for both IPv4 and IPv6 local addresses, provided that the application
 has configured both IPv4 and IPv6 STUN servers. If this situation occurs, i.e.,
 STUN returns the same IP address value for an address that has already
-been communicated as a mDNS candidate during the current ICE gathering phase,
+been communicated as an mDNS candidate during the current ICE gathering phase,
 the ICE agent MUST NOT eliminate the candidate as redundant and MUST send
 the IP address as a server-reflexive candidate. This allows the ICE agent
 to send mDNS candidates immediately, even if the associated addresses may not
