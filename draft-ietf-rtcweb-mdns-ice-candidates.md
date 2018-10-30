@@ -178,7 +178,7 @@ ICE Candidate Processing {#processing}
 --------------------------------------
 
 This section outlines how received ICE candidates with mDNS names are
-processed by ICE agents, and is relevant to all scenarios.
+processed by ICE agents, and is relevant to all endpoints.
 
 For any remote ICE candidate received by the ICE agent, the following procedure
 is used:
