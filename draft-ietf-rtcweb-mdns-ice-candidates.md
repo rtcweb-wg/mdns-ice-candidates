@@ -381,8 +381,17 @@ Instead, the determination of whether an address is public can be reliably made
 as part of the ICE gathering process, namely, if the query to the
 STUN {{RFC5389}} server returns the same value as the local address. This can
 be done for both IPv4 and IPv6 local addresses, provided that the application
-has configured both IPv4 and IPv6 STUN servers. Implementations MAY cache this
-information about address privacy to speed up future ICE gathering.
+has configured both IPv4 and IPv6 STUN servers. If this situation occurs, i.e.,
+STUN returns the same IP address value for an address that has already
+been communicated as a mDNS candidate during the current ICE gathering phase,
+the ICE agent MUST NOT eliminate the candidate as redundant and MUST send
+the IP address as a server-reflexive candidate. This allows the ICE agent
+to send mDNS candidates immediately, even if the associated addresses may not
+be private.
+
+Once an address has been identified as public, the ICE agent MAY cache this
+information and omit mDNS protection for that address in future ICE gathering
+phases.
 
 Special Handling for IPv6 Addresses
 -----------------------------------
