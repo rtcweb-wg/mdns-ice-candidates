@@ -262,7 +262,8 @@ exchange the mDNS candidates between ICE Agent 1 and 2 can be given by:
     a=candidate:1 1 udp 2122262783 1f4712db-ea17-4bcf-a596-105139dfd8bf.local 54596 typ host
 
 * For ICE Agent 2,
-a=candidate:1 1 udp 2122262783 2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local 61606 typ host
+
+    a=candidate:1 1 udp 2122262783 2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local 61606 typ host
 
 Peer-reflexive Candidate From Slow Signaling
 --------------------------------------------
