@@ -253,10 +253,12 @@ normally to obtain the corresponding IP addresses.
              mDNS name N1 |                                 |
              for 1.1.1.1> |                                 |
                           |------- mDNS Candidate N1 ------>|
+                      1f4712db-ea17-4bcf-a596-105139dfd8bf.local
                           |                                 | <Register
                           |                                 |  mDNS name N2
                           |                                 |  for 2.2.2.2>
                           |<------ mDNS Candidate N2 -------|
+                      2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local
            <Resolve       |                                 | <Resolve
             mDNS name N2> |                                 |  mDNS name N1>
                           |<==== STUN check to 1.1.1.1 =====|
@@ -274,6 +276,7 @@ mDNS candidate is signaled after the STUN checks begin.
              mDNS name N1 |                                 |
              for 1.1.1.1> |                                 |
                           |------- mDNS Candidate N1 ------>|
+                      1f4712db-ea17-4bcf-a596-105139dfd8bf.local
                           |                                 | <Resolve
                           |                                 |  mDNS name N1>
                           |<==== STUN check to 1.1.1.1 =====|
@@ -281,6 +284,7 @@ mDNS candidate is signaled after the STUN checks begin.
           2.2.2.2 created |                                 |  mDNS name N2
                           |                                 |  for 2.2.2.2>
                           |<------ mDNS Candidate N2 -------|
+                      2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local
                           |                                 |
 
 Peer-reflexive Candidate From Slow Resolution
@@ -295,7 +299,10 @@ received.
              mDNS name N1 |                                 |  mDNS name N2
              for 1.1.1.1> |                                 |  for 2.2.2.2>
                           |------- mDNS Candidate N1 ------>|
+                      1f4712db-ea17-4bcf-a596-105139dfd8bf.local
+                          |                                 |
                           |<------ mDNS Candidate N2 -------|
+                      2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local
     <Resolve              |                                 | <Resolve
      ...                  |                                 |  mDNS name N1>
      mDNS                 |<==== STUN check to 1.1.1.1 =====|
