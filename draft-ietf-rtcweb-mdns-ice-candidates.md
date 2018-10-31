@@ -464,7 +464,7 @@ specific to mDNS hostname candidates, it makes this attack simpler when
 targeting devices with well-known mDNS names.
 
 As noted in {{processing}}, ICE agents may decide to not resolve mDNS names, for
-instance if these names are not version 4 UUID as defined in {{RFC4122}}.
+example, if these names are not in the format defined by {{gathering}}.
 
 IANA Considerations
 ===================
