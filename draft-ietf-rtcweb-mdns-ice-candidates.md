@@ -372,6 +372,21 @@ applications running in a third-party browsing context (i.e., a context that
 has a different origin than the top-level browsing context), or a private
 browsing context.
 
+Network Interface Enumeration
+-----------------------------
+
+Even when local IP addresses are not exposed, the number of mDNS hostname
+candidates can still provide a fingerprinting dimension. This is in particular
+the case for network interfaces with limited connectivity that will not generate
+server-reflexive or relay candidates.
+
+The more mDNS names an endpoint exposes through mDNS hostname candidates, the
+higher the fingerprinting risk. One countermeasure is to limit this number to a
+small value.
+
+Note that no additional fingerprinting risk is introduced when restricting mDNS
+hostname candidates to default route only.
+
 Security Considerations {#security}
 =======================
 
