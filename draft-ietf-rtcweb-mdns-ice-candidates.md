@@ -129,36 +129,40 @@ IP addresses.
 
 For each host candidate gathered by an ICE agent as part of the gathering
 process described in {{RFC8445}}, Section 5.1.1, the candidate is handled as
-described below. However, in certain cases, the ICE agent may decide that
-it does not need to conceal a candidate IP, and this processing may be skipped
-for that candidate.
+described below. 
 
-This may be because the ICE agent has a priori knowledge that the candidate
+1. Check whether this IP address satisfies the ICE agent's policy regarding
+whether an address is safe to expose. If so, expose the candidate and abort
+this process.
+
+2. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
+
+3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4 UUID as defined in {{RFC4122}}, followed by ".local".
+
+4. Register the candidate's mDNS hostname as defined in {{RFC6762}}.
+
+5. If registering of the mDNS hostname fails, abort these steps. The candidate is not exposed.
+
+6. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
+
+7. Replace the IP address of the ICE candidate with its mDNS hostname and provide
+the candidate to the web application.
+
+ICE agents can implement this procedure in any way as long as it produces
+equivalent results. An implementation may for instance pre-register mDNS 
+hostnames by executing steps 3 to 6 and prepopulate an ICE agent accordingly. 
+By doing so, only step 7 of the above procedure will be executed at the time 
+of gathering candidates.
+
+ICE agents may also decide that certain local IP addresses are safe to 
+expose. This may be because the ICE agent has a priori knowledge that the
 address is in fact public, or because the agent has made a policy decision to
 not conceal certain types of IP addresses (e.g., those with built-in privacy
 protections) as a calculated choice to improve connectivity. This topic is
 discussed further in {#privacy} below.
 
-1. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
-
-2. Generate a unique mDNS hostname. The unique name MUST consist of a version 4 UUID as defined in {{RFC4122}}, followed by ".local".
-
-3. Register the candidate's mDNS hostname as defined in {{RFC6762}}.
-
-4. If registering of the mDNS hostname fails, abort these steps. The candidate is not exposed.
-
-5. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
-
-6. Replace the IP address of the ICE candidate with its mDNS hostname and provide
-the candidate to the web application.
-
-An ICE agent can implement this procedure in any way so long as it produces equivalent results to this procedure.
-
-An implementation may for instance pre-register mDNS hostnames by executing steps 3 to 5 and prepopulate an ICE agent accordingly.
-By doing so, only step 6 of the above procedure will be executed at the time of gathering candidates.
-
 An implementation may also detect that mDNS is not supported by the available network interfaces.
-The ICE agent may skip steps 2 and 3 and directly decide to not expose the host candidate.
+The ICE agent may skip steps 3 and 4 and directly decide to not expose the host candidate.
 
 This procedure ensures that an mDNS name is used to replace only one IP address.
 Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST
@@ -400,7 +404,7 @@ As noted in {{IPHandling}}, private IPv4 addresses are especially problematic
 because of their unbounded lifetime. However, the {{RFC4941}} IPv6
 addresses recommended for WebRTC have inherent privacy protections, namely
 a short lifetime and the lack of any stateful information. Accordingly,
-implementations MAY choose to not obscure {{RFC4941}} addresses with mDNS names
+implementations MAY choose to not conceal {{RFC4941}} addresses with mDNS names
 as a tradeoff for improved peer-to-peer connectivity.
 
 Specific Browsing Contexts
