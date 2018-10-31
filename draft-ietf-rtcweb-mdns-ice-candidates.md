@@ -227,20 +227,25 @@ Examples
 ========
 
 The examples below show how the mDNS technique is used during ICE processing.
-The first example illustrates an mDNS candidate gathered with a version 4 UUID
-name. The second example shows the typical case of exchanging mDNS candidates,
+The first example illustrates mDNS candidates gathered with version 4 UUID
+names. The second example shows the typical case of exchanging mDNS candidates,
 and other two examples demonstrate how peer-reflexive candidates for local IP
 addresses can be created due to timing differences.
 
-mDNS Candidate
---------------
+mDNS Candidates
+---------------
 
 The exchange of ICE candidates relies on out-of-band signaling, and we
-demonstrate below an mDNS candidate signaled with the SDP Offer/Answer procedure
-defined in {{ICESDP}}. The candidate attribute in the SDP message for this
-mDNS candidate can be given by
+demonstrate below mDNS candidates signaled with the SDP Offer/Answer procedure
+defined in {{ICESDP}}. In the rest examples, we assume two ICE agents, and each
+gathers an mDNS candidate, respectively. The candidate attributes in the SDP
+messages to exchange these candidate can be given by:
 
+* For ICE Agent 1,
 a=candidate:1 1 udp 2122262783 1f4712db-ea17-4bcf-a596-105139dfd8bf.local 54596 typ host
+
+* For ICE Agent 2,
+a=candidate:1 1 udp 2122262783 2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local 61606 typ host
 
 Normal Handling
 ---------------
@@ -253,12 +258,10 @@ normally to obtain the corresponding IP addresses.
              mDNS name N1 |                                 |
              for 1.1.1.1> |                                 |
                           |------- mDNS Candidate N1 ------>|
-                      1f4712db-ea17-4bcf-a596-105139dfd8bf.local
                           |                                 | <Register
                           |                                 |  mDNS name N2
                           |                                 |  for 2.2.2.2>
                           |<------ mDNS Candidate N2 -------|
-                      2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local
            <Resolve       |                                 | <Resolve
             mDNS name N2> |                                 |  mDNS name N1>
                           |<==== STUN check to 1.1.1.1 =====|
@@ -276,7 +279,6 @@ mDNS candidate is signaled after the STUN checks begin.
              mDNS name N1 |                                 |
              for 1.1.1.1> |                                 |
                           |------- mDNS Candidate N1 ------>|
-                      1f4712db-ea17-4bcf-a596-105139dfd8bf.local
                           |                                 | <Resolve
                           |                                 |  mDNS name N1>
                           |<==== STUN check to 1.1.1.1 =====|
@@ -284,7 +286,6 @@ mDNS candidate is signaled after the STUN checks begin.
           2.2.2.2 created |                                 |  mDNS name N2
                           |                                 |  for 2.2.2.2>
                           |<------ mDNS Candidate N2 -------|
-                      2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local
                           |                                 |
 
 Peer-reflexive Candidate From Slow Resolution
@@ -299,10 +300,7 @@ received.
              mDNS name N1 |                                 |  mDNS name N2
              for 1.1.1.1> |                                 |  for 2.2.2.2>
                           |------- mDNS Candidate N1 ------>|
-                      1f4712db-ea17-4bcf-a596-105139dfd8bf.local
-                          |                                 |
                           |<------ mDNS Candidate N2 -------|
-                      2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local
     <Resolve              |                                 | <Resolve
      ...                  |                                 |  mDNS name N1>
      mDNS                 |<==== STUN check to 1.1.1.1 =====|
