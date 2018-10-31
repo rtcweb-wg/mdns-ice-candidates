@@ -238,7 +238,7 @@ when raw local IP addresses are used.
 
 Given that these mDNS registrations and queries are typically occurring on a
 local network, any associated delays should be small. Also, as noted in
-{#gathering}, pre-registration can be employed to eliminate gathering delays
+{{gathering}}, pre-registration can be employed to eliminate gathering delays
 entirely.
 
 Backward Compatibility
