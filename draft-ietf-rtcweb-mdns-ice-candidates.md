@@ -180,7 +180,7 @@ An ICE agent that supports mDNS candidates MUST support the situation where the 
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
-An ICE agent may add additional restrictions to resolve the ICE candidate using
+An ICE agent MAY add additional restrictions regarding the ICE candidates it will resolve using 
 mDNS, as this mechanism allows attackers to send ICE traffic to devices with
 well-known mDNS names.
 
