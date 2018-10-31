@@ -181,7 +181,7 @@ In this case, the ICE agent MUST take exactly one of the resolved IP addresses a
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
 
 An ICE agent may add additional restrictions to resolve the ICE candidate using
-mDNS as this mechanism allows attackers to send network traffic to devices with
+mDNS, as this mechanism allows attackers to send ICE traffic to devices with
 well-known mDNS names.
 
 Limitations
