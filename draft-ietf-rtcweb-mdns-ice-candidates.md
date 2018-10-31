@@ -190,7 +190,8 @@ as defined in {{RFC8445}}.
 2. Otherwise, resolve the candidate using mDNS.
 
 3. If it resolves to an IP address, replace the mDNS hostname of the ICE
-candidate with the resolved IP address and continue processing of the candidate.
+candidate with the resolved IP address and continue processing of the candidate
+as defined in {{RFC8445}}.
 
 4. Otherwise, ignore the candidate.
 
