@@ -227,7 +227,7 @@ Examples
 ========
 
 The examples below show how the mDNS technique is used during ICE processing.
-The first example shows the typical case, and other two examples demonstrate
+The first example shows the typical case, and the other two examples demonstrate
 how peer-reflexive candidates for local IP addresses can be created due to
 timing differences.
 
@@ -253,9 +253,9 @@ normally to obtain the corresponding IP addresses.
                           |                                 |
 
 The exchange of ICE candidates relies on out-of-band signaling, for instance
-the SDP Offer/Answer procedure defined in {{ICESDP}}. In the above example and
-also the following ones, the candidate attributes in the SDP messages to
-exchange the mDNS candidates between ICE Agent 1 and 2 can be given by:
+the SDP Offer/Answer procedure defined in {{ICESDP}}. In the above example,
+the candidate attributes in the SDP messages to exchange the mDNS candidates
+between ICE Agent 1 and 2 can be given by:
 
 * For ICE Agent 1,
 a=candidate:1 1 udp 2122262783 1f4712db-ea17-4bcf-a596-105139dfd8bf.local 54596 typ host
