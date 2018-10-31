@@ -231,7 +231,7 @@ be provided before publication of this document.
 Connection Setup Latency
 ------------------------
 
-As noted in {#principle}, ICE agents using the mDNS technique are responsible
+As noted in {{principle}}, ICE agents using the mDNS technique are responsible
 for registering and resolving mDNS names as part of the ICE process. These
 steps may delay establishment of a direct peer-to-peer connection, compared to
 when raw local IP addresses are used.
