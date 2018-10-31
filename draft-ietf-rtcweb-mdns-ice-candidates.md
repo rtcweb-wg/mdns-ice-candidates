@@ -462,7 +462,6 @@ As noted in Section 4.2 of {{RTCWebSecurity}}, an attacker may use ICE as a way
 to send unsolicited network traffic to specific endpoints. While this is not
 specific to mDNS hostname candidates, this technique makes it easier to
 target devices with well-known mDNS names.
-targeting devices with well-known mDNS names.
 
 As noted in {{processing}}, ICE agents may decide to not resolve mDNS names, for
 example, if these names are not in the format defined by {{gathering}}.
