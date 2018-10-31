@@ -58,7 +58,7 @@ informative:
     date: 2018-04-18
   Overview:
     target: https://tools.ietf.org/html/draft-ietf-rtcweb-overview
-    title: Overview: Real Time Protocols for Browser-based Applications
+    title: "Overview: Real Time Protocols for Browser-based Applications"
     author:
       ins: H. Alvestrand
     date: 2017-11-12
