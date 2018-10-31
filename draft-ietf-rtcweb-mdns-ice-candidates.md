@@ -76,6 +76,12 @@ informative:
   HTMLSpec:
     target: https://html.spec.whatwg.org
     title: HTML Living Standard
+  RTCWebSecurity:
+    target: https://tools.ietf.org/html/draft-ietf-rtcweb-security
+    title:  Security Considerations for WebRTC
+    author:
+      ins: E. Rescorla
+    date: 2018-01-22
 
 --- abstract
 
@@ -204,6 +210,10 @@ hostname resolution results in more than one IP address. In this case, the ICE
 agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD use the first IPv6 address resolved, if one exists, or
 the first IPv4 address, if not.
+
+An ICE agent MAY add additional restrictions regarding the ICE candidates it will resolve using 
+mDNS, as this mechanism allows attackers to send ICE traffic to devices with
+well-known mDNS names.
 
 Limitations
 ===========
@@ -491,6 +501,17 @@ shows which endpoints are communicating, and for how long. If both endpoints in 
 session are on the same network, the fact they are communicating can be discovered.
 
 As above, mitigation of this threat is beyond the scope of this proposal.
+
+Unsolicited ICE Communications
+------------------------------
+
+As noted in Section 4.2 of {{RTCWebSecurity}}, an attacker may use ICE as a way
+to send unsolicited network traffic to specific endpoints. While this is not
+specific to mDNS hostname candidates, this technique makes it easier to
+target devices with well-known mDNS names.
+
+As noted in {{processing}}, ICE agents may decide to not resolve mDNS names, for
+example, if these names are not in the format defined by {{gathering}}.
 
 IANA Considerations
 ===================
