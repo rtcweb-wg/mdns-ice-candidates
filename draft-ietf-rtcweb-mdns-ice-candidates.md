@@ -330,12 +330,12 @@ preregister their mDNS names to speed up ICE gathering.
           2001:db8::2> |<----- srflx Candidate C2.4 ------| <2001:db8::2>
                        |                |                 |
                        |<=STUN 2001:db8::1<--2001::db8:2==|
-                       |==STUN 2001:db8::1<--2001::db8:2=>|
+                       |==STUN 2001:db8::1-->2001::db8:2=>|
                        |<=STUN 192.168.1.1<--192.168.1.2==|
                        |==STUN 192.168.1.1-->192.168.1.2=>|
               <Failed> |X=STUN 192.0.2.1<-X--192.168.1.2==|
                        |==STUN 192.168.1.1--X->192.0.2.2=>| <Failed>
-       <USE-CANDIDATE> |==STUN 2001:db8::1<--2001::db8:2=>|
+       <USE-CANDIDATE> |==STUN 2001:db8::1-->2001::db8:2=>|
          
 Privacy Considerations {#privacy}
 ==================================
