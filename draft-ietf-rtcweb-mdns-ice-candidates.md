@@ -92,11 +92,11 @@ with dynamically generated Multicast DNS (mDNS) names.
 Introduction {#problems}
 ============
 
-As detailed in {{IPHandling}}, exposing client private IP addresses by default to web applications
-maximizes the probability of successfully creating direct peer-to-peer 
-connections between clients, but creates a significant surface for user 
-fingerprinting. {{IPHandling}} recognizes this issue, but also admits that there
-is no current solution to this problem; implementations that choose to use
+As detailed in {{IPHandling}}, exposing client private IP addresses by default
+to web applications maximizes the probability of successfully creating direct
+peer-to-peer connections between clients, but creates a significant surface for
+user fingerprinting. {{IPHandling}} recognizes this issue, but also admits that
+there is no current solution to this problem; implementations that choose to use
 Mode 3 to address the privacy concerns often suffer from failing or suboptimal
 connections in WebRTC applications. This is particularly an issue on unmanaged
 networks, typically homes or small offices, where NAT loopback may not be
