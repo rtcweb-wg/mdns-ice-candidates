@@ -227,7 +227,7 @@ Examples
 ========
 
 The examples below show how the mDNS technique is used during ICE processing.
-The first example shows the typical case, and other two examples demonstrate
+The first example shows the typical case, and the other two examples demonstrate
 how peer-reflexive candidates for local IP addresses can be created due to
 timing differences.
 
