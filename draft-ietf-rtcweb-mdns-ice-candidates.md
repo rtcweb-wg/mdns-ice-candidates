@@ -382,9 +382,10 @@ Generated Names Reuse
 It is important that use of registered mDNS hostnames is limited in time
 and/or scope. Indefinitely reusing the same mDNS hostname candidate would
 provide applications an even more reliable tracking mechanism than the private
-IP addresses that this specification is designed to hide. The use of
-registered mDNS hostnames SHOULD be scoped by origin, and SHOULD have the
-lifetime of the page.
+IP addresses that this specification is designed to hide. In the case of a web
+application, the use of registered mDNS hostnames SHOULD be scoped by the web
+application origin, and SHOULD have the lifetime of the page executing the web
+application.
 
 Specific Browsing Contexts
 ----------------------------
