@@ -70,6 +70,12 @@ informative:
   HTMLSpec:
     target: https://html.spec.whatwg.org
     title: HTML Living Standard
+  RTCWebSecurity:
+    target: https://tools.ietf.org/html/draft-ietf-rtcweb-security
+    title:  Security Considerations for WebRTC
+    author:
+      ins: E. Rescorla
+    date: 2018-01-22
 
 --- abstract
 
@@ -167,18 +173,16 @@ For any remote ICE candidate received by the ICE agent, the following procedure 
 
 4. Otherwise, ignore the candidate.
 
-An ICE agent may add additional restrictions to resolve the ICE candidate using
-mDNS as this mechanism allows attackers to send network traffic to devices with
-well-know mDNS names. If the source providing the ICE candidates is not trusted,
-for instance a web page, the ICE agent MAY decide to not resolve mDNS names that
-are not version 4 UUID as defined in {{RFC4122}}.
-
 An ICE agent may use a hostname resolver that transparently supports both Multicast and Unicast DNS.
 In this case the resolution of a ".local" name may happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
 
 An ICE agent that supports mDNS candidates MUST support the situation where the hostname resolution results in more than one IP address.
 In this case, the ICE agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD, if available, use the first IPv6 address resolved, otherwise the first IPv4 address.
+
+An ICE agent may add additional restrictions to resolve the ICE candidate using
+mDNS as this mechanism allows attackers to send network traffic to devices with
+well-known mDNS names.
 
 Limitations
 ===========
@@ -450,6 +454,17 @@ shows which endpoints are communicating, and for how long. If both endpoints in 
 session are on the same network, the fact they are communicating can be discovered.
 
 As above, mitigation of this threat is beyond the scope of this proposal.
+
+Unsolicited ICE Communications
+------------------------------
+
+As noted in Section 4.2 of {{RTCWebSecurity}}, an attacker may use ICE as a way
+to send unsolicited network traffic to specific endpoints. While this is not
+specific to mDNS hostname candidates, it makes this attack simpler when
+targeting devices with well-known mDNS names.
+
+As noted in {{processing}}, ICE agents may decide to not resolve mDNS names, for
+instance if these names are not version 4 UUID as defined in {{RFC4122}}.
 
 IANA Considerations
 ===================
