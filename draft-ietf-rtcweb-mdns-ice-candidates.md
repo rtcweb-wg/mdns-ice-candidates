@@ -227,9 +227,10 @@ Examples
 ========
 
 The examples below show how the mDNS technique is used during ICE
-processing. The first example shows the typical case, and the 
-other two examples demonstrate how peer-reflexive candidates for
-local IP addresses can be created due to timing differences.
+processing. The first example shows a simple case, the 
+next two examples demonstrate how peer-reflexive candidates for
+local IP addresses can be created due to timing differences, and
+the final example shows a real-world case with IPv4, IPv6, and STUN.
 
 Normal handling
 ---------------
@@ -292,7 +293,50 @@ received.
      name 2.2.2.2 created |                                 |
      ...                  |                                 |
      N2>                  |                                 |
+     
+IPv4, IPv6, and STUN handling
+-----------------------------
 
+This last example demonstrates the overall ICE gathering process for two
+endpoints, each with a private IPv4 address and a public IPv6 address. They
+preregister their mDNS names to speed up ICE gathering.
+
+                   ICE Agent 1                        ICE Agent 2
+                   192.168.1.1         STUN           192.168.1.2
+                   2001:db8::1        Server          2001:db8::2 
+        <Register mDNS |                |                 | <Register mDNS
+          name N1.1,   |                |                 |  name N2.1,
+          192.168.1.1> |                |                 |  192.168.1.2>
+        <Register mDNS |                |                 | <Register mDNS
+          name N1.2,   |                |                 |  name N2.2,        
+          2001:db8::1> |                |                 |  2001:db8::2>
+                       |                |                 |
+                <N1.1> |------- mDNS Candidate C1.1 ----->|
+                <N1.2> |------- mDNS Candidate C1.2 ----->|
+        <192.168.1.1   |--Binding Req-->|                 | <Resolve mDNS
+         is 192.0.2.1> |<-Binding Resp--|                 |  name N1.1 to
+           <192.0.2.1> |------ srflx Candidate C1.3 ----->|  192.168.1.1>
+      <2001:db8::1     |--Binding Req-->|                 | <Resolve mDNS
+       is 2001:db8::1> |<-Binding Resp--|                 |  name N1.2 to 
+         <2001:db8::1> |------ srflx Candidate C1.4 ----->|  2001:db8::1>   
+                       |                |                 |
+                       |<------ mDNS Candidate C2.1 ------| <Send N2.1>
+                       |<------ mDNS Candidate C2.2 ------| <Send N2.2>
+         <Resolve mDNS |                |<--Binding Req---| <192.168.1.2 
+          name N2.1 to |                |---Binding Resp->|  is 192.0.2.2>
+          192.168.1.2> |<----- srflx Candidate C2.3 ------| <192.0.2.2>
+         <Resolve mDNS |                |<--Binding Req---| <2001:db8::2
+          name N2.2 to |                |---Binding Resp->|  is 2001:db8::2>
+          2001:db8::2> |<----- srflx Candidate C2.4 ------| <2001:db8::2>
+                       |                |                 |
+                       |<=STUN 2001:db8::1<--2001::db8:2==|
+                       |==STUN 2001:db8::1<--2001::db8:2=>|
+                       |<=STUN 192.168.1.1<--192.168.1.2==|
+                       |==STUN 192.168.1.1-->192.168.1.2=>|
+              <Failed> |X=STUN 192.0.2.1<-X--192.168.1.2==|
+                       |==STUN 192.168.1.1--X->192.0.2.2=>| <Failed>
+       <USE-CANDIDATE> |==STUN 2001:db8::1<--2001::db8:2=>|
+         
 Privacy Considerations {#privacy}
 ==================================
 
