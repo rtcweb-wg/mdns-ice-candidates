@@ -377,6 +377,7 @@ preregister their mDNS names to speed up ICE gathering.
            2001:db8::1 |====== STUN, USE-CANDIDATE ======>| 2001:db8::2
 
 Ice Agent 1 candidates:
+
       C1.1: candidate:1 1 udp 2122262783 9b36eaac-bb2e-49bb-bb78-
                       21c41c499900.local 10004 typ host
       C1.2: candidate:2 1 udp 2122262527 76c82649-02d6-4030-8aef-
@@ -387,6 +388,7 @@ Ice Agent 1 candidates:
                       10006 typ srflx raddr 0.0.0.0 rport 0
 
 Ice Agent 2 candidates:
+
       C2.1: candidate:1 1 udp 2122262783 b977f597-260c-4f70-9ac4-
                       26e69b55f966.local 20004 typ host
       C2.2: candidate:2 1 udp 2122262527 ac4595a7-7e42-4e85-85e6-
