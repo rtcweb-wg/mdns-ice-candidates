@@ -257,7 +257,7 @@ the SDP Offer/Answer procedure defined in {{ICESDP}}. In the above example,
 the candidate attributes in the SDP messages to exchange the mDNS candidates
 between ICE Agent 1 and 2 are as follows:
 
-for ICE Agent 1,
+ICE Agent 1:
 
     a=candidate:1 1 udp 2122262783 1f4712db-ea17-4bcf-a596-105139dfd8bf.local
       54596 typ host
