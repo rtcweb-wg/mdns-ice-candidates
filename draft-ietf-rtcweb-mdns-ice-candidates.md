@@ -94,7 +94,7 @@ peer-to-peer connections. To maximize the probability of a direct peer-to-peer
 connection, client private IP addresses are included in this candidate
 collection. However, disclosure of these addresses has privacy implications.
 This document describes a way to share local IP addresses with other clients
-while preserving client privacy. This is achieved by obfuscating IP addresses
+while preserving client privacy. This is achieved by concealing IP addresses
 with dynamically generated Multicast DNS (mDNS) names.
 
 --- middle
