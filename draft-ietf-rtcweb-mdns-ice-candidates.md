@@ -146,11 +146,6 @@ ICE Candidate Gathering {#gathering}
 ------------------------------------
 
 This section outlines how mDNS should be used by ICE agents to conceal local
-IP addresses. Naturally, if the ICE agent does not want to conceal its IPs,
-e.g., if it has a priori knowledge that its addresses are in fact public,
-this processing is unnecessary.
-
-This section outlines how mDNS should be used by ICE agents to conceal local
 IP addresses.
 
 For each host candidate gathered by an ICE agent as part of the gathering
