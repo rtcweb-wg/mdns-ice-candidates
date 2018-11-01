@@ -255,7 +255,7 @@ normally to obtain the corresponding IP addresses.
 The exchange of ICE candidates relies on out-of-band signaling, for example,
 the SDP Offer/Answer procedure defined in {{ICESDP}}. In the above example,
 the candidate attributes in the SDP messages to exchange the mDNS candidates
-between ICE Agent 1 and 2 can be given by
+between ICE Agent 1 and 2 are as follows:
 
 for ICE Agent 1,
 
