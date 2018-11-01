@@ -47,7 +47,8 @@ informative:
   RFC8445:
   ICESDP:
     target: https://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp
-    title: Session Description Protocol (SDP) Offer/Answer procedures for Interactive Connectivity Establishment (ICE)
+    title: Session Description Protocol (SDP) Offer/Answer procedures for
+           Interactive Connectivity Establishment (ICE)
     author:
       ins: M. Petit-Huguenin
       ins: S. Nandakumar
