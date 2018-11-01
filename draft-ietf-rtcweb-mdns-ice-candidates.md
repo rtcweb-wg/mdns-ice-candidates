@@ -292,12 +292,12 @@ not have any effect on connectivity or connection setup time.
 Examples
 ========
 
-The examples below show how the mDNS technique is used during ICE
-processing. The first example shows the typical case, and the 
-other two examples demonstrate how peer-reflexive candidates for
-local IP addresses can be created due to timing differences.
+The examples below show how the mDNS technique is used during ICE processing.
+The first example shows the typical case, and the other two examples demonstrate
+how peer-reflexive candidates for local IP addresses can be created due to
+timing differences.
 
-Normal handling
+Normal Handling
 ---------------
 
 In this example, mDNS candidates are exchanged between peers and resolved
@@ -317,6 +317,21 @@ normally to obtain the corresponding IP addresses.
                           |<==== STUN check to 1.1.1.1 =====|
                           |===== STUN check to 2.2.2.2 ====>|
                           |                                 |
+
+The exchange of ICE candidates relies on out-of-band signaling, for example,
+the SDP Offer/Answer procedure defined in {{ICESDP}}. In the above example,
+the candidate attributes in the SDP messages to exchange the mDNS candidates
+between ICE Agent 1 and 2 are as follows:
+
+ICE Agent 1:
+
+    a=candidate:1 1 udp 2122262783 1f4712db-ea17-4bcf-a596-105139dfd8bf.local
+      54596 typ host
+
+ICE Agent 2:
+
+    a=candidate:1 1 udp 2122262783 2579ef4b-50ae-4bfe-95af-70b3376ecb9c.local
+      61606 typ host
 
 Peer-reflexive Candidate From Slow Signaling
 --------------------------------------------
