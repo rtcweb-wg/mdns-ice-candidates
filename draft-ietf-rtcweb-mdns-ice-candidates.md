@@ -227,7 +227,7 @@ Examples
 ========
 
 The examples below show how the mDNS technique is used during ICE
-processing. The first example shows a simple case, the 
+processing. The first example shows a simple case, the
 next two examples demonstrate how peer-reflexive candidates for
 local IP addresses can be created due to timing differences, and
 the final example shows a real-world case with IPv4, IPv6, and STUN.
@@ -293,7 +293,7 @@ received.
      name 2.2.2.2 created |                                 |
      ...                  |                                 |
      N2>                  |                                 |
-     
+
 IPv4, IPv6, and STUN handling
 -----------------------------
 
@@ -303,15 +303,15 @@ preregister their mDNS names to speed up ICE gathering.
 
                    ICE Agent 1                        ICE Agent 2
                    192.168.1.1         STUN           192.168.1.2
-                   2001:db8::1        Server          2001:db8::2 
+                   2001:db8::1        Server          2001:db8::2
       ----------------------------------------------------------------------
                           Pre-registration of mDNS names
-                       |                |                 |  
+                       |                |                 |
         <Register mDNS |                |                 | <Register mDNS
           name N1.1,   |                |                 |  name N2.1,
           192.168.1.1> |                |                 |  192.168.1.2>
         <Register mDNS |                |                 | <Register mDNS
-          name N1.2,   |                |                 |  name N2.2,        
+          name N1.2,   |                |                 |  name N2.2,
           2001:db8::1> |                |                 |  2001:db8::2>
                        |                |                 |
       - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -323,17 +323,17 @@ preregister their mDNS names to speed up ICE gathering.
                        |                |                 |  name N1.1 to
                        |                |                 |  192.168.1.1>
                        |                |                 | <Resolve mDNS
-                       |                |                 |  name N1.2 to 
-                       |                |                 |  2001:db8::1> 
+                       |                |                 |  name N1.2 to
+                       |                |                 |  2001:db8::1>
                        |                |                 |
       - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
                   ICE Agent 1 sends server-reflexive candidates
                        |                |                 |
-        <192.168.1.1   |--Binding Req-->|                 | 
-         is 192.0.2.1> |<-Binding Resp--|                 | 
-           <192.0.2.1> |------ srflx Candidate C1.3 ----->| 
-      <2001:db8::1     |--Binding Req-->|                 | 
-       is 2001:db8::1> |<-Binding Resp--|                 | 
+        <192.168.1.1   |--Binding Req-->|                 |
+         is 192.0.2.1> |<-Binding Resp--|                 |
+           <192.0.2.1> |------ srflx Candidate C1.3 ----->|
+      <2001:db8::1     |--Binding Req-->|                 |
+       is 2001:db8::1> |<-Binding Resp--|                 |
          <2001:db8::1> |------ srflx Candidate C1.4 ----->| <Discard C1.4
                        |                |                 |  as redundant>
                        |                |                 |
@@ -342,40 +342,60 @@ preregister their mDNS names to speed up ICE gathering.
                        |                |                 |
                        |<------ mDNS Candidate C2.1 ------| <N2.1>
                        |<------ mDNS Candidate C2.2 ------| <N2.2>
-       <Resolve mDNS   |                |                 |     
+       <Resolve mDNS   |                |                 |
         name N2.1 ...> |                |                 |
-       <Resolve mDNS   |                |                 |     
+       <Resolve mDNS   |                |                 |
         name N2.2 ...> |                |                 |
                        |                |                 |
       - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         ICE Agent 2 sends server-reflexive candidates, resolution completes
                        |                |                 |
-                       |                |<--Binding Req---| <192.168.1.2 
+                       |                |<--Binding Req---| <192.168.1.2
                        |                |---Binding Resp->|  is 192.0.2.2>
                        |<----- srflx Candidate C2.3 ------| <192.0.2.2>
                        |                |<--Binding Req---| <2001:db8::2
                        |                |---Binding Resp->|  is 2001:db8::2>
                        |<----- srflx Candidate C2.4 ------| <2001:db8::2>
                        |                |                 |
-        <... N2.1 is   |                |                 |     
+        <... N2.1 is   |                |                 |
          192.168.1.2>  |                |                 |
-        <... N2.2 is   |                |                 |     
+        <... N2.2 is   |                |                 |
          2001:db8::2,  |                |                 |
          discard C2.4> |                |                 |
                        |                |                 |
       - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
                                  ICE processing
                        |                |                 |
-           2001:db8::1 |<============= STUN ==============| 2001:db8::2 
-           2001:db8::1 |============== STUN =============>| 2001:db8::2 
+           2001:db8::1 |<============= STUN ==============| 2001:db8::2
+           2001:db8::1 |============== STUN =============>| 2001:db8::2
            192.168.1.1 |<============= STUN ==============| 192.168.1.2
            192.168.1.1 |============== STUN =============>| 192.168.1.2
-           2001:db8::1 |<============= STUN ==============| 2001:db8::2 
-           2001:db8::1 |============== STUN =============>| 2001:db8::2 
+           2001:db8::1 |<============= STUN ==============| 2001:db8::2
+           2001:db8::1 |============== STUN =============>| 2001:db8::2
              192.0.2.1 |    Failed === STUN ==============| 192.168.1.2
            192.168.1.1 |============== STUN === Failed    | 192.0.2.2
-           2001:db8::1 |====== STUN, USE-CANDIDATE ======>| 2001:db8::2        
-         
+           2001:db8::1 |====== STUN, USE-CANDIDATE ======>| 2001:db8::2
+
+Ice Agent 1 candidates:
+      C1.1: candidate:1 1 udp 2122262783 9b36eaac-bb2e-49bb-bb78-
+                      21c41c499900.local 10004 typ host
+      C1.2: candidate:2 1 udp 2122262527 76c82649-02d6-4030-8aef-
+                      a2ba3a9019d5.local 10006 typ host
+      C1.3: candidate:1 1 udp 1686055167 192.0.2.1
+                      30004 typ srflx raddr 0.0.0.0 rport 0
+      C1.4: candidate:2 1 udp 1686054911 2001:db8::1
+                      10006 typ srflx raddr 0.0.0.0 rport 0
+
+Ice Agent 2 candidates:
+      C2.1: candidate:1 1 udp 2122262783 b977f597-260c-4f70-9ac4-
+                      26e69b55f966.local 20004 typ host
+      C2.2: candidate:2 1 udp 2122262527 ac4595a7-7e42-4e85-85e6-
+                      c292abe0e681.local 20006 typ host
+      C2.3: candidate:1 1 udp 1686055167 192.0.2.2
+                      40004 typ srflx raddr 0.0.0.0 rport 0
+      C2.4: candidate:2 1 udp 1686054911 2001:db8::2
+                      20006 typ srflx raddr 0.0.0.0 rport 0
+
 Privacy Considerations {#privacy}
 ==================================
 
