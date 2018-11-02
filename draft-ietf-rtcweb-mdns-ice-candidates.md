@@ -294,11 +294,11 @@ not have any effect on connectivity or connection setup time.
 Examples
 ========
 
-The examples below show how the mDNS technique is used during ICE
-processing. The first example shows a simple case, the
-next two examples demonstrate how peer-reflexive candidates for
-local IP addresses can be created due to timing differences, and
-the final example shows a real-world case with IPv4, IPv6, and STUN.
+The examples below show how the mDNS technique is used during ICE processing.
+The first example shows a simple case, the next two examples demonstrate how
+peer-reflexive candidates for local IP addresses can be created due to timing
+differences, and the final example shows a real-world case with IPv4, IPv6, and
+STUN.
 
 Normal Handling
 ---------------
@@ -447,17 +447,15 @@ preregister their mDNS names to speed up ICE gathering.
          discard C2.4> |                |                 |
                        |                |                 |
       - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-                                 ICE processing
+                              ICE connectivity checks
                        |                |                 |
            2001:db8::1 |<============= STUN ==============| 2001:db8::2
            2001:db8::1 |============== STUN =============>| 2001:db8::2
            192.168.1.1 |<============= STUN ==============| 192.168.1.2
            192.168.1.1 |============== STUN =============>| 192.168.1.2
-           2001:db8::1 |<============= STUN ==============| 2001:db8::2
-           2001:db8::1 |============== STUN =============>| 2001:db8::2
-             192.0.2.1 |    Failed === STUN ==============| 192.168.1.2
-           192.168.1.1 |============== STUN === Failed    | 192.0.2.2
-           2001:db8::1 |====== STUN, USE-CANDIDATE ======>| 2001:db8::2
+             192.0.2.1 |    Failed <-- STUN --------------| 192.168.1.2
+           192.168.1.1 |---------------STUN --> Failed    | 192.0.2.2
+           2001:db8::1 |====== STUN(USE-CANDIDATE) ======>| 2001:db8::2
 
 Ice Agent 1 candidates:
 
