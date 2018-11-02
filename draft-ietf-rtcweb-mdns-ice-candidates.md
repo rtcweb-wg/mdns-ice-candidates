@@ -35,16 +35,17 @@ author:
     organization: Google
     email: qingsi@google.com
 
-informative:
-  RFC1918:
+normative:
   RFC2119:
   RFC4122:
   RFC4941:
   RFC5389:
   RFC5766:
-  RFC6146:
   RFC6762:
   RFC8445:
+informative:
+  RFC1918:
+  RFC6146:
   ICESDP:
     target: https://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp
     title: Session Description Protocol (SDP) Offer/Answer procedures for
