@@ -47,7 +47,8 @@ informative:
   RFC8445:
   ICESDP:
     target: https://tools.ietf.org/html/draft-ietf-mmusic-ice-sip-sdp
-    title: Session Description Protocol (SDP) Offer/Answer procedures for Interactive Connectivity Establishment (ICE)
+    title: Session Description Protocol (SDP) Offer/Answer procedures for
+           Interactive Connectivity Establishment (ICE)
     author:
       ins: M. Petit-Huguenin
       ins: S. Nandakumar
@@ -121,10 +122,10 @@ of private IP addresses by arbitrary web pages, it can also be used by any
 endpoint that wants to avoid disclosing information about its local network
 to remote peers on other networks.
 
-WebRTC and WebRTC-compatible endpoints {{Overview}} that receive ICE 
-candidates with mDNS names will resolve these names to IP addresses and 
+WebRTC and WebRTC-compatible endpoints {{Overview}} that receive ICE
+candidates with mDNS names will resolve these names to IP addresses and
 perform ICE processing as usual. In the case where the
-endpoint is a web application, the WebRTC implementation will manage this 
+endpoint is a web application, the WebRTC implementation will manage this
 resolution internally and will not disclose the actual IP addresses to the
 application.
 
@@ -150,44 +151,49 @@ IP addresses.
 
 For each host candidate gathered by an ICE agent as part of the gathering
 process described in {{RFC8445}}, Section 5.1.1, the candidate is handled as
-described below. 
+described below.
 
 1. Check whether this IP address satisfies the ICE agent's policy regarding
-whether an address is safe to expose. If so, expose the candidate and abort
-this process.
+   whether an address is safe to expose. If so, expose the candidate and abort
+   this process.
 
-2. Check whether the ICE agent has a usable registered mDNS hostname resolving to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
+2. Check whether the ICE agent has a usable registered mDNS hostname resolving
+   to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
 
-3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4 UUID as defined in {{RFC4122}}, followed by ".local".
+3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4
+   UUID as defined in {{RFC4122}}, followed by ".local".
 
 4. Register the candidate's mDNS hostname as defined in {{RFC6762}}.
 
-5. If registering of the mDNS hostname fails, abort these steps. The candidate is not exposed.
+5. If registering of the mDNS hostname fails, abort these steps. The candidate
+   is not exposed.
 
-6. Store the mDNS hostname and its related IP address in the ICE agent for future reuse.
+6. Store the mDNS hostname and its related IP address in the ICE agent for
+   future reuse.
 
-7. Replace the IP address of the ICE candidate with its mDNS hostname and provide
-the candidate to the web application.
+7. Replace the IP address of the ICE candidate with its mDNS hostname and
+   provide the candidate to the web application.
 
 ICE agents can implement this procedure in any way as long as it produces
-equivalent results. An implementation may for instance pre-register mDNS 
-hostnames by executing steps 3 to 6 and prepopulate an ICE agent accordingly. 
-By doing so, only step 7 of the above procedure will be executed at the time 
+equivalent results. An implementation may for instance pre-register mDNS
+hostnames by executing steps 3 to 6 and prepopulate an ICE agent accordingly.
+By doing so, only step 7 of the above procedure will be executed at the time
 of gathering candidates.
 
-ICE agents may also decide that certain local IP addresses are safe to 
+ICE agents may also decide that certain local IP addresses are safe to
 expose. This may be because the ICE agent has a priori knowledge that the
 address is in fact public, or because the agent has made a policy decision to
 not conceal certain types of IP addresses (e.g., those with built-in privacy
 protections) as a calculated choice to improve connectivity. This topic is
 discussed further in {#privacy} below.
 
-An implementation may also detect that mDNS is not supported by the available network interfaces.
-The ICE agent may skip steps 3 and 4 and directly decide to not expose the host candidate.
+An implementation may also detect that mDNS is not supported by the available
+network interfaces. The ICE agent may skip steps 3 and 4 and directly decide to
+not expose the host candidate.
 
 This procedure ensures that an mDNS name is used to replace only one IP address.
-Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses MUST
-expose a different mDNS name for each address.
+Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses
+MUST expose a different mDNS name for each address.
 
 Any server-reflexive candidates generated from an mDNS local candidate MUST have
 their raddr field set to 0.0.0.0 and their rport field set to 0.
@@ -227,9 +233,9 @@ agent MUST take exactly one of the resolved IP addresses and ignore the others.
 The ICE agent SHOULD use the first IPv6 address resolved, if one exists, or
 the first IPv4 address, if not.
 
-An ICE agent MAY add additional restrictions regarding the ICE candidates it will resolve using 
-mDNS, as this mechanism allows attackers to send ICE traffic to devices with
-well-known mDNS names.
+An ICE agent MAY add additional restrictions regarding the ICE candidates it
+will resolve using mDNS, as this mechanism allows attackers to send ICE traffic
+to devices with well-known mDNS names.
 
 Limitations
 ===========
@@ -238,10 +244,10 @@ Reduced Connectivity
 --------------------
 
 With typical ICE, endpoints on the same network will usually be able to
-establish a direct connection between their local IP addresses. When using the mDNS
-technique, a direct connection is still possible, but only if at least one side
-can properly resolve the provided mDNS candidates. This may not be possible in
-all scenarios.
+establish a direct connection between their local IP addresses. When using the
+mDNS technique, a direct connection is still possible, but only if at least one
+side can properly resolve the provided mDNS candidates. This may not be possible
+in all scenarios.
 
 First, some networks may entirely disable mDNS.  Second, mDNS queries have
 limited scope. On large networks, this may mean that an mDNS name cannot be
@@ -256,7 +262,7 @@ One potential mitigation, as discussed in {#privacy}, is to not conceal
 candidates created from {{RFC4941}} IPv6 addresses. This permits connectivity
 even in large internal networks or where mDNS is disabled.
 
-The exact impact of the mDNS technique is being researched experimentally 
+The exact impact of the mDNS technique is being researched experimentally
 and will be provided before publication of this document.
 
 Connection Setup Latency
@@ -550,7 +556,8 @@ Malicious Responses to Deny Name Registration
 If the optional probing queries are implemented for the name registration, a
 malicious endpoint in the local network, which is capable of responding mDNS
 queries, could send responses to block the use of the generated names. This
-would lead to the discarding of this ICE host candidate as in Step 5 in {{gathering}}.
+would lead to the discarding of this ICE host candidate as in Step 5 in
+{{gathering}}.
 
 The above attack can be mitigated by skipping the probing when registering a
 name, which also conforms to Section 8 in {{RFC6762}}, given that the name is
@@ -567,10 +574,11 @@ scope of this proposal.
 Monitoring of Sessions
 ----------------------
 
-A malicious endpoint in the local network may also record other endpoints who are registering,
-unregistering, and resolving mDNS names. By doing so, they can create a session log that
-shows which endpoints are communicating, and for how long. If both endpoints in the
-session are on the same network, the fact they are communicating can be discovered.
+A malicious endpoint in the local network may also record other endpoints who
+are registering, unregistering, and resolving mDNS names. By doing so, they can
+create a session log that shows which endpoints are communicating, and for how
+long. If both endpoints in the session are on the same network, the fact they
+are communicating can be discovered.
 
 As above, mitigation of this threat is beyond the scope of this proposal.
 
@@ -593,11 +601,14 @@ This document requires no actions from IANA.
 Specification Requirements {#requirements}
 ============
 
-The proposal relies on identifying and resolving any mDNS-based ICE candidates as part of adding/processing a remote candidate.
-{{ICESDP}} section 4.1 could be updated to explicitly allow mDNS names in the connection-address field.
+The proposal relies on identifying and resolving any mDNS-based ICE candidates
+as part of adding/processing a remote candidate.
+{{ICESDP}} section 4.1 could be updated to explicitly allow mDNS names in the
+connection-address field.
 
-The proposal relies on adding the ability to register mDNS names at ICE gathering time.
-This could be described in {{ICESDP}} and/or {{WebRTCSpec}}.
+The proposal relies on adding the ability to register mDNS names at ICE
+gathering time. This could be described in {{ICESDP}} and/or {{WebRTCSpec}}.
 
-The proposal allows updating {{IPHandling}} so that mode 2 is not the mode used by default when user consent is not required.
-Instead, the default mode could be defined as mode 3 with mDNS-based ICE candidates.
+The proposal allows updating {{IPHandling}} so that mode 2 is not the mode used
+by default when user consent is not required. Instead, the default mode could be
+defined as mode 3 with mDNS-based ICE candidates.
