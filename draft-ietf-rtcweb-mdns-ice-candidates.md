@@ -305,19 +305,19 @@ Normal Handling
 In this example, mDNS candidates are exchanged between peers and resolved
 normally to obtain the corresponding IP addresses.
 
-                  ICE Agent 1 (1.1.1.1)             ICE Agent 2 (2.2.2.2)
-            <Register     |                                 |
-             mDNS name N1 |                                 |
-             for 1.1.1.1> |                                 |
+               ICE Agent 1 (192.0.2.1)           ICE Agent 2 (192.0.2.2)
+           <Register mDNS |                                 |
+             name N1,     |                                 |
+             192.0.2.1>   |                                 |
                           |------- mDNS Candidate N1 ------>|
-                          |                                 | <Register
-                          |                                 |  mDNS name N2
-                          |                                 |  for 2.2.2.2>
+                          |                                 | <Register mDNS
+                          |                                 |  name N2,
+                          |                                 |  192.0.2.2>
                           |<------ mDNS Candidate N2 -------|
            <Resolve       |                                 | <Resolve
             mDNS name N2> |                                 |  mDNS name N1>
-                          |<==== STUN check to 1.1.1.1 =====|
-                          |===== STUN check to 2.2.2.2 ====>|
+                          |<=== STUN check to 192.0.2.1 ====|
+                          |==== STUN check to 192.0.2.2 ===>|
                           |                                 |
 
 The exchange of ICE candidates relies on out-of-band signaling, for example,
@@ -341,17 +341,17 @@ Peer-reflexive Candidate From Slow Signaling
 In this example, a peer-reflexive candidate is generated because the
 mDNS candidate is signaled after the STUN checks begin.
 
-                  ICE Agent 1 (1.1.1.1)             ICE Agent 2 (2.2.2.2)
-            <Register     |                                 |
-             mDNS name N1 |                                 |
-             for 1.1.1.1> |                                 |
+               ICE Agent 1 (192.0.2.1)           ICE Agent 2 (192.0.2.2)
+           <Register mDNS |                                 |
+             name N1,     |                                 |
+             192.0.2.1>   |                                 |
                           |------- mDNS Candidate N1 ------>|
                           |                                 | <Resolve
                           |                                 |  mDNS name N1>
-                          |<==== STUN check to 1.1.1.1 =====|
-          prflx candidate |                                 | <Register
-          2.2.2.2 created |                                 |  mDNS name N2
-                          |                                 |  for 2.2.2.2>
+                          |<=== STUN check to 192.0.2.1 ====|
+          prflx candidate |                                 | <Register mDNS
+        192.0.2.2 created |                                 |  name N2,
+                          |                                 |  192.0.2.2>
                           |<------ mDNS Candidate N2 -------|
                           |                                 |
 
@@ -362,18 +362,18 @@ In this example, a peer-reflexive candidate is generated because the
 mDNS resolution for name N2 does not complete until after the STUN checks are
 received.
 
-                  ICE Agent 1 (1.1.1.1)             ICE Agent 2 (2.2.2.2)
-            <Register     |                                 | <Register
-             mDNS name N1 |                                 |  mDNS name N2
-             for 1.1.1.1> |                                 |  for 2.2.2.2>
+               ICE Agent 1 (192.0.2.1)           ICE Agent 2 (192.0.2.2)
+           <Register mDNS |                                 | <Register mDNS
+             name N1,     |                                 |  name N2,
+             192.0.2.1>   |                                 |  192.0.2.2>
                           |------- mDNS Candidate N1 ------>|
                           |<------ mDNS Candidate N2 -------|
     <Resolve              |                                 | <Resolve
-     ...                  |                                 |  mDNS name N1>
-     mDNS                 |<==== STUN check to 1.1.1.1 =====|
-     ...  prflx candidate |                                 |
-     name 2.2.2.2 created |                                 |
-     ...                  |                                 |
+     mDNS                 |                                 |  mDNS name N1>
+      .                   |<=== STUN check to 192.0.2.1 ====|
+      .   prflx candidate |                                 |
+      . 192.0.2.2 created |                                 |
+     name                 |                                 |
      N2>                  |                                 |
 
 IPv4, IPv6, and STUN handling
