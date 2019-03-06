@@ -254,10 +254,10 @@ First, some networks may entirely disable mDNS.  Second, mDNS queries have
 limited scope. On large networks, this may mean that an mDNS name cannot be
 resolved if the remote endpoint is too many segments away.
 
-When mDNS fails, ICE will attempt to fall back to either NAT hairpin,
-if supported, or TURN relay, if not. As noted in {{IPHandling}}, this may
-result in increased media latency and reduced connectivity/increased cost
-(depending on whether the application chooses to use TURN).
+When mDNS fails, ICE will attempt to fall back to either NAT hairpin, if
+supported, or TURN relay if not. This may result in reduced connectivity,
+reduced throughput and increased latency, as well as increased cost in case of
+TURN relay.
 
 One potential mitigation, as discussed in {#privacy}, is to not conceal
 candidates created from {{RFC4941}} IPv6 addresses. This permits connectivity
