@@ -707,10 +707,7 @@ Specification Requirements {#requirements}
 The proposal relies on identifying and resolving any mDNS-based ICE candidates
 as part of adding/processing a remote candidate.
 {{ICESDP}} section 4.1 could be updated to explicitly allow mDNS names in the
-connection-address sub-field of a connection-data field ("c=" line). Since an
-mDNS name also conceals the address family, the corresponding "c=" line must
-use either "IP4" or "IP6" in the address-type sub-field when an mDNS name is
-used in the connection-address sub-field. "IP4" could be the default value.
+connection-address field.
 
 The proposal relies on adding the ability to register mDNS names at ICE
 gathering time. This could be described in {{ICESDP}} and/or {{WebRTCSpec}}.
