@@ -651,7 +651,27 @@ attacks, in which new names, hence new records, are constantly created and sent.
 A browser-wide mDNS message rate limit MUST be provided for all messages
 that can be indirectly dispatched by a web application, namely the probing
 queries, announcement responses, resolution queries, and goodbye responses
-associated with mDNS.
+associated with mDNS. In addition to the multicast rate limiting defined in
+{{RFC6762}}, for all mDNS queries including the probing queries, the interval
+between any two queries SHOULD be at least one second. For mDNS responses, we
+recommend the following rate limiting scheme that applies different restrictions
+based on the mDNS message type.
+
+1. Per-response rate limiting. Announcement ({{RFC6762}}, Section 8.3) and
+   goodbye ({{RFC6762}}, Section 10.1) responses SHOULD be limited per response
+   on each interface so that the time elapsed between any two transmissions of
+   mDNS responses containing the above messages is no less than one second on
+   the given interface.
+
+2. Per-record rate limiting. Responses containing resource records for name
+   resolution, and also negative responses to non-probing queries for non-existing
+   records of generated mDNS names, SHOULD be rate limited per record. The time elapsed
+   of any contained record must be no less than one second from the last time
+   that a per-record rate-limited response that also contains this record is
+   transmitted.
+
+3. No rate limiting. Response, including negative responses, to probing queries
+   SHOULD be sent without delay ({{RFC6762}}, Section 6).
 
 Malicious Responses to Deny Name Registration
 ---------------------------------------------
