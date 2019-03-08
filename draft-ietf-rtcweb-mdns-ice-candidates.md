@@ -158,7 +158,7 @@ described below.
    this process.
 
 2. Check whether the ICE agent has previously generated, registered, and stored
-   an mDNS hostname for this IP address as per Steps 3, 4 and 6. If it has, skip
+   an mDNS hostname for this IP address as per Steps 3, 4, and 6. If it has, skip
    ahead to Step 7.
 
 3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4
