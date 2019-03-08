@@ -281,14 +281,19 @@ entirely.
 Backward Compatibility
 ----------------------
 
-Note that backward compatibility does not present a significant issue for the
-mDNS technique. When an endpoint that supports mDNS communicates with an endpoint
-that does not, the legacy endpoint will still provide its local IP addresses,
-and accordingly a direct connection can still be attempted, even though
-the legacy endpoint cannot resolve the mDNS names provided by the new endpoint.
-In the event the legacy endpoint attempts to resolve mDNS names using Unicast
-DNS, this may cause ICE to take somewhat longer to fully complete, but should
-not have any effect on connectivity or connection setup time.
+For the most part, backward compatibility does not present a significant issue
+for the mDNS technique. When an endpoint that supports mDNS communicates with
+an endpoint that does not, the legacy endpoint will still provide its local IP
+addresses, and accordingly a direct connection can still be attempted, even
+though the legacy endpoint cannot resolve the mDNS names provided by the new
+endpoint. In the event the legacy endpoint attempts to resolve mDNS names using
+Unicast DNS, this may cause ICE to take somewhat longer to fully complete, but
+should not have any effect on connectivity or connection setup time.
+
+However, some legacy endpoints are not fully {{RFC5245}}-compliant and can
+behave unpredictably in the presence of ICE candidates that contain a hostname,
+potentially leading to ICE failure. Such endpoints have been identified during
+testing of this technique, but appear to be rare.
 
 Examples
 ========
