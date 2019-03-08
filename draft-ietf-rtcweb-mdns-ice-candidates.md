@@ -230,8 +230,9 @@ happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
 An ICE agent that supports mDNS candidates MUST support the situation where the
 hostname resolution results in more than one IP address. In this case, the ICE
 agent MUST take exactly one of the resolved IP addresses and ignore the others.
-The ICE agent SHOULD use the first IPv6 address resolved, if one exists, or
-the first IPv4 address, if not.
+The ICE agent MUST do this using an algorithm that consistently selects the same
+IP address, independent of the order of the IP addresses in the resolution
+results. This algorithm SHOULD select an IPv6 address when present.
 
 An ICE agent MAY add additional restrictions regarding the ICE candidates it
 will resolve using mDNS, as this mechanism allows attackers to send ICE traffic
