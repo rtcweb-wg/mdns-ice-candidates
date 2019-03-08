@@ -157,8 +157,9 @@ described below.
    whether an address is safe to expose. If so, expose the candidate and abort
    this process.
 
-2. Check whether the ICE agent has a usable registered mDNS hostname resolving
-   to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
+2. Check whether the ICE agent has previously generated, registered, and stored
+   an mDNS hostname for this IP address as per Steps 3, 4, and 6. If it has, skip
+   ahead to Step 7.
 
 3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4
    UUID as defined in {{RFC4122}}, followed by ".local".
