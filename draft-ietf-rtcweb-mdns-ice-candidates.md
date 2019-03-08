@@ -290,7 +290,7 @@ endpoint. In the event the legacy endpoint attempts to resolve mDNS names using
 Unicast DNS, this may cause ICE to take somewhat longer to fully complete, but
 should not have any effect on connectivity or connection setup time.
 
-However, some legacy endpoints are not fully {{RFC5245}}-compliant and can
+However, some legacy endpoints are not fully spec-compliant and can
 behave unpredictably in the presence of ICE candidates that contain a hostname,
 potentially leading to ICE failure. Such endpoints have been identified during
 testing of this technique, but appear to be rare.
