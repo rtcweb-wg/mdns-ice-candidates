@@ -157,7 +157,7 @@ described below.
    whether an address is safe to expose. If so, expose the candidate and abort
    this process.
 
-2. Check whether the ICE agent has previously generated, registered and stored
+2. Check whether the ICE agent has previously generated, registered, and stored
    an mDNS hostname for this IP address as per Steps 3, 4 and 6. If it has, skip
    ahead to Step 7.
 
