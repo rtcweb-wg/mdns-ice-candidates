@@ -658,19 +658,19 @@ recommend the following rate limiting scheme that applies different restrictions
 based on the mDNS message type.
 
 1. Per-response rate limiting. Announcement ({{RFC6762}}, Section 8.3) and
-   goodbye ({{RFC6762}}, Section 10.1) responses SHOULD be limited per response
+   goodbye ({{RFC6762}}, Section 10.1) responses SHOULD be limited per-response
    on each interface so that the time elapsed between any two transmissions of
    mDNS responses containing the above messages is no less than one second on
    the given interface.
 
 2. Per-record rate limiting. Responses containing resource records for name
-   resolution, and also negative responses to non-probing queries for non-existing
+   resolution, as well as negative responses to non-probing queries for non-existing
    records of generated mDNS names, SHOULD be rate limited per record. The time elapsed
    of any contained record must be no less than one second from the last time
    that a per-record rate-limited response that also contains this record is
    transmitted.
 
-3. No rate limiting. Response, including negative responses, to probing queries
+3. No rate limiting. Responses to probing queries, including negative responses,
    SHOULD be sent without delay ({{RFC6762}}, Section 6).
 
 Malicious Responses to Deny Name Registration
