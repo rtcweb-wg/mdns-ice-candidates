@@ -202,6 +202,13 @@ Any candidates exposed to the web application via local descriptions MUST be
 identical to those provided during candidate gathering (i.e., MUST NOT
 contain private host IP addresses).
 
+The mDNS name of an mDNS candidate MUST be used in its connection-address field
+in the SDP. When an mDNS candidate is the default candidate, its mDNS name MUST
+be used in the connection-address field of the "c=" line in the SDP. Since an
+mDNS candidate also conceals its address family, the corresponding "c=" line
+SHOULD use "IP4" in the address-type field.
+
+
 ICE Candidate Processing {#processing}
 --------------------------------------
 
@@ -703,14 +710,6 @@ This document requires no actions from IANA.
 
 Specification Requirements {#requirements}
 ============
-
-The proposal relies on identifying and resolving any mDNS-based ICE candidates
-as part of adding/processing a remote candidate. {{ICESDP}} section 4.1 could
-be updated to explicitly allow mDNS names in the connection-address sub-field
-of a connection-data field ("c=" line). Since an mDNS name also conceals the
-address family, the corresponding "c=" line must use either "IP4" or "IP6" in
-the address-type sub-field when an mDNS name is used in the connection-address
-sub-field. "IP4" could be the default value.
 
 The proposal relies on adding the ability to register mDNS names at ICE
 gathering time. This could be described in {{ICESDP}} and/or {{WebRTCSpec}}.
