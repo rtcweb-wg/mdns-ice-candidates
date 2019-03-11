@@ -228,11 +228,8 @@ An ICE agent may use a hostname resolver that transparently supports both
 Multicast and Unicast DNS. In this case the resolution of a ".local" name may
 happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
 
-An ICE agent that supports mDNS candidates MUST support the situation where the
-hostname resolution results in more than one IP address. In this case, the ICE
-agent MUST take exactly one of the resolved IP addresses and ignore the others.
-The ICE agent SHOULD use the first IPv6 address resolved, if one exists, or
-the first IPv4 address, if not.
+An ICE agent SHOULD ignore candidates where the hostname resolution returns
+more than one IP address.
 
 An ICE agent MAY add additional restrictions regarding the ICE candidates it
 will resolve using mDNS, as this mechanism allows attackers to send ICE traffic
