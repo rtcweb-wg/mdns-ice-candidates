@@ -648,12 +648,12 @@ A malicious Web application could flood the local network with mDNS messages by:
 record on a given interface cannot be sent less than one second since its last
 transmission. This rate limiting rule however does not mitigate the above
 attacks, in which new names, hence new records, are constantly created and sent.
-A browser-wide mDNS message rate limit MUST be provided for all messages
-that can be indirectly dispatched by a web application, namely the probing
-queries, announcement responses, resolution queries, and goodbye responses
-associated with mDNS. Such a rate limiting rule SHOULD NOT allow responses from
-an origin to queries for the ICE candidate processing blocked by mDNS messages
-from a different origin.
+A browser-wide mDNS message rate limit MUST be provided for all unsolicited
+messages that can be dispatched by a web application, namely the probing
+queries, announcement responses, and goodbye responses associated with mDNS.
+Such a rate limiting rule SHOULD also ensure that mDNS messages sent by
+a page do not block mDNS messages for name resolution in the ICE candidate
+processing of another page, especially if these pages have different origins.
 
 Malicious Responses to Deny Name Registration
 ---------------------------------------------
