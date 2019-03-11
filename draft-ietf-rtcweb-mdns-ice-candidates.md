@@ -196,19 +196,18 @@ This procedure ensures that an mDNS name is used to replace only one IP address.
 Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses
 MUST expose a different mDNS name for each address.
 
-Any server-reflexive candidates generated from an mDNS local candidate MUST have
-their raddr field set to 0.0.0.0 and their rport field set to 0.
-
-Any candidates exposed to the web application via local descriptions MUST be
-identical to those provided during candidate gathering (i.e., MUST NOT
-contain private host IP addresses).
-
 The mDNS name of an mDNS candidate MUST be used in its connection-address field
 in the SDP. When an mDNS candidate is the default candidate, its mDNS name MUST
 be used in the connection-address field of the "c=" line in the SDP. Since an
 mDNS candidate also conceals its address family, the corresponding "c=" line
 SHOULD use "IP4" in the address-type field.
 
+Any server-reflexive candidates generated from an mDNS local candidate MUST have
+their raddr field set to 0.0.0.0 and their rport field set to 0.
+
+Any candidates exposed to the web application via local descriptions MUST be
+identical to those provided during candidate gathering (i.e., MUST NOT
+contain private host IP addresses).
 
 ICE Candidate Processing {#processing}
 --------------------------------------
