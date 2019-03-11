@@ -196,8 +196,13 @@ This procedure ensures that an mDNS name is used to replace only one IP address.
 Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses
 MUST expose a different mDNS name for each address.
 
-Any server-reflexive candidates generated from an mDNS local candidate MUST have
-their raddr field set to 0.0.0.0 and their rport field set to 0.
+Note that any server-reflexive candidates generated from an mDNS host
+candidate will have IP addresses as their transport addresses, rather than mDNS
+hostnames. Because their transport addresses are different 
+(i.e., not hostnames), they MUST NOT be considered redundant with their host
+counterparts, per the guidance in {{RFC8445}}, Section 5.1.3. To avoid
+accidental leakage, these candidates MUST have their raddr field set to 0.0.0.0 
+and their rport field set to 0.
 
 Any candidates exposed to the web application via local descriptions MUST be
 identical to those provided during candidate gathering (i.e., MUST NOT
