@@ -157,8 +157,9 @@ described below.
    whether an address is safe to expose. If so, expose the candidate and abort
    this process.
 
-2. Check whether the ICE agent has a usable registered mDNS hostname resolving
-   to the ICE candidate's IP address. If one exists, skip ahead to Step 6.
+2. Check whether the ICE agent has previously generated, registered, and stored
+   an mDNS hostname for this IP address as per Steps 3, 4, and 6. If it has, skip
+   ahead to Step 7.
 
 3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4
    UUID as defined in {{RFC4122}}, followed by ".local".
@@ -234,11 +235,8 @@ An ICE agent may use a hostname resolver that transparently supports both
 Multicast and Unicast DNS. In this case the resolution of a ".local" name may
 happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
 
-An ICE agent that supports mDNS candidates MUST support the situation where the
-hostname resolution results in more than one IP address. In this case, the ICE
-agent MUST take exactly one of the resolved IP addresses and ignore the others.
-The ICE agent SHOULD use the first IPv6 address resolved, if one exists, or
-the first IPv4 address, if not.
+An ICE agent SHOULD ignore candidates where the hostname resolution returns
+more than one IP address.
 
 An ICE agent MAY add additional restrictions regarding the ICE candidates it
 will resolve using mDNS, as this mechanism allows attackers to send ICE traffic
@@ -288,14 +286,19 @@ entirely.
 Backward Compatibility
 ----------------------
 
-Note that backward compatibility does not present a significant issue for the
-mDNS technique. When an endpoint that supports mDNS communicates with an endpoint
-that does not, the legacy endpoint will still provide its local IP addresses,
-and accordingly a direct connection can still be attempted, even though
-the legacy endpoint cannot resolve the mDNS names provided by the new endpoint.
-In the event the legacy endpoint attempts to resolve mDNS names using Unicast
-DNS, this may cause ICE to take somewhat longer to fully complete, but should
-not have any effect on connectivity or connection setup time.
+For the most part, backward compatibility does not present a significant issue
+for the mDNS technique. When an endpoint that supports mDNS communicates with
+an endpoint that does not, the legacy endpoint will still provide its local IP
+addresses, and accordingly a direct connection can still be attempted, even
+though the legacy endpoint cannot resolve the mDNS names provided by the new
+endpoint. In the event the legacy endpoint attempts to resolve mDNS names using
+Unicast DNS, this may cause ICE to take somewhat longer to fully complete, but
+should not have any effect on connectivity or connection setup time.
+
+However, some legacy endpoints are not fully spec-compliant and can
+behave unpredictably in the presence of ICE candidates that contain a hostname,
+potentially leading to ICE failure. Such endpoints have been identified during
+testing of this technique, but appear to be rare.
 
 Examples
 ========
@@ -707,13 +710,3 @@ IANA Considerations
 ===================
 
 This document requires no actions from IANA.
-
-Specification Requirements {#requirements}
-============
-
-The proposal relies on adding the ability to register mDNS names at ICE
-gathering time. This could be described in {{ICESDP}} and/or {{WebRTCSpec}}.
-
-The proposal allows updating {{IPHandling}} so that mode 2 is not the mode used
-by default when user consent is not required. Instead, the default mode could be
-defined as mode 3 with mDNS-based ICE candidates.
