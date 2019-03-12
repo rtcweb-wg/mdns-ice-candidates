@@ -644,16 +644,16 @@ A malicious Web application could flood the local network with mDNS messages by:
 - adding fictitious remote ICE host candidates with mDNS names.
 
 
-{{RFC6762}} defines a per-record multicast rate limiting rule, in which a given
-record on a given interface cannot be sent less than one second since its last
-transmission. This rate limiting rule however does not mitigate the above
-attacks, in which new names, hence new records, are constantly created and sent.
-A browser-wide mDNS message rate limit MUST be provided for all unsolicited
-messages that can be dispatched by a web application, namely the probing
-queries, announcement responses, and goodbye responses associated with mDNS.
-Such a rate limiting rule SHOULD also ensure that mDNS messages sent by
-a page do not block mDNS messages for name resolution in the ICE candidate
-processing of another page, especially if these pages have different origins.
+{{RFC6762}} defines a general per-question and per-record multicast rate
+limiting rule, in which a given question or record on a given interface cannot be
+sent less than one second since its last transmission. This rate limiting rule
+however does not mitigate the above attacks, in which new names, hence new
+questions or records, are constantly created and sent. A browser-wide mDNS
+message rate limit MUST be provided for both mDNS queries and responses that can
+be dispatched during the ICE candidate gathering and processing described in
+{{principle}}. A browser MAY implement more specific rate limits, e.g. to
+ensure a single origin does not prevent other origins from registering,
+unregistering, or resolving mDNS names.
 
 Malicious Responses to Deny Name Registration
 ---------------------------------------------
