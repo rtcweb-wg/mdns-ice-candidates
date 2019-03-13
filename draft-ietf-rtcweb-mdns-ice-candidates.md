@@ -400,7 +400,7 @@ supported, or TURN relay if not. This may result in reduced connectivity,
 reduced throughput and increased latency, as well as increased cost in case of
 TURN relay.
 
-One potential mitigation, as discussed in {#privacy}, is to not conceal
+One potential mitigation, as discussed in {{privacy}}, is to not conceal
 candidates created from {{RFC4941}} IPv6 addresses. This permits connectivity
 even in large internal networks or where mDNS is disabled.
 
