@@ -330,7 +330,7 @@ host IP addresses are private and need to be wrapped with mDNS names,
 they will be unreachable from the TURN server, and as noted above,
 the reverse path will continue to work normally.
 
-#### Generated Name Reuse
+### Generated Name Reuse
 
 It is important that use of registered mDNS hostnames is limited in time
 and/or scope. Indefinitely reusing the same mDNS hostname candidate would
