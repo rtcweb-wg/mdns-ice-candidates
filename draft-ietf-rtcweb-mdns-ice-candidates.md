@@ -330,7 +330,7 @@ host IP addresses are private and need to be wrapped with mDNS names,
 they will be unreachable from the TURN server, and as noted above,
 the reverse path will continue to work normally.
 
-#### Generated Name Reuse
+### Generated Name Reuse
 
 It is important that use of registered mDNS hostnames is limited in time
 and/or scope. Indefinitely reusing the same mDNS hostname candidate would
@@ -666,7 +666,7 @@ however does not mitigate the above attacks, in which new names, hence new
 questions or records, are constantly created and sent. Therefore, a browser-wide
 mDNS message rate limit MUST be provided for all mDNS queries and responses that
 are dispatched during the ICE candidate gathering and processing described in
-{{principle}}. A browser MAY implement more specific rate limits, e.g., to
+{{description}}. A browser MAY implement more specific rate limits, e.g., to
 ensure a single origin does not prevent other origins from registering,
 unregistering, or resolving mDNS names.
 
