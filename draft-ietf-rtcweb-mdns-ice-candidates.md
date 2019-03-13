@@ -666,7 +666,7 @@ however does not mitigate the above attacks, in which new names, hence new
 questions or records, are constantly created and sent. Therefore, a browser-wide
 mDNS message rate limit MUST be provided for all mDNS queries and responses that
 are dispatched during the ICE candidate gathering and processing described in
-{{principle}}. A browser MAY implement more specific rate limits, e.g., to
+{{description}}. A browser MAY implement more specific rate limits, e.g., to
 ensure a single origin does not prevent other origins from registering,
 unregistering, or resolving mDNS names.
 
