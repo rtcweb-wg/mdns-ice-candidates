@@ -136,7 +136,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in {{RFC2119}}.
 
-Principle {#principle}
+Description {#description}
 ======================
 
 This section uses the concept of ICE agent as defined in {{RFC8445}}. In the
@@ -148,6 +148,8 @@ ICE Candidate Gathering {#gathering}
 
 This section outlines how mDNS should be used by ICE agents to conceal local
 IP addresses.
+
+### Procedure
 
 For each host candidate gathered by an ICE agent as part of the gathering
 process described in {{RFC8445}}, Section 5.1.1, the candidate is handled as
@@ -181,13 +183,6 @@ hostnames by executing steps 3 to 6 and prepopulate an ICE agent accordingly.
 By doing so, only step 7 of the above procedure will be executed at the time
 of gathering candidates.
 
-ICE agents may also decide that certain local IP addresses are safe to
-expose. This may be because the ICE agent has a priori knowledge that the
-address is in fact public, or because the agent has made a policy decision to
-not conceal certain types of IP addresses (e.g., those with built-in privacy
-protections) as a calculated choice to improve connectivity. This topic is
-discussed further in {#privacy} below.
-
 An implementation may also detect that mDNS is not supported by the available
 network interfaces. The ICE agent may skip steps 3 and 4 and directly decide to
 not expose the host candidate.
@@ -196,21 +191,55 @@ This procedure ensures that an mDNS name is used to replace only one IP address.
 Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses
 MUST expose a different mDNS name for each address.
 
+### Implementation Guidance
+
+#### Determining Address Privacy and Server-Reflexive Candidates
+
+Naturally, an address that is already exposed to the Internet does not need to
+be protected by mDNS, as it can be trivially observed by the web server or
+remote endpoint. However, determining this ahead of time is not straightforward;
+while the fact that an IPv4 address is private can sometimes be inferred by its
+value, e.g., whether it is an {{RFC1918}} address, the reverse is not
+necessarily true. IPv6 addresses present their own complications, e.g.,
+private IPv6 addresses as a result of NAT64 {{RFC6146}}.
+
+Instead, the determination of whether an address is public can be reliably made
+as part of the ICE gathering process. For each mDNS host candidate generated
+according the guidance above, the usual STUN {{RFC5389}} request is sent to
+a STUN server. This can be done for both IPv4 and IPv6 local addresses,
+provided that the application has configured both IPv4 and IPv6 STUN servers.
+If the STUN response returns the same value as the local IP address,
+this indicates the address is in fact public.
+
+Regardless of the result, a server-reflexive candidate will be generated;
+the transport address of this candidate is an IP address and therefore
+distinct from the hostname transport address of the associated mDNS candidate,
+and as such MUST NOT be considered redundant per the guidance in {{RFC8445}},
+Section 5.1.3. To avoid accidental IP address, this server-reflexive candidate
+MUST have its raddr field set to 0.0.0.0 and its rport field set to 0.
+
+Once an address has been identified as public, the ICE agent MAY cache this
+information and omit mDNS protection for that address in future ICE gathering
+phases.
+
+#### Special Handling for IPv6 Addresses
+
+As noted in {{IPHandling}}, private IPv4 addresses are especially problematic
+because of their unbounded lifetime. However, the {{RFC4941}} IPv6
+addresses recommended for WebRTC have inherent privacy protections, namely
+a short lifetime and the lack of any stateful information. Accordingly,
+implementations MAY choose to not conceal {{RFC4941}} addresses with mDNS names
+as a tradeoff for improved peer-to-peer connectivity.
+
+#### mDNS Candidate Encoding
+
 The mDNS name of an mDNS candidate MUST be used in the connection-address field
-of its candidate attribute. When an mDNS candidate is the default candidate, 
-its mDNS name MUST be used in the connection-address field of the SDP "c=" line. 
+of its candidate attribute. When an mDNS candidate is the default candidate,
+its mDNS name MUST be used in the connection-address field of the SDP "c=" line.
 Since an mDNS candidate also conceals its address family, the "c=" line
 SHOULD use "IP4" in the address-type field.
 
-Note that any server-reflexive candidates generated from an mDNS host
-candidate will have IP addresses as their transport addresses, rather than mDNS
-hostnames. Because their transport addresses are different 
-(i.e., not hostnames), they MUST NOT be considered redundant with their host
-counterparts, per the guidance in {{RFC8445}}, Section 5.1.3. To avoid
-accidental leakage, these candidates MUST have their raddr field set to 0.0.0.0 
-and their rport field set to 0.
-
-Any candidates exposed to the web application via local descriptions MUST be
+Any candidates exposed to the application via local descriptions MUST be
 identical to those provided during candidate gathering (i.e., MUST NOT
 contain private host IP addresses).
 
@@ -219,6 +248,8 @@ ICE Candidate Processing {#processing}
 
 This section outlines how received ICE candidates with mDNS names are
 processed by ICE agents, and is relevant to all endpoints.
+
+### Procedure
 
 For any remote ICE candidate received by the ICE agent, the following procedure
 is used:
@@ -235,6 +266,8 @@ as defined in {{RFC8445}}.
 
 4. Otherwise, ignore the candidate.
 
+### Implementation Guidance
+
 An ICE agent may use a hostname resolver that transparently supports both
 Multicast and Unicast DNS. In this case the resolution of a ".local" name may
 happen through Unicast DNS as noted in {{RFC6762}}, Section 3.
@@ -246,8 +279,108 @@ An ICE agent MAY add additional restrictions regarding the ICE candidates it
 will resolve using mDNS, as this mechanism allows attackers to send ICE traffic
 to devices with well-known mDNS names.
 
-Limitations
-===========
+Additional Privacy Considerations {#privacy}
+--------------------------------------------
+
+The goal of this mechanism is to keep knowledge of private host IP
+addresses within the ICE agent while continuing to allow the
+application to transmit ICE candidates. Besides keeping private
+host IP addresses out of ICE candidates, implementations must take
+steps to prevent these IP addresses from being exposed to web
+applications through other means.
+
+### Statistics
+
+Statistics related to ICE candidates that are accessible to the web
+application MUST NOT contain the IP address of a local or remote mDNS
+candidate; the mDNS name SHOULD be used instead.
+
+In addition, a peer-reflexive remote candidate may be constructed
+from a remote host IP address as a result of an ICE connectivity
+check, as described in Section 7.3.1.3 of {{RFC8445}}. This check
+may arrive before the candidate due to signaling or mDNS
+resolution delays, as shown in the examples above.
+
+To prevent disclosure of the host IP address to the application in
+this scenario, statistics related to ICE candidates MUST NOT
+contain the IP address of any peer-reflexive candidate, unless that IP
+has already been learned through signaling of a candidate with the
+same address and either the same or a different port; this includes cases
+where the signaled candidate is discarded as redundant according to
+Section 5.1.3 of {{RFC8445}}.
+
+### Interactions With TURN Servers
+
+When sending data to a TURN {{RFC5766}} server, the sending client tells
+the server the destination IP and port for the data. This means that
+if the client uses TURN to send to an IP that was obtained by mDNS
+resolution, the TURN server will learn the underlying host IP and port,
+and this information can then be relayed to the web application,
+defeating the value of the mDNS wrapping.
+
+To prevent disclosure of the host IP address to a TURN server, the ICE
+agent MUST NOT form candidate pairs between its own relay candidates
+and remote mDNS candidates. Note that the converse is not an issue; the
+ICE agent MAY form candidate pairs between its own mDNS candidates and
+remote relay candidates, as in this situation host IPs will not be sent
+directly to the TURN server.
+
+This restriction has no effect on connectivity; in the cases where
+host IP addresses are private and need to be wrapped with mDNS names,
+they will be unreachable from the TURN server, and as noted above,
+the reverse path will continue to work normally.
+
+#### Generated Name Reuse
+
+It is important that use of registered mDNS hostnames is limited in time
+and/or scope. Indefinitely reusing the same mDNS hostname candidate would
+provide applications an even more reliable tracking mechanism than the private
+IP addresses that this specification is designed to hide. In the case of a web
+application, the use of registered mDNS hostnames SHOULD be scoped by the web
+application origin, and SHOULD have the lifetime of the page executing the web
+application.
+
+### Specific Browsing Contexts
+
+As noted in {{IPHandling}}, privacy may be breached if a web application running
+in two browsing contexts can determine whether it is running on the same device.
+While the approach in this document prevents the application from directly
+comparing local private IP addresses, a successful local WebRTC connection
+can also present a threat to user privacy. Specifically, when the latency of a
+WebRTC connection latency is close to zero, the probability is high that the
+two peers are running on the same device.
+
+To avoid this issue, browsers SHOULD NOT register mDNS names for WebRTC
+applications running in a third-party browsing context (i.e., a context that
+has a different origin than the top-level browsing context), or a private
+browsing context.
+
+### Network Interface Enumeration
+
+Even when local IP addresses are not exposed, the number of mDNS hostname
+candidates can still provide a fingerprinting dimension. This is in particular
+the case for network interfaces with limited connectivity that will not generate
+server-reflexive or relay candidates.
+
+The more mDNS names an endpoint exposes through mDNS hostname candidates, the
+higher the fingerprinting risk. One countermeasure is to limit this number to a
+small value.
+
+Note that no additional fingerprinting risk is introduced when restricting mDNS
+hostname candidates to default route only.
+
+### Monitoring of Sessions
+
+A malicious endpoint in the local network may also record other endpoints who
+are registering, unregistering, and resolving mDNS names. By doing so, they can
+create a session log that shows which endpoints are communicating, and for how
+long. If both endpoints in the session are on the same network, the fact they
+are communicating can be discovered.
+
+Mitigation of this threat is beyond the scope of this proposal.
+
+Potential Limitations
+=====================
 
 Reduced Connectivity
 --------------------
@@ -267,7 +400,7 @@ supported, or TURN relay if not. This may result in reduced connectivity,
 reduced throughput and increased latency, as well as increased cost in case of
 TURN relay.
 
-One potential mitigation, as discussed in {#privacy}, is to not conceal
+One potential mitigation, as discussed in {{privacy}}, is to not conceal
 candidates created from {{RFC4941}} IPv6 addresses. This permits connectivity
 even in large internal networks or where mDNS is disabled.
 
@@ -277,7 +410,7 @@ and will be provided before publication of this document.
 Connection Setup Latency
 ------------------------
 
-As noted in {{principle}}, ICE agents using the mDNS technique are responsible
+As noted in {{description}}, ICE agents using the mDNS technique are responsible
 for registering and resolving mDNS names as part of the ICE process. These
 steps may delay establishment of a direct peer-to-peer connection, compared to
 when raw local IP addresses are used.
@@ -492,138 +625,6 @@ Ice Agent 2 candidates:
       C2.4: candidate:2 1 udp 1686054911 2001:db8::2
                       20006 typ srflx raddr 0.0.0.0 rport 0
 
-Privacy Considerations {#privacy}
-==================================
-
-The goal of this mechanism is to keep knowledge of private host IP
-addresses within the ICE agent while continuing to allow the
-application to transmit ICE candidates. Besides keeping private
-host IP addresses out of ICE candidates, implementations must take
-steps to prevent these IP addresses from being exposed to web
-applications through other means.
-
-Statistics
-----------
-
-Statistics related to ICE candidates that are accessible to the web
-application MUST NOT contain the IP address of a local or remote mDNS
-candidate; the mDNS name SHOULD be used instead.
-
-In addition, a peer-reflexive remote candidate may be constructed
-from a remote host IP address as a result of an ICE connectivity
-check, as described in Section 7.3.1.3 of {{RFC8445}}. This check
-may arrive before the candidate due to signaling or mDNS
-resolution delays, as shown in the examples above.
-
-To prevent disclosure of the host IP address to the application in
-this scenario, statistics related to ICE candidates MUST NOT
-contain the IP address of any peer-reflexive candidate, unless that IP
-has already been learned through signaling of a candidate with the
-same address and either the same or a different port; this includes cases
-where the signaled candidate is discarded as redundant according to
-Section 5.1.3 of {{RFC8445}}.
-
-Interactions With TURN Servers
-------------------------------
-
-When sending data to a TURN {{RFC5766}} server, the sending client tells
-the server the destination IP and port for the data. This means that
-if the client uses TURN to send to an IP that was obtained by mDNS
-resolution, the TURN server will learn the underlying host IP and port,
-and this information can then be relayed to the web application,
-defeating the value of the mDNS wrapping.
-
-To prevent disclosure of the host IP address to a TURN server, the ICE
-agent MUST NOT form candidate pairs between its own relay candidates
-and remote mDNS candidates. Note that the converse is not an issue; the
-ICE agent MAY form candidate pairs between its own mDNS candidates and
-remote relay candidates, as in this situation host IPs will not be sent
-directly to the TURN server.
-
-This restriction has no effect on connectivity; in the cases where
-host IP addresses are private and need to be wrapped with mDNS names,
-they will be unreachable from the TURN server, and as noted above,
-the reverse path will continue to work normally.
-
-Generated Names Reuse
----------------------
-
-It is important that use of registered mDNS hostnames is limited in time
-and/or scope. Indefinitely reusing the same mDNS hostname candidate would
-provide applications an even more reliable tracking mechanism than the private
-IP addresses that this specification is designed to hide. In the case of a web
-application, the use of registered mDNS hostnames SHOULD be scoped by the web
-application origin, and SHOULD have the lifetime of the page executing the web
-application.
-
-Determination of Address Privacy
---------------------------------
-
-Naturally, an address that is already exposed to the Internet does not need to
-be protected by mDNS, as it can be trivially observed by the web server or
-remote endpoint. However, determining this ahead of time is not straightforward;
-while the fact that an IPv4 address is private can sometimes be inferred by its
-value, e.g., whether it is an {{RFC1918}} address, the reverse is not
-necessarily true. IPv6 addresses present their own complications, e.g.,
-private IPv6 addresses as a result of NAT64 {{RFC6146}}.
-
-Instead, the determination of whether an address is public can be reliably made
-as part of the ICE gathering process, namely, if the query to the
-STUN {{RFC5389}} server returns the same value as the local address. This can
-be done for both IPv4 and IPv6 local addresses, provided that the application
-has configured both IPv4 and IPv6 STUN servers. If this situation occurs, i.e.,
-STUN returns the same IP address value for an address that has already
-been communicated as an mDNS candidate during the current ICE gathering phase,
-the ICE agent MUST NOT eliminate the candidate as redundant and MUST send
-the IP address as a server-reflexive candidate. This allows the ICE agent
-to send mDNS candidates immediately (i.e., without waiting for STUN),
-even if the associated addresses may not be private.
-
-Once an address has been identified as public, the ICE agent MAY cache this
-information and omit mDNS protection for that address in future ICE gathering
-phases.
-
-Special Handling for IPv6 Addresses
------------------------------------
-
-As noted in {{IPHandling}}, private IPv4 addresses are especially problematic
-because of their unbounded lifetime. However, the {{RFC4941}} IPv6
-addresses recommended for WebRTC have inherent privacy protections, namely
-a short lifetime and the lack of any stateful information. Accordingly,
-implementations MAY choose to not conceal {{RFC4941}} addresses with mDNS names
-as a tradeoff for improved peer-to-peer connectivity.
-
-Specific Browsing Contexts
---------------------------
-
-As noted in {{IPHandling}}, privacy may be breached if a web application running
-in two browsing contexts can determine whether it is running on the same device.
-While the approach in this document prevents the application from directly
-comparing local private IP addresses, a successful local WebRTC connection
-can also present a threat to user privacy. Specifically, when the latency of a
-WebRTC connection latency is close to zero, the probability is high that the
-two peers are running on the same device.
-
-To avoid this issue, browsers SHOULD NOT register mDNS names for WebRTC
-applications running in a third-party browsing context (i.e., a context that
-has a different origin than the top-level browsing context), or a private
-browsing context.
-
-Network Interface Enumeration
------------------------------
-
-Even when local IP addresses are not exposed, the number of mDNS hostname
-candidates can still provide a fingerprinting dimension. This is in particular
-the case for network interfaces with limited connectivity that will not generate
-server-reflexive or relay candidates.
-
-The more mDNS names an endpoint exposes through mDNS hostname candidates, the
-higher the fingerprinting risk. One countermeasure is to limit this number to a
-small value.
-
-Note that no additional fingerprinting risk is introduced when restricting mDNS
-hostname candidates to default route only.
-
 Security Considerations {#security}
 =======================
 
@@ -689,17 +690,6 @@ related to the gathered ICE host candidates.
 The existence of malicious endpoints in the local network poses a generic
 threat, and requires dedicated protocol suites to mitigate, which is beyond the
 scope of this proposal.
-
-Monitoring of Sessions
-----------------------
-
-A malicious endpoint in the local network may also record other endpoints who
-are registering, unregistering, and resolving mDNS names. By doing so, they can
-create a session log that shows which endpoints are communicating, and for how
-long. If both endpoints in the session are on the same network, the fact they
-are communicating can be discovered.
-
-As above, mitigation of this threat is beyond the scope of this proposal.
 
 Unsolicited ICE Communications
 ------------------------------
