@@ -240,7 +240,7 @@ name MUST NOT be used in the connection-address field of the SDP "c=" line, as
 experimental deployment has indicated that many remote endpoints will fail to
 handle such a SDP. In this situation, the IP address "0.0.0.0" and port value
 "9" MUST instead be used in the c= and m= lines, similar to how the
-no-candidates case is handled in {{IceSDP}}, Section 4.3.1.
+no-candidates case is handled in {{ICESDP}}, Section 4.3.1.
 
 Any candidates exposed to the application via local descriptions MUST be
 identical to those provided during candidate gathering (i.e., MUST NOT
