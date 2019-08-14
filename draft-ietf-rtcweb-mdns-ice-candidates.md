@@ -234,10 +234,13 @@ as a tradeoff for improved peer-to-peer connectivity.
 #### mDNS Candidate Encoding
 
 The mDNS name of an mDNS candidate MUST be used in the connection-address field
-of its candidate attribute. When an mDNS candidate is the default candidate,
-its mDNS name MUST be used in the connection-address field of the SDP "c=" line.
-Since an mDNS candidate also conceals its address family, the "c=" line
-SHOULD use "IP4" in the address-type field.
+of its candidate attribute. However, when an mDNS candidate would be the
+default candidate, typically because there are no other candidates, its mDNS
+name MUST NOT be used in the connection-address field of the SDP "c=" line, as
+experimental deployment has indicated that many remote endpoints will fail to
+handle such a SDP. In this situation, the IP address "0.0.0.0" and port value
+"9" MUST instead be used in the c= and m= lines, similar to how the
+no-candidates case is handled in {{IceSDP}}, Section 4.3.1.
 
 Any candidates exposed to the application via local descriptions MUST be
 identical to those provided during candidate gathering (i.e., MUST NOT
