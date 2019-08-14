@@ -400,12 +400,20 @@ supported, or TURN relay if not. This may result in reduced connectivity,
 reduced throughput and increased latency, as well as increased cost in case of
 TURN relay.
 
+During experimental testing of the mDNS technique across a set of known
+mDNS-aware endpoints that had configured a STUN server but not a TURN server,
+the observed impact to ICE connection rate was 2% (relative) when mDNS
+was enabled on both sides, compared to when mDNS was only enabled on one
+side. In this testing, the percentage of connections that required STUN
+(i.e., went through a NAT) increased from 94% to 97%, indicating that
+mDNS succeeded about half the time, and fell back to NAT hairpin for the
+remainder. The most likely explanation for the overall connection rate drop
+is that hairpinning failed in some cases.
+
 One potential mitigation, as discussed in {{privacy}}, is to not conceal
 candidates created from {{RFC4941}} IPv6 addresses. This permits connectivity
-even in large internal networks or where mDNS is disabled.
-
-The exact impact of the mDNS technique is being researched experimentally
-and will be provided before publication of this document.
+even in large internal networks or where mDNS is disabled. Future versions
+of this document will include experimental data regarding this option.
 
 Connection Setup Latency
 ------------------------
@@ -434,8 +442,11 @@ should not have any effect on connectivity or connection setup time.
 
 However, some legacy endpoints are not fully spec-compliant and can
 behave unpredictably in the presence of ICE candidates that contain a hostname,
-potentially leading to ICE failure. Such endpoints have been identified during
-testing of this technique, but appear to be rare.
+potentially leading to ICE failure. Some endpoints may also fail to handle
+a connectivity check from an address that they have not received in signaling.
+During the aforementioned experimental testing, the connection rate when
+interacting with endpoints that provided raw IP addresses (and therefore 
+should be unaffected) decreased by 3% (relative), presumably for these reasons.
 
 Examples
 ========
