@@ -93,7 +93,6 @@ informative:
 WebRTC applications collect ICE candidates as part of the process of creating
 peer-to-peer connections. To maximize the probability of a direct peer-to-peer
 connection, client private IP addresses are included in this candidate
-collection. However, disclosure of these addresses has privacy implications.
 This document describes a way to share local IP addresses with other clients
 while preserving client privacy. This is achieved by concealing IP addresses
 with dynamically generated Multicast DNS (mDNS) names.
@@ -215,8 +214,9 @@ Regardless of the result, a server-reflexive candidate will be generated;
 the transport address of this candidate is an IP address and therefore
 distinct from the hostname transport address of the associated mDNS candidate,
 and as such MUST NOT be considered redundant per the guidance in {{RFC8445}},
-Section 5.1.3. To avoid accidental IP address, this server-reflexive candidate
-MUST have its raddr field set to 0.0.0.0 and its rport field set to 0.
+Section 5.1.3. To avoid accidental IP address disclosure, this server-reflexive
+candidate MUST have its raddr field set to "0.0.0.0"/"::" and its rport field
+set to "9", as discussed in {{ICESDP}}, Section 9.1.
 
 Once an address has been identified as public, the ICE agent MAY cache this
 information and omit mDNS protection for that address in future ICE gathering
@@ -238,8 +238,8 @@ of its candidate attribute. However, when an mDNS candidate would be the
 default candidate, typically because there are no other candidates, its mDNS
 name MUST NOT be used in the connection-address field of the SDP "c=" line, as
 experimental deployment has indicated that many remote endpoints will fail to
-handle such a SDP. In this situation, the IP address "0.0.0.0" and port value
-"9" MUST instead be used in the c= and m= lines, similar to how the
+handle such a SDP. In this situation, the IP address values "0.0.0.0"/"::" and
+port value "9" MUST instead be used in the c= and m= lines, similar to how the
 no-candidates case is handled in {{ICESDP}}, Section 4.3.1.
 
 Any candidates exposed to the application via local descriptions MUST be
