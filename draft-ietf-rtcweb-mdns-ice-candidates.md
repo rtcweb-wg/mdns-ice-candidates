@@ -379,6 +379,14 @@ are communicating can be discovered.
 
 Mitigation of this threat is beyond the scope of this proposal.
 
+### Absence of mDNS candidates
+
+A web page SHOULD NOT be able to learn any user-specific information from the
+ICE agent exposing or not mDNS candidates. For that reason, an ICE agent
+decides to expose or not mDNS candidates based on some fixed configuration
+rules. In particular, lack of network mDNS support or mDNS registration
+failures SHOULD have no impact on exposing mDNS candidates.
+
 Potential Limitations
 =====================
 
