@@ -166,10 +166,9 @@ described below.
 3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4
    UUID as defined in {{RFC4122}}, followed by ".local".
 
-4. Register the candidate's mDNS hostname as defined in {{RFC6762}}. As the
-   hostname is expected to be unique, the ICE agent SHOULD skip probing when
-   registering the hostname. The ICE agent MAY also skip sending an mDNS
-   announcement for the hostname.
+4. Register the candidate's mDNS hostname as defined in {{RFC6762}}. The ICE agent
+   SHOULD send an mDNS announcement for the hostname. As the hostname is expected
+   to be unique, the ICE agent SHOULD skip probing of the hostname.
 
 5. If registering of the mDNS hostname fails, abort these steps. The candidate
    is not exposed.
@@ -196,32 +195,12 @@ MUST expose a different mDNS name for each address.
 
 ### Implementation Guidance
 
-#### Registration and Responses
-
-If the ICE agent skips both probing and announcement sending, the ICE agent
-does not send any mDNS message on the network. In that case, the ICE agent is
-expected to answer to any query matching the registered name.
-
-Sending an mDNS announcement will usually allow the ICE agent receiving the
-remote ICE candidate containing the mDNS name to already have the information
-useful to resolve the mDNS name if the mDNS ICE candidate can actually be used.
-If the mDNS announcement is not sent, this can increase the connection setup
-time.
+#### Registration
 
 Sending the mDNS announcement to the network can be delayed, for instance due
-to rate limits. An ICE agent can provide the candidate to the web application
-before the mDNS announcement is sent on the network.
-
-When processing an mDNS query message that matches a registered mDNS name and
-the mDNS query message has its response-unicast bit set, the ICE agent SHOULD
-answer through unicast and SHOULD NOT send an mDNS announcement for the mDNS
-name. This will limit the multicast traffic as the announcement is probably not
-useful to any other node of the network.
-
-TODO: Verify the 'SHOULD NOT' rule interaction with
-[RFC 6762 section 7.3](https://tools.ietf.org/html/rfc6762#section-7.3).
-Do we need to state that a query should always be sent? or sent even if a
-previous request was sent with the unicast response bit set?
+to rate limits. An ICE agent SHOULD provide the candidate to the web application
+as soon as its mDNS name is generated, regardless of whether the announcement
+is sent on the network.
 
 #### Determining Address Privacy and Server-Reflexive Candidates
 
@@ -717,6 +696,10 @@ are dispatched during the ICE candidate gathering and processing described in
 {{description}}. A browser MAY implement more specific rate limits, e.g., to
 ensure a single origin does not prevent other origins from registering,
 unregistering, or resolving mDNS names.
+
+The browser is expected to answer to mDNS query messages, which might have the
+response-unicast bit set. In such a case, it is important to follow {{RFC6762}}
+section 5.5 and ignore mDNS query messages originating from outside the local link.
 
 Malicious Responses to Deny Name Registration
 ---------------------------------------------
