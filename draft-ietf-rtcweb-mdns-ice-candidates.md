@@ -272,7 +272,7 @@ is used:
 as defined in {{RFC8445}}.
 
 2. Otherwise, resolve the candidate using mDNS. The ICE agent SHOULD set the
-unicast-response bit of the corresponding mDNS query message. This minimizes
+unicast-response bit of the corresponding mDNS query message; this minimizes
 multicast traffic, as the response is probably only useful to the
 querying node.
 
