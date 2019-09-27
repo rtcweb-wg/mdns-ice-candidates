@@ -697,6 +697,9 @@ are dispatched during the ICE candidate gathering and processing described in
 ensure a single origin does not prevent other origins from registering,
 unregistering, or resolving mDNS names.
 
+mDNS queries from outside the local link
+----------------------------------------
+
 The browser is expected to answer to mDNS query messages, which might have the
 response-unicast bit set. In such a case, it is important to follow {{RFC6762}}
 section 5.5 and ignore mDNS query messages originating from outside the local link.
