@@ -200,7 +200,7 @@ MUST expose a different mDNS name for each address.
 Sending the mDNS announcement to the network can be delayed, for instance due
 to rate limits. An ICE agent SHOULD provide the candidate to the web application
 as soon as its mDNS name is generated, regardless of whether the announcement
-is sent on the network.
+has been sent on the network.
 
 #### Determining Address Privacy and Server-Reflexive Candidates
 
