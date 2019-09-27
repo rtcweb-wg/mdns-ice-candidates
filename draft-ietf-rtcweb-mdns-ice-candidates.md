@@ -167,7 +167,7 @@ described below.
    UUID as defined in {{RFC4122}}, followed by ".local".
 
 4. Register the candidate's mDNS hostname as defined in {{RFC6762}}. The ICE agent
-   SHOULD send an mDNS announcement for the hostname. As the hostname is expected
+   SHOULD send an mDNS announcement for the hostname, but as the hostname is expected
    to be unique, the ICE agent SHOULD skip probing of the hostname.
 
 5. If registering of the mDNS hostname fails, abort these steps. The candidate
