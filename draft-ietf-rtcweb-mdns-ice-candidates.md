@@ -180,12 +180,10 @@ hostnames by executing steps 3 to 6 and prepopulate an ICE agent accordingly.
 By doing so, only step 7 of the above procedure will be executed at the time
 of gathering candidates.
 
-A web page SHOULD NOT be able to learn any user-specific information from the
-ICE agent exposing or not mDNS candidates. For that reason, an ICE agent
-decides to expose or not mDNS candidates based on some fixed configuration
-rules, as defined in {{IPHandling}} for instance. Lack of network mDNS support
-or mDNS registration failures SHOULD have no impact on exposing mDNS
-candidates.
+In order to prevent web applications from using this mechanism to query for
+mDNS support in the local network, the ICE agent SHOULD still provide mDNS
+candidates in step 6 even if the local network does not support mDNS or mDNS
+registration fails in step 4.
 
 This procedure ensures that an mDNS name is used to replace only one IP address.
 Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses
