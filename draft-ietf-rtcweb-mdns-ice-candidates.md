@@ -176,8 +176,8 @@ described below.
 
 ICE agents can implement this procedure in any way as long as it produces
 equivalent results. An implementation may for instance pre-register mDNS
-hostnames by executing steps 3 to 6 and prepopulate an ICE agent accordingly.
-By doing so, only step 7 of the above procedure will be executed at the time
+hostnames by executing steps 3 to 5 and prepopulate an ICE agent accordingly.
+By doing so, only step 6 of the above procedure will be executed at the time
 of gathering candidates.
 
 In order to prevent web applications from using this mechanism to query for
