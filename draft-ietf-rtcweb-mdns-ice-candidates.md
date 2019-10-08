@@ -166,7 +166,9 @@ described below.
 3. Generate a unique mDNS hostname. The unique name MUST consist of a version 4
    UUID as defined in {{RFC4122}}, followed by ".local".
 
-4. Register the candidate's mDNS hostname as defined in {{RFC6762}}.
+4. Register the candidate's mDNS hostname as defined in {{RFC6762}}. The ICE agent
+   SHOULD send an mDNS announcement for the hostname, but as the hostname is expected
+   to be unique, the ICE agent SHOULD skip probing of the hostname.
 
 5. If registering of the mDNS hostname fails, abort these steps. The candidate
    is not exposed.
@@ -192,6 +194,13 @@ Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses
 MUST expose a different mDNS name for each address.
 
 ### Implementation Guidance
+
+#### Registration
+
+Sending the mDNS announcement to the network can be delayed, for instance due
+to rate limits. An ICE agent SHOULD provide the candidate to the web application
+as soon as its mDNS name is generated, regardless of whether the announcement
+has been sent on the network.
 
 #### Determining Address Privacy and Server-Reflexive Candidates
 
@@ -262,7 +271,10 @@ is used:
 ".local" or if the value contains more than one ".", then process the candidate
 as defined in {{RFC8445}}.
 
-2. Otherwise, resolve the candidate using mDNS.
+2. Otherwise, resolve the candidate using mDNS. The ICE agent SHOULD set the
+unicast-response bit of the corresponding mDNS query message; this minimizes
+multicast traffic, as the response is probably only useful to the
+querying node.
 
 3. If it resolves to an IP address, replace the mDNS hostname of the ICE
 candidate with the resolved IP address and continue processing of the candidate
