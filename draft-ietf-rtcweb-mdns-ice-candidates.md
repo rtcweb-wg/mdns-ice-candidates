@@ -170,24 +170,22 @@ described below.
    SHOULD send an mDNS announcement for the hostname, but as the hostname is expected
    to be unique, the ICE agent SHOULD skip probing of the hostname.
 
-5. If registering of the mDNS hostname fails, abort these steps. The candidate
-   is not exposed.
-
-6. Store the mDNS hostname and its related IP address in the ICE agent for
+5. Store the mDNS hostname and its related IP address in the ICE agent for
    future reuse.
 
-7. Replace the IP address of the ICE candidate with its mDNS hostname and
+6. Replace the IP address of the ICE candidate with its mDNS hostname and
    provide the candidate to the web application.
 
 ICE agents can implement this procedure in any way as long as it produces
 equivalent results. An implementation may for instance pre-register mDNS
-hostnames by executing steps 3 to 6 and prepopulate an ICE agent accordingly.
-By doing so, only step 7 of the above procedure will be executed at the time
+hostnames by executing steps 3 to 5 and prepopulate an ICE agent accordingly.
+By doing so, only step 6 of the above procedure will be executed at the time
 of gathering candidates.
 
-An implementation may also detect that mDNS is not supported by the available
-network interfaces. The ICE agent may skip steps 3 and 4 and directly decide to
-not expose the host candidate.
+In order to prevent web applications from using this mechanism to query for
+mDNS support in the local network, the ICE agent SHOULD still provide mDNS
+candidates in step 6 even if the local network does not support mDNS or mDNS
+registration fails in step 4.
 
 This procedure ensures that an mDNS name is used to replace only one IP address.
 Specifically, an ICE agent using an interface with both IPv4 and IPv6 addresses
