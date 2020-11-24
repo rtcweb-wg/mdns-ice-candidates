@@ -291,7 +291,8 @@ more than one IP address.
 
 An ICE agent MAY add additional restrictions regarding the ICE candidates it
 will resolve using mDNS, as this mechanism allows attackers to send ICE traffic
-to devices with well-known mDNS names.
+to devices with well-known mDNS names. In particular, ICE agents SHOULD NOT
+resolve mDNS names if they are not in the format defined by {{gathering}}.
 
 Additional Privacy Considerations {#privacy}
 --------------------------------------------
@@ -723,6 +724,10 @@ As noted in Section 4.2 of {{RTCWebSecurity}}, an attacker may use ICE as a way
 to send unsolicited network traffic to specific endpoints. While this is not
 specific to mDNS hostname candidates, this technique makes it easier to
 target devices with well-known mDNS names.
+
+Also, the same technique can be used as an oracle to determine whether some
+local services are reachable in the local network. This knowledge can be used
+for fingerprinting purposes or as a basis for attacking local networks.
 
 As noted in {{processing}}, ICE agents may decide to not resolve mDNS names, for
 example, if these names are not in the format defined by {{gathering}}.
