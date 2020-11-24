@@ -334,8 +334,10 @@ defeating the value of the mDNS wrapping.
 
 To prevent disclosure of the host IP address to a TURN server, the ICE
 agent MUST NOT form candidate pairs between its own relay candidates
-and remote mDNS candidates. Note that the converse is not an issue; the
-ICE agent MAY form candidate pairs between its own mDNS candidates and
+and remote mDNS candidates. Note that filtering out on candidate type
+field is not enough as remote mDNS candidates are identified from
+their connection-address field. Note also that the converse is not an issue:
+the ICE agent MAY form candidate pairs between its own mDNS candidates and
 remote relay candidates, as in this situation host IPs will not be sent
 directly to the TURN server.
 
