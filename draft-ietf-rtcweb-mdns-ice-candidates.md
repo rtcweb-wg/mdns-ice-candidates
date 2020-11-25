@@ -78,6 +78,13 @@ informative:
       ins: B. Aboba
       ins: T. Brandstetter
       ins: J.I. Bruaroey
+  WebRTCStats:
+    target: https://w3c.github.io/webrtc-stats/
+    title:  Identifiers for WebRTC's Statistics API
+    author:
+      ins: H. Alvestrand
+      ins: V. Singh
+      ins: H. Boström
   HTMLSpec:
     target: https://html.spec.whatwg.org
     title: HTML Living Standard
@@ -308,6 +315,13 @@ applications through other means.
 Statistics related to ICE candidates that are accessible to the web
 application MUST NOT contain the IP address of a local or remote mDNS
 candidate; the mDNS name SHOULD be used instead.
+
+Statistics SHOULD NOT leak whether the mDNS resolution succeeds or fails.
+For that reason, RTCIceCandidateStats objects as defined in {{WebRTCStats}}
+SHOULD be generated for any remote mDNS candidate submitted to the ICE agent,
+even if the mDNS candidate is ignored as part of {{processing}}.
+An implementation strategy to ignore candidates is to replace
+the mDNS hostname of the ICE candidate with IP values "0.0.0.0"/"::".
 
 In addition, a peer-reflexive remote candidate may be constructed
 from a remote host IP address as a result of an ICE connectivity
