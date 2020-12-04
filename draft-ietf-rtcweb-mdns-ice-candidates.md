@@ -321,7 +321,7 @@ For that reason, RTCIceCandidateStats objects as defined in {{WebRTCStats}}
 SHOULD be generated for any remote mDNS candidate submitted to the ICE agent,
 even if the mDNS candidate is ignored as part of {{processing}}.
 An implementation strategy to ignore candidates is to replace
-the mDNS hostname of the ICE candidate with IP values "0.0.0.0"/"::".
+the mDNS hostname of the ICE candidate with IP values "0.0.0.0" or "::".
 
 In addition, a peer-reflexive remote candidate may be constructed
 from a remote host IP address as a result of an ICE connectivity
