@@ -277,7 +277,7 @@ is used:
 ".local" or if the value contains more than one ".", then process the candidate
 as defined in {{RFC8445}}.
 
-2. If the ICE agent candidate policy is "relay", as defined in {{JSEP}}, ignore the candidate.
+2. If the ICE candidate policy is "relay", as defined in {{JSEP}}, ignore the candidate.
 
 3. Otherwise, resolve the candidate using mDNS. The ICE agent SHOULD set the
 unicast-response bit of the corresponding mDNS query message; this minimizes
