@@ -87,6 +87,14 @@ informative:
     author:
       ins: E. Rescorla
     date: 2018-01-22
+  JSEP:
+    target: https://tools.ietf.org/html/draft-ietf-rtcweb-jsep
+    title:  JavaScript Session Establishment Protocol
+    author:
+      ins: J. Uberti
+      ins: C. Jennings
+      ins: E. Rescorla, Ed.
+    date: 2019-02-27
 
 --- abstract
 
@@ -269,16 +277,18 @@ is used:
 ".local" or if the value contains more than one ".", then process the candidate
 as defined in {{RFC8445}}.
 
-2. Otherwise, resolve the candidate using mDNS. The ICE agent SHOULD set the
+2. If the ICE candidate policy is "relay", as defined in {{JSEP}}, ignore the candidate.
+
+3. Otherwise, resolve the candidate using mDNS. The ICE agent SHOULD set the
 unicast-response bit of the corresponding mDNS query message; this minimizes
 multicast traffic, as the response is probably only useful to the
 querying node.
 
-3. If it resolves to an IP address, replace the mDNS hostname of the ICE
+4. If it resolves to an IP address, replace the mDNS hostname of the ICE
 candidate with the resolved IP address and continue processing of the candidate
 as defined in {{RFC8445}}.
 
-4. Otherwise, ignore the candidate.
+5. Otherwise, ignore the candidate.
 
 ### Implementation Guidance
 
