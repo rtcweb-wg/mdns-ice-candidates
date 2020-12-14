@@ -756,8 +756,9 @@ Also, the same technique can be used as an oracle to determine whether some
 local services are reachable in the local network. This knowledge can be used
 for fingerprinting purposes or as a basis for attacking local networks.
 
-As noted in {{processing}}, ICE agents may decide to not resolve mDNS names, for
-example, if these names are not in the format defined by {{gathering}}.
+As noted in {{processing}}, ICE agents are discouraged to resolve mDNS names
+that are not in the format defined by {{gathering}} and may further constrain
+the mDNS names they will actually try to resolve.
 
 IANA Considerations
 ===================
