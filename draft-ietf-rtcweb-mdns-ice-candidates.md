@@ -128,7 +128,8 @@ connections in WebRTC applications. This is particularly an issue on unmanaged
 networks, typically homes or small offices, where NAT loopback may not be
 supported.
 
-This document proposes an overall solution to this problem by providing a
+This document proposes an overall solution to this problem by extending
+{{ICESDP}} to provide a
 mechanism for WebRTC implementations to register ephemeral mDNS {{RFC6762}}
 names for local private IP addresses, and then provide those names, rather than
 the IP addresses, in their ICE candidates. While this technique is intended
@@ -153,6 +154,18 @@ document are to be interpreted as described in {{RFC2119}}.
 
 Description {#description}
 ======================
+
+This document extends the {{ICESDP}} specification to allow the generation
+and resolution of ICE candidates that use mDNS FQDN names.
+Section 5.1 of {{ICESDP}} states that 'An agent generating local candidates
+MUST NOT use FQDN addresses. An agent processing remote candidates MUST
+ignore candidate lines that include candidates with FQDN or IP address
+versions that are not supported or recognized.'.
+This specification updates these sentences as follows: 'An agent generating
+local candidates MUST NOT use FQDN addresses which top-level domain name
+is not ".local". An agent processing remote candidate MUST ignore candidate
+lines that include candidates with FQDN which top-level domain name is not
+".local" or IP address versions that are not supported or recognized.'.
 
 This section uses the concept of ICE agent as defined in {{RFC8445}}. In the
 remainder of the document, it is assumed that each browsing context (as defined
