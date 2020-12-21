@@ -164,7 +164,7 @@ versions that are not supported or recognized.'.
 This specification updates these sentences as follows: 'An agent generating
 local candidates MUST NOT use FQDN addresses of which the top-level domain name
 is not ".local". An agent processing remote candidate MUST ignore candidate
-lines that include candidates with FQDN which top-level domain name is not
+lines that include candidates with FQDN of which the top-level domain name is not
 ".local" or IP address versions that are not supported or recognized.'.
 
 This section uses the concept of ICE agent as defined in {{RFC8445}}. In the
