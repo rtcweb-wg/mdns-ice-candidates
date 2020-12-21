@@ -156,7 +156,7 @@ Description {#description}
 ======================
 
 This document extends the {{ICESDP}} specification to allow the generation
-and resolution of ICE candidates that use mDNS FQDN names.
+and resolution of ICE candidates that use a specific subset of FQDN addresses.
 Section 5.1 of {{ICESDP}} states that 'An agent generating local candidates
 MUST NOT use FQDN addresses. An agent processing remote candidates MUST
 ignore candidate lines that include candidates with FQDN or IP address
