@@ -162,7 +162,7 @@ MUST NOT use FQDN addresses. An agent processing remote candidates MUST
 ignore candidate lines that include candidates with FQDN or IP address
 versions that are not supported or recognized.'.
 This specification updates these sentences as follows: 'An agent generating
-local candidates MUST NOT use FQDN addresses which top-level domain name
+local candidates MUST NOT use FQDN addresses of which the top-level domain name
 is not ".local". An agent processing remote candidate MUST ignore candidate
 lines that include candidates with FQDN which top-level domain name is not
 ".local" or IP address versions that are not supported or recognized.'.
