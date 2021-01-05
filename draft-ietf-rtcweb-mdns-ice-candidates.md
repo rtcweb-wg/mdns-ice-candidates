@@ -8,6 +8,7 @@ ipr: trust200902
 area: General
 workgroup: RTCWEB
 keyword: Internet-Draft
+updates: 8839
 
 stand_alone: yes
 pi: [toc, sortrefs, symrefs]
@@ -129,8 +130,7 @@ networks, typically homes or small offices, where NAT loopback may not be
 supported.
 
 This document proposes an overall solution to this problem by extending
-{{ICESDP}} to provide a
-mechanism for WebRTC implementations to register ephemeral mDNS {{RFC6762}}
+{{ICESDP}} to allow ICE implementations to register ephemeral mDNS {{RFC6762}}
 names for local private IP addresses, and then provide those names, rather than
 the IP addresses, in their ICE candidates. While this technique is intended
 to benefit WebRTC implementations in web browsers, by preventing collection
@@ -154,18 +154,6 @@ document are to be interpreted as described in {{RFC2119}}.
 
 Description {#description}
 ======================
-
-This document extends the {{ICESDP}} specification to allow the generation
-and resolution of ICE candidates that use a specific subset of FQDN addresses.
-Section 5.1 of {{ICESDP}} states that 'An agent generating local candidates
-MUST NOT use FQDN addresses. An agent processing remote candidates MUST
-ignore candidate lines that include candidates with FQDN or IP address
-versions that are not supported or recognized.'.
-This specification updates these sentences as follows: 'An agent generating
-local candidates MUST NOT use FQDN addresses of which the top-level domain name
-is not ".local". An agent processing remote candidate MUST ignore candidate
-lines that include candidates with FQDN of which the top-level domain name is not
-".local" or IP address versions that are not supported or recognized.'.
 
 This section uses the concept of ICE agent as defined in {{RFC8445}}. In the
 remainder of the document, it is assumed that each browsing context (as defined
@@ -433,6 +421,20 @@ long. If both endpoints in the session are on the same network, the fact they
 are communicating can be discovered.
 
 Mitigation of this threat is beyond the scope of this proposal.
+
+Update to RFC 8839
+==================
+
+Section 5.1 of {{ICESDP}} states:
+
+>An agent generating local candidates MUST NOT use FQDN addresses.
+>An agent processing remote candidates MUST ignore candidate lines that 
+>include candidates with FQDN or IP address versions that are not supported
+>or recognized.
+
+This document extends {{ICESDP}} to specifically allow the generation and
+processing of ICE candidates with the ".local" FQDNs defined in {gathering}.
+The restrictions on other FQDNs are unaffected.
 
 Potential Limitations
 =====================
