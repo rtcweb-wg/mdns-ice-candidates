@@ -8,6 +8,7 @@ ipr: trust200902
 area: General
 workgroup: RTCWEB
 keyword: Internet-Draft
+updates: 8839
 
 stand_alone: yes
 pi: [toc, sortrefs, symrefs]
@@ -128,8 +129,8 @@ connections in WebRTC applications. This is particularly an issue on unmanaged
 networks, typically homes or small offices, where NAT loopback may not be
 supported.
 
-This document proposes an overall solution to this problem by providing a
-mechanism for WebRTC implementations to register ephemeral mDNS {{RFC6762}}
+This document proposes an overall solution to this problem by extending
+{{ICESDP}} to allow ICE implementations to register ephemeral mDNS {{RFC6762}}
 names for local private IP addresses, and then provide those names, rather than
 the IP addresses, in their ICE candidates. While this technique is intended
 to benefit WebRTC implementations in web browsers, by preventing collection
@@ -420,6 +421,20 @@ long. If both endpoints in the session are on the same network, the fact they
 are communicating can be discovered.
 
 Mitigation of this threat is beyond the scope of this proposal.
+
+Update to RFC 8839
+==================
+
+Section 5.1 of {{ICESDP}} states:
+
+>An agent generating local candidates MUST NOT use FQDN addresses.
+>An agent processing remote candidates MUST ignore candidate lines that 
+>include candidates with FQDN or IP address versions that are not supported
+>or recognized.
+
+This document extends {{ICESDP}} to specifically allow the generation and
+processing of ICE candidates with the ".local" FQDNs defined in {gathering}.
+The restrictions on other FQDNs are unaffected.
 
 Potential Limitations
 =====================
