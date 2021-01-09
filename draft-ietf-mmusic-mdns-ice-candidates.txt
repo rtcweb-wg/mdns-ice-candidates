@@ -2,7 +2,7 @@
 
 
 
-RTCWEB                                                         Y. Fablet
+MMUSIC                                                         Y. Fablet
 Internet-Draft                                                Apple Inc.
 Updates: 8839 (if approved)                                  J. de Borst
 Intended status: Informational                                 J. Uberti
@@ -12,7 +12,7 @@ Expires: July 12, 2021                                           Q. Wang
 
 
   Using Multicast DNS to protect privacy when exposing ICE candidates
-              draft-ietf-rtcweb-mdns-ice-candidates-latest
+              draft-ietf-mmusic-mdns-ice-candidates-latest
 
 Abstract
 
