@@ -467,11 +467,6 @@ mDNS succeeded about half the time, and fell back to NAT hairpin for the
 remainder. The most likely explanation for the overall connection rate drop
 is that hairpinning failed in some cases.
 
-One potential mitigation, as discussed in {{privacy}}, is to not conceal
-candidates created from {{RFC4941}} IPv6 addresses. This permits connectivity
-even in large internal networks or where mDNS is disabled. Future versions
-of this document will include experimental data regarding this option.
-
 Connection Setup Latency
 ------------------------
 
