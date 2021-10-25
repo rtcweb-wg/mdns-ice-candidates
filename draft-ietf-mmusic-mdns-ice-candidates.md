@@ -118,7 +118,7 @@ concealing the addresses with dynamically generated Multicast DNS (mDNS) names.
 Introduction {#problems}
 ============
 
-As detailed in {{IPHandling}}, exposing client private IP addresses by default
+As detailed in {{IPHandling}}, exposing client local IP addresses by default
 to web applications maximizes the probability of successfully creating direct
 peer-to-peer connections between clients, but creates a significant surface for
 user fingerprinting. {{IPHandling}} recognizes this issue, but also admits that
@@ -130,7 +130,7 @@ supported.
 
 This document proposes an overall solution to this problem by extending
 {{ICESDP}} to allow ICE implementations to register ephemeral mDNS {{RFC6762}}
-names for local private IP addresses, and then provide those names, rather than
+names for local IP addresses, and then provide those names, rather than
 the IP addresses, in their ICE candidates. While this technique is intended
 to benefit WebRTC implementations in web browsers, by preventing collection
 of private IP addresses by arbitrary web pages, it can also be used by any
