@@ -108,12 +108,11 @@ informative:
 
 WebRTC applications collect ICE candidates as part of the process of creating
 peer-to-peer connections. To maximize the probability of a direct peer-to-peer
-connection, client private IP addresses are included in this candidate
-collection. However, disclosure of these addresses has privacy implications.
-This document describes a way to share local IP addresses with other clients
-while preserving client privacy. This is achieved by concealing IP addresses
-with dynamically generated Multicast DNS (mDNS) names.
-
+connection, the endpoint's local IP addresses are included in this candidate
+collection. However, these addresses are typically private and, as such, their
+disclosure has privacy implications. This document describes a 
+privacy-preserving way to share local IP addresses with other endpoints by
+concealing the addresses with dynamically generated Multicast DNS (mDNS) names.
 --- middle
 
 Introduction {#problems}
@@ -144,6 +143,10 @@ perform ICE processing as usual. In the case where the
 endpoint is a web application, the WebRTC implementation will manage this
 resolution internally and will not disclose the actual IP addresses to the
 application.
+
+While mDNS names are only valid within a local network, the same is true for 
+private IP addresses, and therefore this does not limit the effectiveness of 
+this technique.
 
 Terminology
 ===========
