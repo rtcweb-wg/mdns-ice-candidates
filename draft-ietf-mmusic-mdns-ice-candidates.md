@@ -144,7 +144,7 @@ endpoint is a web application, the WebRTC implementation will manage this
 resolution internally and will not disclose the actual IP addresses to the
 application.
 
-While mDNS names are only valid within a local network, the same is true for 
+While mDNS names are usually only valid within a local network, the same is true for 
 private IP addresses, and therefore this does not limit the effectiveness of 
 this technique.
 
