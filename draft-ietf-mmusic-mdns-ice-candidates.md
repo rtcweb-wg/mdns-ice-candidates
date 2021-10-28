@@ -498,17 +498,25 @@ Backward Compatibility
 
 For the most part, backward compatibility does not present a significant issue
 for the mDNS technique. When an endpoint that supports mDNS communicates with
-an endpoint that does not, the legacy endpoint will still provide its local IP
-addresses, and accordingly a direct connection can still be attempted, even
-though the legacy endpoint cannot resolve the mDNS names provided by the new
-endpoint. In the event the legacy endpoint attempts to resolve mDNS names using
-Unicast DNS, this may cause ICE to take somewhat longer to fully complete, but
-should not have any effect on connectivity or connection setup time.
+a legacy endpoint that does not, the legacy endpoint will still provide its local
+IP addresses, allowing the new endpoint to attempt direct connections to
+those addresses. Through the process of learning peer-reflexive candidates 
+described in {{RFC8445}}, the legacy endpoint will also learn the IP addresses 
+of the mDNS-aware endpoint, allowing ICE to succeed even though the legacy
+endpoint cannot resolve the mDNS names. In the event the legacy endpoint attempts
+to resolve the mDNS names using Unicast DNS, this may cause ICE to take somewhat
+longer to fully complete, but should not have any effect on connectivity or
+connection setup time.
 
 However, some legacy endpoints are not fully spec-compliant and can
 behave unpredictably in the presence of ICE candidates that contain a hostname,
-potentially leading to ICE failure. Some endpoints may also fail to handle
-a connectivity check from an address that they have not received in signaling.
+potentially leading to ICE failure. Specifically, the SDP parsers in these 
+endpoints may raise a fatal error when receiving such candidates, rather than
+simply ignoring them.
+
+Some endpoints may also fail to handle a connectivity check from an address that
+they have not received in signaling (i.e., they do not support learning
+peer-reflexive candidates as described above), leading to ICE failure.
 During the aforementioned experimental testing, the connection rate when
 interacting with endpoints that provided raw IP addresses (and therefore 
 should be unaffected) decreased by 3% (relative), presumably for these reasons.
