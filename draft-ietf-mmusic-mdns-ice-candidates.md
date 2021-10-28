@@ -108,18 +108,17 @@ informative:
 
 WebRTC applications collect ICE candidates as part of the process of creating
 peer-to-peer connections. To maximize the probability of a direct peer-to-peer
-connection, client private IP addresses are included in this candidate
-collection. However, disclosure of these addresses has privacy implications.
-This document describes a way to share local IP addresses with other clients
-while preserving client privacy. This is achieved by concealing IP addresses
-with dynamically generated Multicast DNS (mDNS) names.
-
+connection, the endpoint's local IP addresses are included in this candidate
+collection. However, these addresses are typically private and, as such, their
+disclosure has privacy implications. This document describes a 
+privacy-preserving way to share local IP addresses with other endpoints by
+concealing the addresses with dynamically generated Multicast DNS (mDNS) names.
 --- middle
 
 Introduction {#problems}
 ============
 
-As detailed in {{IPHandling}}, exposing client private IP addresses by default
+As detailed in {{IPHandling}}, exposing client local IP addresses by default
 to web applications maximizes the probability of successfully creating direct
 peer-to-peer connections between clients, but creates a significant surface for
 user fingerprinting. {{IPHandling}} recognizes this issue, but also admits that
@@ -131,7 +130,7 @@ supported.
 
 This document proposes an overall solution to this problem by extending
 {{ICESDP}} to allow ICE implementations to register ephemeral mDNS {{RFC6762}}
-names for local private IP addresses, and then provide those names, rather than
+names for local IP addresses, and then provide those names, rather than
 the IP addresses, in their ICE candidates. While this technique is intended
 to benefit WebRTC implementations in web browsers, by preventing collection
 of private IP addresses by arbitrary web pages, it can also be used by any
@@ -144,6 +143,10 @@ perform ICE processing as usual. In the case where the
 endpoint is a web application, the WebRTC implementation will manage this
 resolution internally and will not disclose the actual IP addresses to the
 application.
+
+While mDNS names are usually only valid within a local network, the same is true for 
+private IP addresses, and therefore this does not limit the effectiveness of 
+this technique.
 
 Terminology
 ===========
